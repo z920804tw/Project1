@@ -15,25 +15,8 @@ public class ThirdPersonCamera : MonoBehaviour
 
     float cinemachineTargetYaw;
     float cinemachineTargetPitch;
+    float zoomValue;
     Vector2 look;
-
-    PlayerInputAction inputActions;
-
-
-    void Awake()
-    {
-        inputActions = new PlayerInputAction();
-    }
-    #region - enable disable -
-    void OnEnable()
-    {
-        inputActions.Enable();
-    }
-    void OnDisable()
-    {
-        inputActions.Disable();
-    }
-    #endregion
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -41,7 +24,6 @@ public class ThirdPersonCamera : MonoBehaviour
         if (mainCam == null)
         {
             mainCam = GameObject.FindWithTag("MainCamera");
-
             //儲存攝影機的Y軸
             cinemachineTargetYaw = mainCam.transform.eulerAngles.y;
         }
@@ -70,16 +52,20 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         look = value.Get<Vector2>();
     }
+    public void OnZoom(InputValue value)
+    {
+        zoomValue = value.Get<float>();
+    }
     public void ZoomView()
     {
-        float value = inputActions.Player.Zoom.ReadValue<float>();
-        if (value != 0)
+        if (zoomValue != 0)
         {
-            float endPos = Mathf.Clamp(cinemachineThirdPersonFollow.CameraDistance - value, 2f, 6f);
-            StartCoroutine(ZoomInOut(cinemachineThirdPersonFollow.CameraDistance, endPos, 0.1f));
+            float endPos = Mathf.Clamp(cinemachineThirdPersonFollow.CameraDistance - zoomValue, 2f, 6f);
+            StartCoroutine(ZoomInOut(cinemachineThirdPersonFollow.CameraDistance, endPos, 0.05f));
         }
 
     }
+
 
     IEnumerator ZoomInOut(float startPos, float endPos, float duration)
     {
@@ -90,7 +76,7 @@ public class ThirdPersonCamera : MonoBehaviour
             cinemachineThirdPersonFollow.CameraDistance = Mathf.Lerp(startPos, endPos, timer / duration);
             yield return null;
         }
-        cinemachineThirdPersonFollow.CameraDistance =endPos;
+        cinemachineThirdPersonFollow.CameraDistance = endPos;
     }
 
 
