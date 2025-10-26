@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Unity.Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class ThirdPersonCamera : MonoBehaviour
@@ -38,15 +39,11 @@ public class ThirdPersonCamera : MonoBehaviour
             cinemachineTargetPitch -= look.y * camSensitivity;
         }
         //Yaw處理X軸 Pitch處理Y軸
-        cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, TopClamp);
+        cinemachineTargetPitch = Mathf.Clamp(cinemachineTargetPitch, bottomClamp, TopClamp);
         CamTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch, cinemachineTargetYaw, 0.0f);
         ZoomView();
 
 
-    }
-    static float ClampAngle(float angle, float min, float max)
-    {
-        return Mathf.Clamp(angle, min, max);
     }
     public void OnLook(InputValue value)
     {
