@@ -1,33 +1,35 @@
+using System;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ThirdPersonMove : MonoBehaviour
 {
-    Vector2 moveInput;
-    Vector3 inputDir;
     [Header("物件綁定")]
-    public GameObject mainCam;
-    Animator animator;
+    GameObject mainCam;
     CharacterController controller;
     [Header("移動參數設定")]
     public float walkSpeed;
     [SerializeField] float runSpeed;
     [SerializeField] float rotationSmoothTime = 1f;
-
+    Vector2 moveInput;
+    Vector3 inputDir;
     bool isRun = false;
 
     [Header("跳躍參數設定")]
     [SerializeField] float jumpHeight = 1.5f;
     [SerializeField] float gravity = -9.81f;
-
     public LayerMask groundLayer;
     [SerializeField] float sphereRadius;
     [SerializeField] float sphereDistance;
-    [SerializeField] bool isGround = false;
-    [SerializeField] bool isJump = false;
-    [SerializeField] bool wasGround = false; //紀錄上一楨是否在地面上
+    bool isGround = true;
+    bool wasGround = true; //紀錄上一楨是否在地面上
     Vector3 jumpVelecity;
+
+    [Header("瞄準")]
+    public GameObject followCam;
+    public GameObject aimCam;
+    [SerializeField] bool isAim;
 
 
 
@@ -38,23 +40,19 @@ public class ThirdPersonMove : MonoBehaviour
         {
             mainCam = GameObject.FindWithTag("MainCamera");
         }
-        animator = GetComponent<Animator>();
+        // animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
         isGround = CheckIsGround();
-
-
 
         Move();
         Jump();
         TurnFace();
 
-        LandGround();
         wasGround = isGround;
 
     }
@@ -62,9 +60,9 @@ public class ThirdPersonMove : MonoBehaviour
     void Move()
     {
         Vector3 moveDir = Vector3.zero;
+
         if (inputDir != Vector3.zero)
         {
-            animator.SetBool("isWalk", true);
             float speed = 0;
             //目標旋轉角度 (input方向轉成角度 + 相機y軸角度)
             float targetAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + mainCam.transform.eulerAngles.y;
@@ -74,21 +72,16 @@ public class ThirdPersonMove : MonoBehaviour
             //移動角色
             if (isRun)
             {
-                animator.SetBool("isRun", true);
                 speed = runSpeed;
             }
             else
             {
-                animator.SetBool("isRun", false);
                 speed = walkSpeed;
             }
+
             moveDir = moveDir.normalized * speed;
         }
-        else
-        {
-            animator.SetBool("isWalk", false);
-            animator.SetBool("isRun", false);
-        }
+        GetComponent<ThirdPersonAnimation>().MoveAnimState(inputDir, isRun);
         controller.Move(moveDir * Time.deltaTime);
 
 
@@ -98,42 +91,57 @@ public class ThirdPersonMove : MonoBehaviour
         jumpVelecity.y += gravity * Time.deltaTime;
         jumpVelecity.y = Mathf.Max(jumpVelecity.y, gravity);
         controller.Move(jumpVelecity * Time.deltaTime);
+
+        GetComponent<ThirdPersonAnimation>().JumpAnimState(isGround, wasGround);
     }
 
 
     //轉向方法
     void TurnFace()
-    {
-        if (inputDir != Vector3.zero)
+    {   
+        //瞄準模式
+        if (isAim)
         {
-            //目標旋轉角度 (input方向轉成角度 + 相機y軸角度)
-            float turnAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + mainCam.transform.eulerAngles.y;
-            //角色旋轉和平滑
-            Quaternion turnRotation = Quaternion.Euler(0f, turnAngle, 0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSmoothTime * Time.deltaTime);
+            //切換瞄準攝影機
+            followCam.SetActive(false);
+            aimCam.SetActive(true);
+            //產生射線
+            Ray ray = new Ray(aimCam.transform.position, aimCam.transform.forward);
+            RaycastHit hit;
+            Vector3 endPoint;
+            if (Physics.Raycast(ray, out hit, 50))
+            {
+                endPoint = hit.point;
+            }
+            else
+            {
+                endPoint = aimCam.transform.forward * 50;
+            }
+            //設定玩家旋轉
+            Vector3 lookDir = endPoint - aimCam.transform.position;
+            lookDir.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(lookDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSmoothTime * Time.deltaTime);
+            Debug.DrawRay(aimCam.transform.position, lookDir, Color.red);
+
         }
+        else
+        {
+            //一般移動模式
+            if (inputDir != Vector3.zero)
+            {
+                //目標旋轉角度 (input方向轉成角度 + 相機y軸角度)
+                float turnAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + mainCam.transform.eulerAngles.y;
+                //角色旋轉和平滑
+                Quaternion turnRotation = Quaternion.Euler(0f, turnAngle, 0f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSmoothTime * Time.deltaTime);
+            }
+            followCam.SetActive(true);
+            aimCam.SetActive(false);
+        }
+
     }
 
-    void LandGround()
-    {
-        if (isJump) //跳躍
-        {
-            if (isGround && !wasGround)
-            {
-                isJump = false;
-                animator.SetTrigger("isLand");
-                Debug.Log("跳起來後降落");
-            }
-        }
-        // else if(!isJump) 
-        // {
-        //     if (isGround && !wasGround)
-        //     {
-        //         animator.SetTrigger("isLand");
-        //         Debug.Log("掉下去後落地");
-        //     }
-        // }
-    }
 
     bool CheckIsGround()
     {
@@ -163,14 +171,15 @@ public class ThirdPersonMove : MonoBehaviour
     public void OnJump(InputValue value)
     {
         if (!isGround) return;
-
-        animator.SetTrigger("isJump");
-        isJump = true;
         float jumpValue = Mathf.Sqrt(-2f * gravity * jumpHeight);
         jumpVelecity = new Vector3(0, jumpValue, 0);
     }
     public void OnRun(InputValue value)
     {
         isRun = !isRun;
+    }
+    public void OnAim(InputValue value)
+    {
+        isAim = !isAim;
     }
 }

@@ -57,7 +57,7 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         if (zoomValue != 0)
         {
-            float endPos = Mathf.Clamp(cinemachineThirdPersonFollow.CameraDistance - zoomValue, 2f, 6f);
+            float endPos = Mathf.Clamp(cinemachineThirdPersonFollow.CameraDistance - zoomValue, 2f, 5f);
             StartCoroutine(ZoomInOut(cinemachineThirdPersonFollow.CameraDistance, endPos, 0.05f));
         }
 
