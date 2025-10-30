@@ -15,6 +15,7 @@ public class ThirdPersonMove : MonoBehaviour
     Vector2 moveInput;
     Vector3 inputDir;
     bool isRun = false;
+    bool wasRun = false;
 
     [Header("跳躍參數設定")]
     [SerializeField] float jumpHeight = 1.5f;
@@ -30,6 +31,7 @@ public class ThirdPersonMove : MonoBehaviour
     public GameObject followCam;
     public GameObject aimCam;
     [SerializeField] bool isAim;
+
 
 
 
@@ -79,6 +81,7 @@ public class ThirdPersonMove : MonoBehaviour
                 speed = walkSpeed;
             }
 
+            if (isAim) { speed = speed / 2; }
             moveDir = moveDir.normalized * speed;
         }
         GetComponent<ThirdPersonAnimation>().MoveAnimState(inputDir, isRun);
@@ -86,6 +89,7 @@ public class ThirdPersonMove : MonoBehaviour
 
 
     }
+    //跳躍
     void Jump()
     {
         jumpVelecity.y += gravity * Time.deltaTime;
@@ -98,7 +102,7 @@ public class ThirdPersonMove : MonoBehaviour
 
     //轉向方法
     void TurnFace()
-    {   
+    {
         //瞄準模式
         if (isAim)
         {
@@ -115,7 +119,7 @@ public class ThirdPersonMove : MonoBehaviour
             }
             else
             {
-                endPoint = aimCam.transform.forward * 50;
+                endPoint = aimCam.transform.position + aimCam.transform.forward * 50;
             }
             //設定玩家旋轉
             Vector3 lookDir = endPoint - aimCam.transform.position;
@@ -123,6 +127,17 @@ public class ThirdPersonMove : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(lookDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSmoothTime * Time.deltaTime);
             Debug.DrawRay(aimCam.transform.position, lookDir, Color.red);
+
+            //玩家頭轉向目標點
+            GetComponent<ThirdPersonAnimation>().HeadLook();
+
+            //瞄準奔跑判定
+            if (isRun)
+            {
+                //當瞄準時無法奔跑，但會記錄
+                wasRun = isRun;
+                isRun = false;
+            }
 
         }
         else
@@ -136,13 +151,19 @@ public class ThirdPersonMove : MonoBehaviour
                 Quaternion turnRotation = Quaternion.Euler(0f, turnAngle, 0f);
                 transform.rotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSmoothTime * Time.deltaTime);
             }
+
+            GetComponent<ThirdPersonAnimation>().ResetHeadLook();
+
             followCam.SetActive(true);
             aimCam.SetActive(false);
+
+            //瞄準結束後如果有在瞄準期間按下奔跑按鍵就在瞄準結束後再賦予奔跑的功能
+            if (wasRun)
+            {
+                isRun = wasRun;
+            }
         }
-
     }
-
-
     bool CheckIsGround()
     {
         if (Physics.CheckSphere(transform.position + Vector3.down * sphereDistance, sphereRadius, groundLayer))
@@ -153,11 +174,6 @@ public class ThirdPersonMove : MonoBehaviour
         {
             return false;
         }
-    }
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + Vector3.down * sphereDistance, sphereRadius);
     }
 
     public void OnMove(InputValue value) //新版Input System的移動按鍵偵測
@@ -177,9 +193,22 @@ public class ThirdPersonMove : MonoBehaviour
     public void OnRun(InputValue value)
     {
         isRun = !isRun;
+
+        //如果有奔跑的紀錄就直接重製    
+        if (wasRun)
+        {
+            wasRun = false;
+            isRun = false;
+        }
     }
     public void OnAim(InputValue value)
     {
         isAim = !isAim;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + Vector3.down * sphereDistance, sphereRadius);
     }
 }

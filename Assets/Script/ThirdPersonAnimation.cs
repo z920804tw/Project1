@@ -1,9 +1,15 @@
+using System;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class ThirdPersonAnimation : MonoBehaviour
 {
-    public Animator animator;
+    Animator animator;
+    GameObject mainCam;
+    public Rig headRig;
+    public GameObject lookPoint;
+
     [Header("移動動畫參數")]
     [SerializeField] float moveVelocity;
     [SerializeField] float acceleration;
@@ -12,12 +18,41 @@ public class ThirdPersonAnimation : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        mainCam = GameObject.FindWithTag("MainCamera");
+        headRig.weight = 0;
     }
-
-    // Update is called once per frame
     void Update()
     {
 
+    }
+    public void HeadLook()
+    {
+        headRig.weight = 1;
+        Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
+        RaycastHit hit;
+        Vector3 endPoint;
+        if (Physics.Raycast(ray, out hit, 10f))
+        {
+            endPoint = hit.point;
+        }
+        else
+        {
+            endPoint = mainCam.transform.position + mainCam.transform.forward * 10;
+        }
+        lookPoint.transform.position = endPoint;
+        Debug.DrawRay(mainCam.transform.position, endPoint - mainCam.transform.position, Color.red);
+    }
+
+    public void ResetHeadLook()
+    {
+        if (headRig.weight != 0)
+        {
+            headRig.weight -= 0.8f * Time.deltaTime;
+            if (headRig.weight < 0)
+            {
+                headRig.weight = 0;
+            }
+        }
     }
 
     public void MoveAnimState(Vector3 moveInput, bool isRun)
