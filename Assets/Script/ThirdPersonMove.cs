@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class ThirdPersonMove : MonoBehaviour
 {
     [Header("物件綁定")]
+    public GameObject aimHint;
     GameObject mainCam;
     CharacterController controller;
     [Header("移動參數設定")]
@@ -31,6 +32,7 @@ public class ThirdPersonMove : MonoBehaviour
     public GameObject followCam;
     public GameObject aimCam;
     [SerializeField] bool isAim;
+    public bool IsAim{get{ return isAim; }}
 
 
 
@@ -109,6 +111,7 @@ public class ThirdPersonMove : MonoBehaviour
             //切換瞄準攝影機
             followCam.SetActive(false);
             aimCam.SetActive(true);
+            aimHint.SetActive(true);
             //產生射線
             Ray ray = new Ray(aimCam.transform.position, aimCam.transform.forward);
             RaycastHit hit;
@@ -142,6 +145,7 @@ public class ThirdPersonMove : MonoBehaviour
         }
         else
         {
+            aimHint.SetActive(false);
             //一般移動模式
             if (inputDir != Vector3.zero)
             {
