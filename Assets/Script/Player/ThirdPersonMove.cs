@@ -9,6 +9,7 @@ public class ThirdPersonMove : MonoBehaviour
     public GameObject aimHint;
     GameObject mainCam;
     CharacterController controller;
+    [SerializeField] ThirdPersonAnimation anim;
     [Header("移動參數設定")]
     public float walkSpeed;
     [SerializeField] float runSpeed;
@@ -32,7 +33,7 @@ public class ThirdPersonMove : MonoBehaviour
     public GameObject followCam;
     public GameObject aimCam;
     [SerializeField] bool isAim;
-    public bool IsAim{get{ return isAim; }}
+    public bool IsAim { get { return isAim; } }
 
 
 
@@ -86,7 +87,7 @@ public class ThirdPersonMove : MonoBehaviour
             if (isAim) { speed = speed / 2; }
             moveDir = moveDir.normalized * speed;
         }
-        GetComponent<ThirdPersonAnimation>().MoveAnimState(inputDir, isRun);
+        anim.MoveAnimState(inputDir, isRun);
         controller.Move(moveDir * Time.deltaTime);
 
 
@@ -98,7 +99,7 @@ public class ThirdPersonMove : MonoBehaviour
         jumpVelecity.y = Mathf.Max(jumpVelecity.y, gravity);
         controller.Move(jumpVelecity * Time.deltaTime);
 
-        GetComponent<ThirdPersonAnimation>().JumpAnimState(isGround, wasGround);
+        anim.JumpAnimState(isGround, wasGround);
     }
 
 
@@ -132,7 +133,7 @@ public class ThirdPersonMove : MonoBehaviour
             Debug.DrawRay(aimCam.transform.position, lookDir, Color.red);
 
             //玩家頭轉向目標點
-            GetComponent<ThirdPersonAnimation>().HeadLook();
+            anim.HeadLook();
 
             //瞄準奔跑判定
             if (isRun)
@@ -156,7 +157,7 @@ public class ThirdPersonMove : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSmoothTime * Time.deltaTime);
             }
 
-            GetComponent<ThirdPersonAnimation>().ResetHeadLook();
+            anim.ResetHeadLook();
 
             followCam.SetActive(true);
             aimCam.SetActive(false);

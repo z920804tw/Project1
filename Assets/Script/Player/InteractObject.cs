@@ -1,56 +1,20 @@
-using System.Collections;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 public class InteractObject : MonoBehaviour
 {
-    [Header("組件套用")]
-    public SphereCollider triggerBox;
-    public BoxCollider boxCollider;
-    Rigidbody rb;
-    [Header("物件套用")]
-    public GameObject hint;
-    [Header("參數設定")]
-    public string itemName;
-    public bool canStack;
+    [SerializeField] GameObject hint;
+    public UnityEvent unityEvent;
 
-    [Header("互動設定")]
-    [SerializeField] bool canInteract;
-    [SerializeField] bool canPick;
-    public bool CanPick { get { return canPick; } }
-    GameObject player;
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
-    public void ShowCloseInfo(bool t)
+    public void ShowHint(bool t)
     {
         hint.SetActive(t);
     }
-
-    public void ColliderAndRig(bool t)
+    public void DoEvent()
     {
-        triggerBox.enabled = t;
-        rb.isKinematic = !t;
-    }
-
-    public void Throw(Vector3 dir)
-    {
-        ColliderAndRig(true);
-        Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
-        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
-        rb.AddForce(dir, ForceMode.Impulse);
-        StartCoroutine(WaitReset());
-    }
-
-    IEnumerator WaitReset()
-    {
-        yield return new WaitForSeconds(0.5f);
-        Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
-        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
+        Debug.Log("你執行了一個事件");
+        unityEvent.Invoke();
+        ShowHint(false);
     }
 
 }

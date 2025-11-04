@@ -4,14 +4,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerInventory : MonoBehaviour
 {
+    [Header("組件套用")]
+    [SerializeField] ThirdPersonMove thirdPersonMove;
+    [SerializeField] ThirdPersonAnimation anim;
     [Header("物品欄(手部))參數")]
     public List<GameObject> slots;
     [SerializeField] Transform rightHand;
     [SerializeField] int selectIndex;
     int pickAmount;
     public GameObject handObj;
-    [SerializeField] GameObject triggerObj;
-    ThirdPersonMove thirdPersonMove;
+    [SerializeField] PickObject pickObj;
+
     Vector3 placePos;
 
     bool canPick;
@@ -23,7 +26,6 @@ public class PlayerInventory : MonoBehaviour
     void Start()
     {
         mainCam = GameObject.FindWithTag("MainCamera");
-        thirdPersonMove = GetComponent<ThirdPersonMove>();
         selectIndex = 0;
         slots[selectIndex].GetComponent<PlayerInventorySlot>().selectImg.SetActive(true);
     }
@@ -55,13 +57,13 @@ public class PlayerInventory : MonoBehaviour
                     canPlace = false;
                     canThrow = true;
                 }
-                GetComponent<ThirdPersonAnimation>().ThrowAnim(true, false);
+                anim.ThrowAnim(true, false);
             }
             else if (!thirdPersonMove.IsAim)
             {
                 canPlace = false;
                 canThrow = false;
-                GetComponent<ThirdPersonAnimation>().ThrowAnim(false, false);
+                anim.ThrowAnim(false, false);
             }
         }
     }
@@ -75,9 +77,10 @@ public class PlayerInventory : MonoBehaviour
             if (i.GetComponent<PlayerInventorySlot>().isOccupy)
             {
                 //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (i.GetComponent<PlayerInventorySlot>().type == item.GetComponent<InteractObject>().itemName && item.GetComponent<InteractObject>().canStack)
+                if (i.GetComponent<PlayerInventorySlot>().type == item.GetComponent<PickObject>().itemName && item.GetComponent<PickObject>().canStack)
                 {
                     i.GetComponent<PlayerInventorySlot>().UpdateInfo(1);
+                    Destroy(i);
                     Debug.Log("找到物品欄中已有相同物件，數量+1");
                     return true;
                 }
@@ -116,22 +119,26 @@ public class PlayerInventory : MonoBehaviour
     // //按鍵偵測(撿取、放置、丟)
     public void OnPick(InputValue value)
     {
-        if (canPick && pickAmount < slots.Count)
+        if (canPick)
         {
-            triggerObj.transform.SetParent(rightHand);
-            triggerObj.transform.position = rightHand.transform.position;
-            triggerObj.GetComponent<InteractObject>().ColliderAndRig(false);
-            triggerObj.gameObject.GetComponent<InteractObject>().ShowCloseInfo(false);
-            AddItemToInventory(triggerObj);
+            if (pickAmount < slots.Count)
+            {
+                pickObj.transform.SetParent(rightHand);
+                pickObj.transform.position = rightHand.transform.position;
+                pickObj.ColliderAndRig(false);
+                pickObj.ShowCloseInfo(false);
+                AddItemToInventory(pickObj.gameObject);
 
-            pickAmount++;
+                pickAmount++;
 
-            triggerObj = null;
-            canPick = false;
-        }
-        if (pickAmount >= slots.Count)
-        {
-            Debug.Log("物品欄已滿無法撿取，請丟棄一項物品");    
+                pickObj = null;
+                canPick = false;
+            }
+            else
+            {
+                Debug.Log("物品欄已滿無法撿取，請丟棄一項物品");
+            }
+
         }
     }
 
@@ -141,10 +148,10 @@ public class PlayerInventory : MonoBehaviour
         {
             handObj.transform.SetParent(null);
             handObj.transform.position = placePos;
-            handObj.GetComponent<InteractObject>().ColliderAndRig(true);
+            handObj.GetComponent<PickObject>().ColliderAndRig(true);
             handObj = null;
 
-            GetComponent<ThirdPersonAnimation>().ThrowAnim(false, false);
+            anim.ThrowAnim(false, false);
             slots[selectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
             pickAmount--;
             canPlace = false;
@@ -156,10 +163,10 @@ public class PlayerInventory : MonoBehaviour
         if (canThrow)
         {
             handObj.transform.SetParent(null);
-            handObj.GetComponent<InteractObject>().Throw(mainCam.transform.forward * 10 + transform.up * 5f);
+            handObj.GetComponent<PickObject>().Throw(mainCam.transform.forward * 10 + transform.up * 5f);
             handObj = null;
             canThrow = false;
-            GetComponent<ThirdPersonAnimation>().ThrowAnim(true, true);
+            anim.ThrowAnim(true, true);
             //更新當前選取slot的資訊
             slots[selectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
             //扣除撿取上限
@@ -206,36 +213,35 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    //偵測可撿取物件
+    // //偵測可以撿取物件
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("InteractObject"))
+        if (other.CompareTag("PickObject"))
         {
-            bool canPickObj = other.GetComponent<InteractObject>().CanPick;
-            if (canPickObj && triggerObj == null)
+            if (other.GetComponent<PickObject>() != null && pickObj == null)
             {
-                canPick = true;
-                triggerObj = other.gameObject;
-                triggerObj.GetComponent<InteractObject>().ShowCloseInfo(true);
+                pickObj = other.gameObject.GetComponent<PickObject>();
+                pickObj.ShowCloseInfo(true);
+
+                if (pickObj.CanPick)
+                {
+                    canPick = true;
+                }
             }
-
         }
-
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("InteractObject"))
+        if (other.CompareTag("PickObject"))
         {
-            bool canPickObj = other.GetComponent<InteractObject>().CanPick;
-            if (canPickObj && triggerObj != null && triggerObj.name == other.gameObject.name)
+            if (pickObj != null && pickObj.name == other.name)
             {
+                pickObj.GetComponent<PickObject>().ShowCloseInfo(false);
+                pickObj = null;
+
                 canPick = false;
-                triggerObj.GetComponent<InteractObject>().ShowCloseInfo(false);
-                triggerObj = null;
 
             }
         }
     }
-
-
 }

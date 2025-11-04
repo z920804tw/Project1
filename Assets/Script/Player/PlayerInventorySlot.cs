@@ -47,8 +47,8 @@ public class PlayerInventorySlot : MonoBehaviour
     {
         isOccupy = true;
         slotObject = item;
-        type = item.GetComponent<InteractObject>().itemName;
-        canStack = item.GetComponent<InteractObject>().canStack;
+        type = item.GetComponent<PickObject>().itemName;
+        canStack = item.GetComponent<PickObject>().canStack;
         amount = 1;
         amountText.text = $"{amount}";
         imgText.text = $"{type}";

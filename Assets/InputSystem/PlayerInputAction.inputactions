@@ -79,6 +79,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "d78d339f-3be3-4fe6-9b11-afb4e9daf121",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Place",
                     "type": "Button",
                     "id": "94979542-d4b1-4f19-92d7-844b987f06d0",
@@ -379,6 +388,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Pick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "041bbd39-78e0-467d-9bfc-c6c5cc09918e",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
