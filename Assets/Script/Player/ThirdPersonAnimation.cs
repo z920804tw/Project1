@@ -1,14 +1,19 @@
 using System;
+using System.Collections;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class ThirdPersonAnimation : MonoBehaviour
 {
+    [Header("組件")]
     public Animator animator;
+    [SerializeField] Rig headRig;
+    [SerializeField] GameObject lookPoint;
     GameObject mainCam;
-    public Rig headRig;
-    public GameObject lookPoint;
+    [Header("一般參數設定")]
+    [SerializeField] LayerMask lookLayer;
 
     [Header("移動動畫參數")]
     [SerializeField] float moveVelocity;
@@ -30,7 +35,7 @@ public class ThirdPersonAnimation : MonoBehaviour
         Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
         RaycastHit hit;
         Vector3 endPoint;
-        if (Physics.Raycast(ray, out hit, 10f))
+        if (Physics.Raycast(ray, out hit, 10f, lookLayer))
         {
             endPoint = hit.point;
         }

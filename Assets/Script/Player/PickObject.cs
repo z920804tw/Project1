@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 
-public class PickObject : MonoBehaviour
+public class PickObject : MonoBehaviour, IInteractable
 {
     [Header("組件套用")]
     public SphereCollider triggerBox;
@@ -24,11 +24,34 @@ public class PickObject : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
-    public void ShowCloseInfo(bool t)
+    //-------IInteractable--------//
+    public void Interact()
+    {
+        CollectToInventory();
+        ShowHint(false);
+    }
+    public void ShowHint(bool t)
     {
         hint.SetActive(t);
     }
+    //-------IInteractable--------//
 
+    //新增進物品欄
+    void CollectToInventory()
+    {
+        PlayerInventory playerInventory = GameObject.FindWithTag("Player").GetComponent<PlayerInventory>();
+        if (playerInventory != null)
+        {
+            if (playerInventory.SlotAmount < playerInventory.slots.Count)
+            {
+                playerInventory.AddItemToInventory(this.gameObject);
+            }
+            else
+            {
+                Debug.Log("物品欄已滿");
+            }
+        }
+    }
     public void ColliderAndRig(bool t)
     {
         triggerBox.enabled = t;
