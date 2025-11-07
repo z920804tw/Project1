@@ -1,7 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class VehicleController : MonoBehaviour
 {
+    public PlayerInputAction vehicleInput;
     [Header("車體參數設定")]
     public float maxMotorTorque = 1500f;   // 最大驅動扭力
     public float maxSteeringAngle = 30f;   // 最大轉向角度
@@ -11,11 +14,6 @@ public class VehicleController : MonoBehaviour
     [SerializeField] float breakForce;
     [SerializeField] float slopeTorqueBoost = 1.5f; // 在爬坡時增加多少倍扭力
     [SerializeField] float slopeAngleThreshold = 5f; // 超過多少度視為坡道
-
-    [Header("Debug")]
-    [SerializeField] float leftTorque;
-    [SerializeField] float rightTorque;
-
 
 
     [Header("輪子 Collider")]
@@ -28,32 +26,51 @@ public class VehicleController : MonoBehaviour
     public Transform frontWheelMesh;
     public Transform[] leftWheelsTransform;
     public Transform[] rightWheelsTransform;
+    Vector2 currentInput;
+    Vector2 smoothInputVelocity;
+    [Header("Debug")]
+    [SerializeField] float leftTorque;
+    [SerializeField] float rightTorque;
 
-    private float verticalInput;
-    private float horizontalInput;
+    [SerializeField] float hInputValue;
+    [SerializeField] float vInputValue;
+    [SerializeField] float smoothInputSpeed;
     [SerializeField] float rotateValue;
     Rigidbody rb;
-
+    void Awake()
+    {
+        vehicleInput = new PlayerInputAction();
+    }
+    void OnEnable()
+    {
+        vehicleInput.Enable();
+    }
+    void ODisable()
+    {
+        vehicleInput.Disable();
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
+
+        vInputValue = 0;
+        hInputValue = 0;
     }
+
+
     void Update()
     {
         // 接收輸入
-        verticalInput = Input.GetAxis("Vertical");   // W/S 或 ↑/↓
-        horizontalInput = Input.GetAxis("Horizontal"); // A/D 或 ←/→
-
+        VehicleInput();
 
 
     }
 
     void FixedUpdate()
     {
-
         // 設定轉向
-        float steering = maxSteeringAngle * horizontalInput;
+        float steering = maxSteeringAngle * hInputValue;
         frontWheel.steerAngle = steering;
         leftWheels[0].steerAngle = steering;
         rightWheels[0].steerAngle = steering;
@@ -69,6 +86,31 @@ public class VehicleController : MonoBehaviour
         BreakVehicle();
         LimitSpeed();
 
+
+    }
+    void VehicleInput()
+    {
+        currentInput = Vector2.SmoothDamp(currentInput, vehicleInput.Vehicle.Move.ReadValue<Vector2>(), ref smoothInputVelocity, smoothInputSpeed);
+        Vector3 move = new Vector3(currentInput.x, 0, currentInput.y);
+        hInputValue = Number(move.x);
+        vInputValue = Number(move.z);
+    }
+
+    float Number(float value)
+    {
+        if (value > 0.95f)
+        {
+            value = 1;
+        }
+        else if (value < -0.95)
+        {
+            value = -1;
+        }
+        else if (value < 0.1f && value > -0.1f)
+        {
+            value = 0;
+        }
+        return value;
     }
 
     void HandleMotor()
@@ -85,8 +127,8 @@ public class VehicleController : MonoBehaviour
             accelerationMultiplier = 0.8f;
         }
         // 設定驅動扭力
-        float currentAcceleration = accelerationMultiplier * maxMotorTorque * verticalInput;
-        float turnFactor = horizontalInput * maxMotorTurn; // 0.3 表示最大增加/減少 30% 扭力  
+        float currentAcceleration = accelerationMultiplier * maxMotorTorque * vInputValue;
+        float turnFactor = hInputValue * maxMotorTurn; // 0.3 表示最大增加/減少 30% 扭力  
 
         leftTorque = currentAcceleration * (1 + turnFactor);
         rightTorque = currentAcceleration * (1 - turnFactor);
@@ -118,7 +160,7 @@ public class VehicleController : MonoBehaviour
         }
         else
         {
-            if (verticalInput == 0)
+            if (vInputValue == 0)
             {
                 currentBreakForce = 200;
             }
@@ -157,10 +199,7 @@ public class VehicleController : MonoBehaviour
                 Vector3 limitSpeed = currentSpeed.normalized * backwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
-
         }
-
-        // Debug.Log("Speed:" + rb.linearVelocity.magnitude);
     }
 
     void UpdateTurnWheelPose(Transform mesh, float rotationValue)
@@ -184,7 +223,6 @@ public class VehicleController : MonoBehaviour
         {
             mesh.rotation = quat;
         }
-
     }
 }
 
