@@ -902,6 +902,7 @@ GameObject:
   - component: {fileID: 240378008}
   - component: {fileID: 240378007}
   - component: {fileID: 240378006}
+  - component: {fileID: 240378011}
   - component: {fileID: 240378005}
   m_Layer: 0
   m_Name: Cube
@@ -925,7 +926,34 @@ MonoBehaviour:
   hint: {fileID: 232185156}
   unityEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 240378011}
+        m_TargetAssemblyTypeName: test1, Assembly-CSharp
+        m_MethodName: GetTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  unityEvent1:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 240378011}
+        m_TargetAssemblyTypeName: test1, Assembly-CSharp
+        m_MethodName: Debug1
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!135 &240378006
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1040,6 +1068,18 @@ Transform:
   - {fileID: 232185160}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &240378011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240378004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0c86854cb1414747b9ce0ddc37ee026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::test1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0

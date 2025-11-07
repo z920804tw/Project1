@@ -101,7 +101,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            currentTarget.GetComponent<IInteractable>().Interact();
+            currentTarget.GetComponent<IInteractable>().Interact(this.gameObject);
             currentTarget = null;
         }
     }

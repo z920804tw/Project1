@@ -25,8 +25,9 @@ public class PickObject : MonoBehaviour, IInteractable
         rb = GetComponent<Rigidbody>();
     }
     //-------IInteractable--------//
-    public void Interact()
+    public void Interact(GameObject target)
     {
+        Debug.Log("你執行了一個事件" + "，觸發者:" + target.name);
         CollectToInventory();
         ShowHint(false);
     }

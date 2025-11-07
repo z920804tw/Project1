@@ -32,9 +32,10 @@ public class VehicleController : MonoBehaviour
     [SerializeField] float leftTorque;
     [SerializeField] float rightTorque;
 
-    [SerializeField] float hInputValue;
-    [SerializeField] float vInputValue;
+    [SerializeField] float horizontalInput;
+    [SerializeField] float verticalInput;
     [SerializeField] float smoothInputSpeed;
+
     [SerializeField] float rotateValue;
     Rigidbody rb;
     void Awake()
@@ -54,8 +55,8 @@ public class VehicleController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
 
-        vInputValue = 0;
-        hInputValue = 0;
+        horizontalInput = 0;
+        verticalInput = 0;
     }
 
 
@@ -63,14 +64,12 @@ public class VehicleController : MonoBehaviour
     {
         // 接收輸入
         VehicleInput();
-
-
     }
 
     void FixedUpdate()
     {
         // 設定轉向
-        float steering = maxSteeringAngle * hInputValue;
+        float steering = maxSteeringAngle * horizontalInput;
         frontWheel.steerAngle = steering;
         leftWheels[0].steerAngle = steering;
         rightWheels[0].steerAngle = steering;
@@ -92,21 +91,21 @@ public class VehicleController : MonoBehaviour
     {
         currentInput = Vector2.SmoothDamp(currentInput, vehicleInput.Vehicle.Move.ReadValue<Vector2>(), ref smoothInputVelocity, smoothInputSpeed);
         Vector3 move = new Vector3(currentInput.x, 0, currentInput.y);
-        hInputValue = Number(move.x);
-        vInputValue = Number(move.z);
+        horizontalInput = Number(move.x);
+        verticalInput = Number(move.z);
     }
 
     float Number(float value)
     {
-        if (value > 0.95f)
+        if (value > 0.997f)
         {
             value = 1;
         }
-        else if (value < -0.95)
+        else if (value < -0.997)
         {
             value = -1;
         }
-        else if (value < 0.1f && value > -0.1f)
+        else if (value < 0.001f && value > -0.001f)
         {
             value = 0;
         }
@@ -127,8 +126,8 @@ public class VehicleController : MonoBehaviour
             accelerationMultiplier = 0.8f;
         }
         // 設定驅動扭力
-        float currentAcceleration = accelerationMultiplier * maxMotorTorque * vInputValue;
-        float turnFactor = hInputValue * maxMotorTurn; // 0.3 表示最大增加/減少 30% 扭力  
+        float currentAcceleration = accelerationMultiplier * maxMotorTorque * verticalInput;
+        float turnFactor = horizontalInput * maxMotorTurn; // 0.3 表示最大增加/減少 30% 扭力  
 
         leftTorque = currentAcceleration * (1 + turnFactor);
         rightTorque = currentAcceleration * (1 - turnFactor);
@@ -154,13 +153,14 @@ public class VehicleController : MonoBehaviour
     void BreakVehicle()
     {
         float currentBreakForce = 0;
+        float verticalInputValue = vehicleInput.Vehicle.Move.ReadValue<Vector2>().y;
         if (Input.GetKey(KeyCode.Space))
         {
             currentBreakForce = breakForce;
         }
         else
         {
-            if (vInputValue == 0)
+            if (verticalInputValue == 0)
             {
                 currentBreakForce = 200;
             }
