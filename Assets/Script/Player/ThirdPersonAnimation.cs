@@ -17,6 +17,7 @@ public class ThirdPersonAnimation : MonoBehaviour
 
     [Header("移動動畫參數")]
     [SerializeField] float moveVelocity;
+    public float MoveVelocity{get{ return moveVelocity; } set{ moveVelocity = value; } }
     [SerializeField] float acceleration;
     [SerializeField] float deceleration;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -553,6 +553,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Leave"",
+                    ""type"": ""Button"",
+                    ""id"": ""6515bba3-e276-4d4b-8393-240f0f6fb085"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -729,6 +738,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Joystick"",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9679dc16-7c83-415f-87b7-f9d75c78c1b6"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Leave"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1333,6 +1353,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Vehicle_Move = m_Vehicle.FindAction("Move", throwIfNotFound: true);
         m_Vehicle_Zoom = m_Vehicle.FindAction("Zoom", throwIfNotFound: true);
         m_Vehicle_Look = m_Vehicle.FindAction("Look", throwIfNotFound: true);
+        m_Vehicle_Leave = m_Vehicle.FindAction("Leave", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1647,6 +1668,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Vehicle_Move;
     private readonly InputAction m_Vehicle_Zoom;
     private readonly InputAction m_Vehicle_Look;
+    private readonly InputAction m_Vehicle_Leave;
     /// <summary>
     /// Provides access to input actions defined in input action map "Vehicle".
     /// </summary>
@@ -1670,6 +1692,10 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Vehicle/Look".
         /// </summary>
         public InputAction @Look => m_Wrapper.m_Vehicle_Look;
+        /// <summary>
+        /// Provides access to the underlying input action "Vehicle/Leave".
+        /// </summary>
+        public InputAction @Leave => m_Wrapper.m_Vehicle_Leave;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1705,6 +1731,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Leave.started += instance.OnLeave;
+            @Leave.performed += instance.OnLeave;
+            @Leave.canceled += instance.OnLeave;
         }
 
         /// <summary>
@@ -1725,6 +1754,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Leave.started -= instance.OnLeave;
+            @Leave.performed -= instance.OnLeave;
+            @Leave.canceled -= instance.OnLeave;
         }
 
         /// <summary>
@@ -2138,6 +2170,13 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Leave" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeave(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

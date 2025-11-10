@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+    using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,17 +26,19 @@ public class VehicleController : MonoBehaviour
     public Transform frontWheelMesh;
     public Transform[] leftWheelsTransform;
     public Transform[] rightWheelsTransform;
-    Vector2 currentInput;
-    Vector2 smoothInputVelocity;
     [Header("Debug")]
     [SerializeField] float leftTorque;
     [SerializeField] float rightTorque;
-
-    [SerializeField] float horizontalInput;
-    [SerializeField] float verticalInput;
     [SerializeField] float smoothInputSpeed;
+    [SerializeField] float currentSpeed;
+    public float CurrentSpeed{get{ return currentSpeed; }}
+    float horizontalInput;
+    float verticalInput;
 
-    [SerializeField] float rotateValue;
+    Vector2 currentInput;
+    Vector2 smoothInputVelocity;
+
+    float rotateValue;
     Rigidbody rb;
     void Awake()
     {
@@ -162,7 +164,7 @@ public class VehicleController : MonoBehaviour
         {
             if (verticalInputValue == 0)
             {
-                currentBreakForce = 200;
+                currentBreakForce = 300;
             }
             else
             {
@@ -181,25 +183,27 @@ public class VehicleController : MonoBehaviour
 
     void LimitSpeed()
     {
-        Vector3 currentSpeed = rb.linearVelocity;
+        Vector3 speed = rb.linearVelocity;
+        Vector3 limitSpeed;
         if (leftTorque > 0 && rightTorque > 0)
         {
             //前進
-            if (currentSpeed.magnitude > forwardMaxSpeed)
+            if (speed.magnitude > forwardMaxSpeed)
             {
-                Vector3 limitSpeed = currentSpeed.normalized * forwardMaxSpeed;
+                limitSpeed = speed.normalized * forwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
         }
         else if (leftTorque < 0 && rightTorque < 0)
         {
             //後退
-            if (currentSpeed.magnitude > backwardMaxSpeed)
+            if (speed.magnitude > backwardMaxSpeed)
             {
-                Vector3 limitSpeed = currentSpeed.normalized * backwardMaxSpeed;
+                limitSpeed = speed.normalized * backwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
         }
+        currentSpeed = rb.linearVelocity.magnitude * 5f;
     }
 
     void UpdateTurnWheelPose(Transform mesh, float rotationValue)

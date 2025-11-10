@@ -99,7 +99,7 @@ public class PlayerInteract : MonoBehaviour
     }
     void OnInteract(InputValue value)
     {
-        if (currentTarget != null)
+        if (currentTarget != null && !thirdPersonMove.IsAim)
         {
             currentTarget.GetComponent<IInteractable>().Interact(this.gameObject);
             currentTarget = null;
