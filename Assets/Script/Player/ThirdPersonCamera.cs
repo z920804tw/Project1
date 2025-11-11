@@ -16,6 +16,8 @@ public class ThirdPersonCamera : MonoBehaviour
 
     float cinemachineTargetYaw;
     float cinemachineTargetPitch;
+    public float CinemachineTargetYaw { set { cinemachineTargetYaw = value; } }
+    public float CinemachineTargetPitch{set{ cinemachineTargetPitch = value; }}
     float zoomValue;
     Vector2 look;
     CinemachineBrain cinemachineBrain;

@@ -17,7 +17,7 @@ public class ThirdPersonAnimation : MonoBehaviour
 
     [Header("移動動畫參數")]
     [SerializeField] float moveVelocity;
-    public float MoveVelocity{get{ return moveVelocity; } set{ moveVelocity = value; } }
+    public float MoveVelocity { get { return moveVelocity; } set { moveVelocity = value; } }
     [SerializeField] float acceleration;
     [SerializeField] float deceleration;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -58,6 +58,10 @@ public class ThirdPersonAnimation : MonoBehaviour
                 headRig.weight = 0;
             }
         }
+    }
+    public void GetOnVehicle(bool t)
+    {
+        animator.SetBool("isSit", t);
     }
 
     public void MoveAnimState(Vector3 moveInput, bool isRun)
@@ -119,19 +123,40 @@ public class ThirdPersonAnimation : MonoBehaviour
 
     public void ThrowAnim(bool isAim, bool isThrow)
     {
+        StopCoroutine("AnimLayerDelay");
         if (isAim)
         {
             animator.SetBool("aimThrow", true);
-            if (isThrow)
-            {
-                animator.SetTrigger("isThrow");
-                animator.SetBool("aimThrow", false);
-            }
+            StartCoroutine(AnimLayerDelay(1, 0, 1, 1f));
         }
         else
         {
             animator.SetBool("aimThrow", false);
+            StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
         }
+
+        if (isThrow)
+        {
+            animator.SetTrigger("isThrow");
+            StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
+        }
+    }
+    
+
+    //負責開關Layer的權重延遲
+    IEnumerator AnimLayerDelay(int layer, float start, float end, float duration)
+    {
+        float timer = 0;
+        while(timer < duration)
+        {
+            timer += Time.deltaTime;
+            float currentValue = Mathf.Lerp(start, end, timer / duration);
+            animator.SetLayerWeight(layer, currentValue);
+            Debug.Log(currentValue);
+            yield return null;
+        }
+
+        animator.SetLayerWeight(layer, end);
     }
 
 }

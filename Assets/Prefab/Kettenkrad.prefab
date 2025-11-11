@@ -1313,7 +1313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VehicleController
   maxMotorTorque: 200
-  maxSteeringAngle: 45
+  maxSteeringAngle: 30
   forwardMaxSpeed: 6
   backwardMaxSpeed: 2
   maxMotorTurn: 0.3
@@ -1386,8 +1386,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VehicleSetting
   vehicleInput: {fileID: 7128846708545507348}
-  vehicleController: {fileID: 8677135561993120950}
-  thirdPersonCamera: {fileID: 3362281824235556453}
   vehicleCamera: {fileID: 0}
   interactPos: {fileID: 5897972718581513291}
   exitPos: {fileID: 6604757267710238475}
@@ -3871,7 +3869,7 @@ GameObject:
   - component: {fileID: 4155793752914995338}
   - component: {fileID: 6427068035968213542}
   - component: {fileID: 1267834523497284888}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4144,7 +4142,7 @@ Transform:
   m_GameObject: {fileID: 6217699788726905350}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.664, z: 0.7119999}
+  m_LocalPosition: {x: 0, y: -0.55, z: 0.653}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

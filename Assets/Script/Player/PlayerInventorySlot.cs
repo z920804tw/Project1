@@ -38,6 +38,7 @@ public class PlayerInventorySlot : MonoBehaviour
         {
             amountText.text = $"{0}";
             imgText.text = $"";
+            type = $"";
             slotObject = null;
             isOccupy = false;
         }

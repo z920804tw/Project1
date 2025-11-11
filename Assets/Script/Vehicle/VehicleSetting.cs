@@ -6,8 +6,8 @@ public class VehicleSetting : MonoBehaviour
 {
     [Header("組件設定")]
     [SerializeField] PlayerInput vehicleInput;
-    [SerializeField] VehicleController vehicleController;
-    [SerializeField] ThirdPersonCamera thirdPersonCamera;
+    VehicleController vehicleController;
+    ThirdPersonCamera thirdPersonCamera;
     [SerializeField] GameObject vehicleCamera;
     [SerializeField] Transform interactPos;
     [SerializeField] Transform exitPos;
@@ -18,7 +18,8 @@ public class VehicleSetting : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        vehicleController = GetComponent<VehicleController>();
+        thirdPersonCamera = GetComponent<ThirdPersonCamera>();
     }
 
     // Update is called once per frame
@@ -33,6 +34,7 @@ public class VehicleSetting : MonoBehaviour
             //上車動作
             //先將玩家相關設定關閉
             target.GetComponent<PlayerStatus>().SetStatus(Status.InVehicle);
+            target.GetComponent<PlayerStatus>().anim.GetOnVehicle(true);
 
             target.transform.SetParent(setPos);
             target.transform.position = setPos.position;
@@ -44,6 +46,8 @@ public class VehicleSetting : MonoBehaviour
             vehicleInput.enabled = true;
             vehicleController.enabled = true;
             thirdPersonCamera.enabled = true;
+            thirdPersonCamera.CinemachineTargetYaw = 0;
+            thirdPersonCamera.CinemachineTargetPitch = 20;
             vehicleCamera.SetActive(true);
             interactPos.gameObject.SetActive(false);
             isOccupy = true;
@@ -61,12 +65,14 @@ public class VehicleSetting : MonoBehaviour
             vehicleCamera.SetActive(false);
             interactPos.gameObject.SetActive(true);
 
+
             //將玩家相關設定關閉
             target.transform.SetParent(null);
             target.transform.position = exitPos.position;
             target.transform.rotation = exitPos.rotation;
 
             target.GetComponent<PlayerStatus>().SetStatus(Status.Normal);
+            target.GetComponent<PlayerStatus>().anim.GetOnVehicle(false);
 
 
             isOccupy = false;

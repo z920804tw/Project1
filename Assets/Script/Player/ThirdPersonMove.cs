@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 public class ThirdPersonMove : MonoBehaviour
 {
+    public PlayerInput playerInput;
     [Header("物件綁定")]
     public GameObject aimHint;
     GameObject mainCam;
-    CharacterController controller;
+    [SerializeField] CharacterController controller;
     [SerializeField] ThirdPersonAnimation anim;
     [Header("移動參數設定")]
     public float walkSpeed;
@@ -45,8 +46,6 @@ public class ThirdPersonMove : MonoBehaviour
         {
             mainCam = GameObject.FindWithTag("MainCamera");
         }
-        // animator = GetComponent<Animator>();
-        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -59,7 +58,6 @@ public class ThirdPersonMove : MonoBehaviour
         TurnFace();
 
         wasGround = isGround;
-
     }
     //移動方法
     void Move()
@@ -129,7 +127,7 @@ public class ThirdPersonMove : MonoBehaviour
             Vector3 lookDir = endPoint - aimCam.transform.position;
             lookDir.y = 0;
             Quaternion rotation = Quaternion.LookRotation(lookDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSmoothTime * Time.deltaTime);
+            transform.root.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSmoothTime * Time.deltaTime);
             Debug.DrawRay(aimCam.transform.position, lookDir, Color.red);
 
             //玩家頭轉向目標點
@@ -154,7 +152,7 @@ public class ThirdPersonMove : MonoBehaviour
                 float turnAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + mainCam.transform.eulerAngles.y;
                 //角色旋轉和平滑
                 Quaternion turnRotation = Quaternion.Euler(0f, turnAngle, 0f);
-                transform.rotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSmoothTime * Time.deltaTime);
+                transform.root.rotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSmoothTime * Time.deltaTime);
             }
 
             anim.ResetHeadLook();
@@ -181,21 +179,23 @@ public class ThirdPersonMove : MonoBehaviour
         }
     }
 
-    public void OnMove(InputValue value) //新版Input System的移動按鍵偵測
+    //------會從父物件接收值------//
+    //移動向量轉換
+    public void OnMove(Vector2 value)
     {
-        moveInput = value.Get<Vector2>();
+        moveInput = value;
 
         //將輸入方向轉成世界向量
         inputDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
     }
 
-    public void OnJump(InputValue value)
+    public void OnJump()
     {
         if (!isGround) return;
         float jumpValue = Mathf.Sqrt(-2f * gravity * jumpHeight);
         jumpVelecity = new Vector3(0, jumpValue, 0);
     }
-    public void OnRun(InputValue value)
+    public void OnRun()
     {
         isRun = !isRun;
 
@@ -206,11 +206,11 @@ public class ThirdPersonMove : MonoBehaviour
             isRun = false;
         }
     }
-    public void OnAim(InputValue value)
+    public void OnAim()
     {
         isAim = !isAim;
     }
-
+    //------會從父物件接收值------//
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

@@ -28,7 +28,7 @@ public class PickObject : MonoBehaviour, IInteractable
     public void Interact(GameObject target)
     {
         Debug.Log("你執行了一個事件" + "，觸發者:" + target.name);
-        CollectToInventory();
+        CollectToInventory(target);
         ShowHint(false);
     }
     public void ShowHint(bool t)
@@ -38,9 +38,9 @@ public class PickObject : MonoBehaviour, IInteractable
     //-------IInteractable--------//
 
     //新增進物品欄
-    void CollectToInventory()
+    void CollectToInventory(GameObject target)
     {
-        PlayerInventory playerInventory = GameObject.FindWithTag("Player").GetComponent<PlayerInventory>();
+        PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
         if (playerInventory != null)
         {
             if (playerInventory.SlotAmount < playerInventory.slots.Count)

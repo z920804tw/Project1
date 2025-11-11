@@ -6,19 +6,19 @@ public class PlayerInteract : MonoBehaviour
     [Header("組件")]
     [SerializeField] ThirdPersonMove thirdPersonMove;
     [SerializeField] ThirdPersonAnimation anim;
-    PlayerInventory playerInventory;
-    GameObject mainCam;
+    [SerializeField] PlayerInventory playerInventory;
     [SerializeField] GameObject currentTarget;
+    GameObject mainCam;
     Vector3 placePos;
 
     [Header("Debug")]
     [SerializeField] bool canPlace;
     [SerializeField] bool canThrow;
+    bool hasUesAnim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mainCam = GameObject.FindWithTag("MainCamera");
-        playerInventory = GameObject.FindWithTag("Player").GetComponent<PlayerInventory>();
     }
 
     // Update is called once per frame
@@ -48,18 +48,26 @@ public class PlayerInteract : MonoBehaviour
                     canPlace = false;
                     canThrow = true;
                 }
-                anim.ThrowAnim(true, false);
+                if (!hasUesAnim)
+                {
+                    hasUesAnim = true;
+                    anim.ThrowAnim(true, false);
+                }
             }
             else
             {
                 canPlace = false;
                 canThrow = false;
-                anim.ThrowAnim(false, false);
+                if (hasUesAnim)
+                {
+                    hasUesAnim = false;
+                    anim.ThrowAnim(false, false);
+                }
             }
         }
     }
     //--------按鍵偵測----------//
-    public void OnThrow(InputValue value)
+    public void OnThrow()
     {
         if (canThrow)
         {
@@ -79,7 +87,7 @@ public class PlayerInteract : MonoBehaviour
             canThrow = false;
         }
     }
-    public void OnPlace(InputValue value)
+    public void OnPlace()
     {
         if (canPlace)
         {
@@ -97,11 +105,11 @@ public class PlayerInteract : MonoBehaviour
             canPlace = false;
         }
     }
-    void OnInteract(InputValue value)
+    public void OnInteract()
     {
         if (currentTarget != null && !thirdPersonMove.IsAim)
         {
-            currentTarget.GetComponent<IInteractable>().Interact(this.gameObject);
+            currentTarget.GetComponent<IInteractable>().Interact(transform.root.gameObject);
             currentTarget = null;
         }
     }

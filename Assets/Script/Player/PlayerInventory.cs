@@ -70,7 +70,7 @@ public class PlayerInventory : MonoBehaviour
             }
         }
     }
-    public void OnSelect(InputValue value)
+    public void OnSelect(float value)
     {
         if (!thirdPersonMove.IsAim)
         {
@@ -87,7 +87,7 @@ public class PlayerInventory : MonoBehaviour
                 }
             }
             //取得滾輪數值，並賦予給selectIndex
-            int value1 = (int)value.Get<float>();
+            int value1 = (int)value;
             selectIndex += value1;
             if (selectIndex > 2)
             {
