@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,19 +7,22 @@ public class VehicleSetting : MonoBehaviour
 {
     [Header("組件設定")]
     [SerializeField] PlayerInput vehicleInput;
-    VehicleController vehicleController;
+    [SerializeField] VehicleAudio vehicleAudio;
+    [SerializeField] VehicleController vehicleController;
+    [SerializeField] VehicleUI vehicleUI;
     ThirdPersonCamera thirdPersonCamera;
+    [Header("元件套用")]
     [SerializeField] GameObject vehicleCamera;
     [SerializeField] Transform interactPos;
     [SerializeField] Transform exitPos;
     [SerializeField] Transform setPos;
     [Header("DeBug")]
     [SerializeField] GameObject Target;
+    [SerializeField] float delayTime;
     public bool isOccupy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        vehicleController = GetComponent<VehicleController>();
         thirdPersonCamera = GetComponent<ThirdPersonCamera>();
     }
 
@@ -43,17 +47,19 @@ public class VehicleSetting : MonoBehaviour
 
             //將載具功能打開
 
+            StartCoroutine(DelayVehicleStart(delayTime));
             vehicleInput.enabled = true;
-            vehicleController.enabled = true;
+
             thirdPersonCamera.enabled = true;
             thirdPersonCamera.CinemachineTargetYaw = 0;
             thirdPersonCamera.CinemachineTargetPitch = 20;
             vehicleCamera.SetActive(true);
+
+            vehicleUI.ShowUI(true);
             interactPos.gameObject.SetActive(false);
-            isOccupy = true;
+
+            vehicleAudio.StartEngine(delayTime);
             Target = target;
-
-
         }
         else
         {
@@ -63,8 +69,11 @@ public class VehicleSetting : MonoBehaviour
             vehicleController.enabled = false;
             thirdPersonCamera.enabled = false;
             vehicleCamera.SetActive(false);
-            interactPos.gameObject.SetActive(true);
+            vehicleUI.ShowUI(false);
 
+            StartCoroutine(DelayVehicleOff(delayTime));
+
+            vehicleAudio.OffEngine();
 
             //將玩家相關設定關閉
             target.transform.SetParent(null);
@@ -79,7 +88,6 @@ public class VehicleSetting : MonoBehaviour
             Target = null;
         }
     }
-
 
     void OnLeave(InputValue value)
     {
@@ -102,5 +110,20 @@ public class VehicleSetting : MonoBehaviour
         {
             GetComponent<Rigidbody>().isKinematic = false;
         }
+    }
+
+    IEnumerator DelayVehicleStart(float value)
+    {
+        yield return new WaitForSeconds(value);
+        vehicleController.enabled = true;
+        isOccupy = true;
+    }
+    IEnumerator DelayVehicleOff(float value)
+    {
+        GetComponent<Rigidbody>().isKinematic = true;
+        yield return new WaitForSeconds(value);
+        GetComponent<Rigidbody>().isKinematic = false;
+        interactPos.gameObject.SetActive(true);
+        isOccupy = false;
     }
 }

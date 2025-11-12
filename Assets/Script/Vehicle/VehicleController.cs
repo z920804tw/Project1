@@ -1,10 +1,12 @@
-    using Unity.VisualScripting;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class VehicleController : MonoBehaviour
 {
     public PlayerInputAction vehicleInput;
+    [SerializeField] Rigidbody rb;
     [Header("車體參數設定")]
     public float maxMotorTorque = 1500f;   // 最大驅動扭力
     public float maxSteeringAngle = 30f;   // 最大轉向角度
@@ -31,15 +33,15 @@ public class VehicleController : MonoBehaviour
     [SerializeField] float rightTorque;
     [SerializeField] float smoothInputSpeed;
     [SerializeField] float currentSpeed;
-    public float CurrentSpeed{get{ return currentSpeed; }}
+    public float CurrentSpeed { get { return currentSpeed; } }
     float horizontalInput;
     float verticalInput;
-
-    Vector2 currentInput;
+    [SerializeField] Vector2 currentInput;
+    public Vector2 CurrentInput { get { return currentInput; } }
     Vector2 smoothInputVelocity;
 
     float rotateValue;
-    Rigidbody rb;
+
     void Awake()
     {
         vehicleInput = new PlayerInputAction();
@@ -54,7 +56,6 @@ public class VehicleController : MonoBehaviour
     }
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
 
         horizontalInput = 0;
@@ -92,9 +93,14 @@ public class VehicleController : MonoBehaviour
     void VehicleInput()
     {
         currentInput = Vector2.SmoothDamp(currentInput, vehicleInput.Vehicle.Move.ReadValue<Vector2>(), ref smoothInputVelocity, smoothInputSpeed);
+
+        currentInput.x = Number(currentInput.x);
+        currentInput.y = Number(currentInput.y);
+
+
         Vector3 move = new Vector3(currentInput.x, 0, currentInput.y);
-        horizontalInput = Number(move.x);
-        verticalInput = Number(move.z);
+        horizontalInput = move.x;
+        verticalInput = move.z;
     }
 
     float Number(float value)
@@ -147,15 +153,13 @@ public class VehicleController : MonoBehaviour
             rightWheels[i].motorTorque = leftTorque;
             UpdateWheelPose(rightWheels[i], rightWheelsTransform[i]);
         }
-        // UpdateWheelPose(frontWheel, frontWheelMesh);
-
-
     }
 
     void BreakVehicle()
     {
         float currentBreakForce = 0;
         float verticalInputValue = vehicleInput.Vehicle.Move.ReadValue<Vector2>().y;
+        float pitch = Mathf.Abs(Vector3.SignedAngle(Vector3.up, transform.up, transform.right));
         if (Input.GetKey(KeyCode.Space))
         {
             currentBreakForce = breakForce;
@@ -164,7 +168,15 @@ public class VehicleController : MonoBehaviour
         {
             if (verticalInputValue == 0)
             {
-                currentBreakForce = 300;
+
+                if (pitch > slopeAngleThreshold)
+                {
+                    currentBreakForce = 1000;
+                }
+                else
+                {
+                    currentBreakForce = 300;
+                }
             }
             else
             {
@@ -204,6 +216,11 @@ public class VehicleController : MonoBehaviour
             }
         }
         currentSpeed = rb.linearVelocity.magnitude * 5f;
+        if (currentSpeed < 0.01f)
+        {
+            currentSpeed = 0;
+        }
+
     }
 
     void UpdateTurnWheelPose(Transform mesh, float rotationValue)

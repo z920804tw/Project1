@@ -152,7 +152,6 @@ public class ThirdPersonAnimation : MonoBehaviour
             timer += Time.deltaTime;
             float currentValue = Mathf.Lerp(start, end, timer / duration);
             animator.SetLayerWeight(layer, currentValue);
-            Debug.Log(currentValue);
             yield return null;
         }
 

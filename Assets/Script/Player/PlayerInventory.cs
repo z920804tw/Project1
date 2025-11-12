@@ -6,12 +6,14 @@ public class PlayerInventory : MonoBehaviour
 {
     [Header("組件套用")]
     [SerializeField] ThirdPersonMove thirdPersonMove;
+    [SerializeField] GameObject buttonInventoryUI;
+    public GameObject ButtonInventoryUI{get{ return buttonInventoryUI; }}
     [Header("物品欄(手部))參數")]
     public List<GameObject> slots;
     [SerializeField] int selectIndex;
-    public int SelectIndex{get{ return selectIndex; }}
-    [SerializeField] int slotAmount;
-    public int SlotAmount { get { return slotAmount; }set{ slotAmount += value; } }
+    public int SelectIndex { get { return selectIndex; } }
+    int slotAmount;
+    public int SlotAmount { get { return slotAmount; } set { slotAmount += value; } }
     public GameObject handObj;
     [SerializeField] Transform handTransform;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -106,6 +108,11 @@ public class PlayerInventory : MonoBehaviour
                 handObj = slots[selectIndex].GetComponent<PlayerInventorySlot>().slotObject;
             }
         }
+    }
+
+    public void InventoryUIShow(GameObject ui, bool t)
+    {
+        ui.SetActive(t);
     }
 
 }
