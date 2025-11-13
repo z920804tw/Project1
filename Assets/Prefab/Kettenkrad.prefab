@@ -120,6 +120,7 @@ MonoBehaviour:
   smoothInputSpeed: 0.35
   currentSpeed: 0
   currentInput: {x: 0, y: 0}
+  pitch: 0
 --- !u!1 &294037564324026458
 GameObject:
   m_ObjectHideFlags: 0
@@ -4309,8 +4310,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.586112, y: 1.0650427, z: 4.559466}
-  m_Center: {x: 0.007534504, y: -0.086723566, z: 0.17165732}
+  m_Size: {x: 1.586112, y: 0.905315, z: 4.4073443}
+  m_Center: {x: 0.007534504, y: -0.0068596303, z: 0.18686938}
 --- !u!65 &1267834523497284888
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1,11 +1,17 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VehicleUI : MonoBehaviour
 {
+    [Header("組件設定")]
+    [SerializeField] VehicleController vehicleController;
+    [SerializeField] VehicleFuelTank vehicleFuelTank;
+    [Header("物件設定")]
     [SerializeField] GameObject vehicleUI;
     [SerializeField] TMP_Text vehicleSpeedText;
-    [SerializeField] VehicleController vehicleController;
+    [SerializeField] Image fuelTankCapacityImg;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,7 +26,8 @@ public class VehicleUI : MonoBehaviour
 
     void UpdateVehicleInfo()
     {
-        vehicleSpeedText.text = $"CurrentSpeed:{Mathf.RoundToInt(vehicleController.CurrentSpeed)}";
+        vehicleSpeedText.text = $"CurrentSpeed:{Mathf.RoundToInt(vehicleController.CurrentSpeed)}km/h";
+        fuelTankCapacityImg.fillAmount = vehicleFuelTank.FuelValue / vehicleFuelTank.MaxFuel;
     }
     public void ShowUI(bool t)
     {

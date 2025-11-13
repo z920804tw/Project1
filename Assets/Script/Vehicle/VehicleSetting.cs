@@ -1,4 +1,5 @@
 using System.Collections;
+using NUnit.Framework;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,7 @@ public class VehicleSetting : MonoBehaviour
     [SerializeField] PlayerInput vehicleInput;
     [SerializeField] VehicleAudio vehicleAudio;
     [SerializeField] VehicleController vehicleController;
+    [SerializeField] VehicleFuelTank vehicleFuelTank;
     [SerializeField] VehicleUI vehicleUI;
     ThirdPersonCamera thirdPersonCamera;
     [Header("元件套用")]
@@ -16,20 +18,25 @@ public class VehicleSetting : MonoBehaviour
     [SerializeField] Transform interactPos;
     [SerializeField] Transform exitPos;
     [SerializeField] Transform setPos;
+    [SerializeField] Transform lookTarget;
     [Header("DeBug")]
     [SerializeField] GameObject Target;
     [SerializeField] float delayTime;
-    public bool isOccupy;
+    [SerializeField] bool isEngineStart;
+    public bool IsEngineStart { get { return isEngineStart; } }
+    bool hasStart;
+    [SerializeField] bool isOccupy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         thirdPersonCamera = GetComponent<ThirdPersonCamera>();
+        isEngineStart = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        CheckFuelTankCapacity();
     }
     public void VehicleStatus(GameObject target)
     {
@@ -46,35 +53,19 @@ public class VehicleSetting : MonoBehaviour
 
 
             //將載具功能打開
+            VehicleStatus(true);
 
-            StartCoroutine(DelayVehicleStart(delayTime));
-            vehicleInput.enabled = true;
-
-            thirdPersonCamera.enabled = true;
             thirdPersonCamera.CinemachineTargetYaw = 0;
             thirdPersonCamera.CinemachineTargetPitch = 20;
-            vehicleCamera.SetActive(true);
 
-            vehicleUI.ShowUI(true);
-            interactPos.gameObject.SetActive(false);
-
-            vehicleAudio.StartEngine(delayTime);
             Target = target;
+            isOccupy = true;
         }
         else
         {
             //下車動作
             //將載具功能關閉
-            vehicleInput.enabled = false;
-            vehicleController.enabled = false;
-            thirdPersonCamera.enabled = false;
-            vehicleCamera.SetActive(false);
-            vehicleUI.ShowUI(false);
-
-            StartCoroutine(DelayVehicleOff(delayTime));
-
-            vehicleAudio.OffEngine();
-
+            VehicleStatus(false);
             //將玩家相關設定關閉
             target.transform.SetParent(null);
             target.transform.position = exitPos.position;
@@ -88,7 +79,29 @@ public class VehicleSetting : MonoBehaviour
             Target = null;
         }
     }
+    void CheckFuelTankCapacity()
+    {
+        //沒有油就關閉引擎
+        if (!vehicleFuelTank.HaveFuel && isEngineStart)
+        {
+            Debug.Log("沒油，關閉引擎");
+            StartCoroutine(DelayVehicleOff(delayTime));
+        }
+    }
 
+    void VehicleStatus(bool t)
+    {
+        vehicleInput.enabled = t;
+        vehicleController.enabled = t;
+        thirdPersonCamera.enabled = t;
+
+        vehicleCamera.SetActive(t);
+        vehicleCamera.GetComponent<CinemachineCamera>().Follow=lookTarget;
+        vehicleUI.ShowUI(t);
+        interactPos.gameObject.SetActive(!t);
+    }
+    //-------按鍵偵測---------//
+    //下車按鍵
     void OnLeave(InputValue value)
     {
         if (isOccupy && vehicleController.CurrentSpeed < 1.5f)
@@ -96,7 +109,28 @@ public class VehicleSetting : MonoBehaviour
             VehicleStatus(Target);
         }
     }
-
+    //引擎按鍵
+    void OnEngineSwitch(InputValue value)
+    {
+        if (vehicleFuelTank.HaveFuel)
+        {
+            if (!IsEngineStart && !hasStart)
+            {
+                hasStart = !isEngineStart;
+                StartCoroutine(DelayVehicleStart(delayTime));
+            }
+            else if (isEngineStart)
+            {
+                hasStart = true;
+                StartCoroutine(DelayVehicleOff(delayTime));
+            }
+        }
+        else
+        {
+            Debug.Log("油箱沒有油，無法啟動引擎");
+        }
+    }
+    //-------按鍵偵測---------//
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -114,16 +148,16 @@ public class VehicleSetting : MonoBehaviour
 
     IEnumerator DelayVehicleStart(float value)
     {
+        vehicleAudio.StartEngine(delayTime);
         yield return new WaitForSeconds(value);
-        vehicleController.enabled = true;
-        isOccupy = true;
+        isEngineStart = true;
+        hasStart = false;
     }
     IEnumerator DelayVehicleOff(float value)
     {
-        GetComponent<Rigidbody>().isKinematic = true;
+        vehicleAudio.OffEngine();
+        isEngineStart = false;
         yield return new WaitForSeconds(value);
-        GetComponent<Rigidbody>().isKinematic = false;
-        interactPos.gameObject.SetActive(true);
-        isOccupy = false;
+        hasStart = false;
     }
 }

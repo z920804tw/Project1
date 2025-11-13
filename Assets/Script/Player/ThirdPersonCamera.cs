@@ -20,7 +20,6 @@ public class ThirdPersonCamera : MonoBehaviour
     public float CinemachineTargetPitch{set{ cinemachineTargetPitch = value; }}
     float zoomValue;
     Vector2 look;
-    CinemachineBrain cinemachineBrain;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -476,6 +476,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EngineSwitch",
+                    "type": "Button",
+                    "id": "fe943f09-4dd4-4c61-abe3-78a695af3e31",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -663,6 +672,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Leave",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11a41463-27d2-4203-9aef-e7b997d4eb54",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "EngineSwitch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

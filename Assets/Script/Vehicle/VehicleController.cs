@@ -1,11 +1,9 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class VehicleController : MonoBehaviour
 {
     public PlayerInputAction vehicleInput;
+    [SerializeField] VehicleSetting vehicleSetting;
     [SerializeField] Rigidbody rb;
     [Header("車體參數設定")]
     public float maxMotorTorque = 1500f;   // 最大驅動扭力
@@ -40,6 +38,7 @@ public class VehicleController : MonoBehaviour
     public Vector2 CurrentInput { get { return currentInput; } }
     Vector2 smoothInputVelocity;
 
+    [SerializeField] float pitch;
     float rotateValue;
 
     void Awake()
@@ -83,12 +82,23 @@ public class VehicleController : MonoBehaviour
         UpdateTurnWheelPose(leftWheelsTransform[0].transform, rotateValue);
         UpdateTurnWheelPose(rightWheelsTransform[0].transform, rotateValue);
 
-        //馬達控制 更新輪子模型的位置與旋轉
+        //左輪子
+        for (int i = 0; i < leftWheels.Length; i++)
+        {
+            UpdateWheelPose(leftWheels[i], leftWheelsTransform[i]);
+        }
+
+        //右輪
+        for (int i = 0; i < rightWheels.Length; i++)
+        {
+            UpdateWheelPose(rightWheels[i], rightWheelsTransform[i]);
+        }
+
+        //車輛速度控制
+
         HandleMotor();
         BreakVehicle();
         LimitSpeed();
-
-
     }
     void VehicleInput()
     {
@@ -123,7 +133,7 @@ public class VehicleController : MonoBehaviour
     void HandleMotor()
     {
         //計算角度
-        float pitch = Vector3.SignedAngle(Vector3.up, transform.up, transform.right);
+        pitch = Vector3.SignedAngle(Vector3.up, transform.up, transform.right);
         float accelerationMultiplier = 1f;
         if (pitch < -slopeAngleThreshold)
         {
@@ -133,6 +143,21 @@ public class VehicleController : MonoBehaviour
         {
             accelerationMultiplier = 0.8f;
         }
+        //檢查引擎是否啟動，如果沒有就不會給予車輪動力
+        if (!vehicleSetting.IsEngineStart)
+        {
+            leftTorque = 0;
+            rightTorque = 0;
+            foreach (var wheel in leftWheels)
+            {
+                wheel.motorTorque = leftTorque;
+            }
+            foreach (var wheel in rightWheels)
+            {
+                wheel.motorTorque = rightTorque;
+            }
+            return;
+        }
         // 設定驅動扭力
         float currentAcceleration = accelerationMultiplier * maxMotorTorque * verticalInput;
         float turnFactor = horizontalInput * maxMotorTurn; // 0.3 表示最大增加/減少 30% 扭力  
@@ -140,18 +165,16 @@ public class VehicleController : MonoBehaviour
         leftTorque = currentAcceleration * (1 + turnFactor);
         rightTorque = currentAcceleration * (1 - turnFactor);
 
-        //左輪子
+        //左輪
         for (int i = 0; i < leftWheels.Length; i++)
         {
             leftWheels[i].motorTorque = leftTorque;
-            UpdateWheelPose(leftWheels[i], leftWheelsTransform[i]);
         }
 
         //右輪
         for (int i = 0; i < rightWheels.Length; i++)
         {
             rightWheels[i].motorTorque = leftTorque;
-            UpdateWheelPose(rightWheels[i], rightWheelsTransform[i]);
         }
     }
 
@@ -159,7 +182,6 @@ public class VehicleController : MonoBehaviour
     {
         float currentBreakForce = 0;
         float verticalInputValue = vehicleInput.Vehicle.Move.ReadValue<Vector2>().y;
-        float pitch = Mathf.Abs(Vector3.SignedAngle(Vector3.up, transform.up, transform.right));
         if (Input.GetKey(KeyCode.Space))
         {
             currentBreakForce = breakForce;
@@ -169,7 +191,7 @@ public class VehicleController : MonoBehaviour
             if (verticalInputValue == 0)
             {
 
-                if (pitch > slopeAngleThreshold)
+                if (pitch < -slopeAngleThreshold)
                 {
                     currentBreakForce = 1000;
                 }
@@ -180,7 +202,14 @@ public class VehicleController : MonoBehaviour
             }
             else
             {
-                currentBreakForce = 0;
+                if (!vehicleSetting.IsEngineStart)
+                {
+                    currentBreakForce = 300;
+                }
+                else
+                {
+                    currentBreakForce = 0;
+                }
             }
         }
         foreach (WheelCollider wcollider in leftWheels)
@@ -199,6 +228,14 @@ public class VehicleController : MonoBehaviour
         Vector3 limitSpeed;
         if (leftTorque > 0 && rightTorque > 0)
         {
+            if (pitch > slopeAngleThreshold)
+            {
+                forwardMaxSpeed = 6;
+            }
+            else
+            {
+                forwardMaxSpeed = 4;
+            }
             //前進
             if (speed.magnitude > forwardMaxSpeed)
             {
@@ -238,12 +275,9 @@ public class VehicleController : MonoBehaviour
         col.GetWorldPose(out pos, out quat);
         mesh.position = pos;
 
-
-
         if (mesh != leftWheelsTransform[0] && mesh != rightWheelsTransform[0])
         {
             mesh.rotation = quat;
         }
     }
 }
-

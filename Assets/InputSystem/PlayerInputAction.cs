@@ -562,6 +562,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EngineSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""fe943f09-4dd4-4c61-abe3-78a695af3e31"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -749,6 +758,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Leave"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11a41463-27d2-4203-9aef-e7b997d4eb54"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""EngineSwitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1354,6 +1374,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Vehicle_Zoom = m_Vehicle.FindAction("Zoom", throwIfNotFound: true);
         m_Vehicle_Look = m_Vehicle.FindAction("Look", throwIfNotFound: true);
         m_Vehicle_Leave = m_Vehicle.FindAction("Leave", throwIfNotFound: true);
+        m_Vehicle_EngineSwitch = m_Vehicle.FindAction("EngineSwitch", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1669,6 +1690,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Vehicle_Zoom;
     private readonly InputAction m_Vehicle_Look;
     private readonly InputAction m_Vehicle_Leave;
+    private readonly InputAction m_Vehicle_EngineSwitch;
     /// <summary>
     /// Provides access to input actions defined in input action map "Vehicle".
     /// </summary>
@@ -1696,6 +1718,10 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Vehicle/Leave".
         /// </summary>
         public InputAction @Leave => m_Wrapper.m_Vehicle_Leave;
+        /// <summary>
+        /// Provides access to the underlying input action "Vehicle/EngineSwitch".
+        /// </summary>
+        public InputAction @EngineSwitch => m_Wrapper.m_Vehicle_EngineSwitch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1734,6 +1760,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Leave.started += instance.OnLeave;
             @Leave.performed += instance.OnLeave;
             @Leave.canceled += instance.OnLeave;
+            @EngineSwitch.started += instance.OnEngineSwitch;
+            @EngineSwitch.performed += instance.OnEngineSwitch;
+            @EngineSwitch.canceled += instance.OnEngineSwitch;
         }
 
         /// <summary>
@@ -1757,6 +1786,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Leave.started -= instance.OnLeave;
             @Leave.performed -= instance.OnLeave;
             @Leave.canceled -= instance.OnLeave;
+            @EngineSwitch.started -= instance.OnEngineSwitch;
+            @EngineSwitch.performed -= instance.OnEngineSwitch;
+            @EngineSwitch.canceled -= instance.OnEngineSwitch;
         }
 
         /// <summary>
@@ -2177,6 +2209,13 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLeave(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "EngineSwitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnEngineSwitch(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -6,9 +6,11 @@ using UnityEngine;
 public class VehicleAudio : MonoBehaviour
 {
     public VehicleController vehicleController;
+    [SerializeField] VehicleSetting vehicleSetting;
     public AudioSource audioSource;
     public AudioClip startEngineClip;
     public AudioClip engineSoundClip;
+    bool isStart;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,26 +21,32 @@ public class VehicleAudio : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (vehicleController.CurrentInput.y != 0)
+        if (vehicleSetting.IsEngineStart)
         {
-            //加速or減速
-            ChangeEnginePitch(Mathf.Abs(vehicleController.CurrentInput.y));
-        }
-        else
-        {
-            //減少
-            ChangeEnginePitch(Mathf.Abs(vehicleController.CurrentInput.y));
+            if (vehicleController.CurrentInput.y != 0)
+            {
+                //加速or減速
+                ChangeEnginePitch(Mathf.Abs(vehicleController.CurrentInput.y));
+            }
+            else
+            {
+                //減少
+                ChangeEnginePitch(Mathf.Abs(vehicleController.CurrentInput.y));
+            }
         }
     }
 
+    //啟動引擎
     public void StartEngine(float delayTime)
     {
         StartCoroutine(AudioSwitchDelay(startEngineClip, engineSoundClip, delayTime));
     }
+    //關閉引擎
     public void OffEngine()
     {
         StartCoroutine(AudioOff(3f));
     }
+    //變換引擎音調(模擬加速和倒車的聲音)
     public void ChangeEnginePitch(float value)
     {
         audioSource.pitch = 1 + value;
@@ -72,6 +80,7 @@ public class VehicleAudio : MonoBehaviour
             if (audioSource.volume <= 0)
             {
                 audioSource.volume = 1;
+                audioSource.pitch = 1;
                 audioSource.clip = null;
                 audioSource.Stop();
             }
