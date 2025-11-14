@@ -123,38 +123,42 @@ public class ThirdPersonAnimation : MonoBehaviour
 
     public void ThrowAnim(bool isAim, bool isThrow)
     {
+
         StopCoroutine("AnimLayerDelay");
         if (isAim)
         {
-            animator.SetBool("aimThrow", true);
-            StartCoroutine(AnimLayerDelay(1, 0, 1, 1f));
+            if (isThrow)
+            {
+                animator.SetTrigger("isThrow");
+                StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
+            }
+            else
+            {
+                animator.SetBool("aimThrow", true);
+                StartCoroutine(AnimLayerDelay(1, 0, 1, 1f));
+            }
         }
         else
         {
             animator.SetBool("aimThrow", false);
             StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
         }
-
-        if (isThrow)
-        {
-            animator.SetTrigger("isThrow");
-            StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
-        }
     }
-    
+
 
     //負責開關Layer的權重延遲
     IEnumerator AnimLayerDelay(int layer, float start, float end, float duration)
     {
         float timer = 0;
-        while(timer < duration)
+        while (timer < duration)
         {
             timer += Time.deltaTime;
             float currentValue = Mathf.Lerp(start, end, timer / duration);
             animator.SetLayerWeight(layer, currentValue);
+
             yield return null;
         }
-
+        Debug.Log("完成");
         animator.SetLayerWeight(layer, end);
     }
 

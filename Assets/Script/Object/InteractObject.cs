@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class InteractObject : MonoBehaviour, IInteractable
 {
-    [SerializeField] GameObject hint;
+    [SerializeField] string hintText;
     public UnityEvent<GameObject> unityEvent;
     public UnityEvent unityEvent1;
 
@@ -17,7 +17,7 @@ public class InteractObject : MonoBehaviour, IInteractable
     }
     public void ShowHint(bool t)
     {
-        hint.SetActive(t);
+        UIManager.Instance.ShowInteractHint(t,hintText);
     }
     //-------IInteractable--------//
 

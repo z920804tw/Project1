@@ -6,50 +6,60 @@ public class VehicleFuelTank : MonoBehaviour
     [Header("組件設定")]
     [SerializeField] VehicleSetting vehicleSetting;
     [Header("參數設定")]
-    [SerializeField] float fuelValue;
+    [SerializeField] float currentFuel;
+    public float CurrentFuel { get { return currentFuel; } }
     [SerializeField] float maxFuel;
-    public float fuelConsumption;
-    public float FuelValue { get { return fuelValue; } }
     public float MaxFuel { get { return maxFuel; } }
+    [SerializeField] float fuelConsumption;
+    public float fuelValue;
 
     [SerializeField] bool haveFuel;
     public bool HaveFuel { get { return haveFuel; } }
-    float timer = 0;
+    float timer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        fuelValue = maxFuel;
+        currentFuel = maxFuel;
         UpdateFuelCapacity(0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        fuelValue = currentFuel / maxFuel;
+        CheckHaveFuel();
+        
         if (!vehicleSetting.IsEngineStart)
         {
             timer = 0;
             return;
         }
-
         timer += Time.deltaTime;
         if (timer > 10)
         {
             timer = 0;
             UpdateFuelCapacity(-fuelConsumption);
         }
+
     }
 
     public void UpdateFuelCapacity(float value)
     {
-        fuelValue += value;
-        if (fuelValue <= 0)
+        currentFuel += value;
+        if (currentFuel <= 0)
         {
-            fuelValue = 0;
-            haveFuel = false;
+            currentFuel = 0;
+        }
+    }
+    void CheckHaveFuel()
+    {
+        if (currentFuel > 0)
+        {
+            haveFuel = true;
         }
         else
         {
-            haveFuel = true;
+            haveFuel = false;
         }
     }
 }

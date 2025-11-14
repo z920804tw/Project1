@@ -11,7 +11,6 @@ public class VehicleSetting : MonoBehaviour
     [SerializeField] VehicleAudio vehicleAudio;
     [SerializeField] VehicleController vehicleController;
     [SerializeField] VehicleFuelTank vehicleFuelTank;
-    [SerializeField] VehicleUI vehicleUI;
     ThirdPersonCamera thirdPersonCamera;
     [Header("元件套用")]
     [SerializeField] GameObject vehicleCamera;
@@ -36,7 +35,14 @@ public class VehicleSetting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckFuelTankCapacity();
+        if (isOccupy)
+        {
+            CheckFuelTankCapacity();
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateVehecleUI(vehicleController.CurrentSpeed, vehicleFuelTank.fuelValue);
+            }
+        }
     }
     public void VehicleStatus(GameObject target)
     {
@@ -54,7 +60,6 @@ public class VehicleSetting : MonoBehaviour
 
             //將載具功能打開
             VehicleStatus(true);
-
             thirdPersonCamera.CinemachineTargetYaw = 0;
             thirdPersonCamera.CinemachineTargetPitch = 20;
 
@@ -94,10 +99,10 @@ public class VehicleSetting : MonoBehaviour
         vehicleInput.enabled = t;
         vehicleController.enabled = t;
         thirdPersonCamera.enabled = t;
+        UIManager.Instance.ShowVehecleUI(t);
 
         vehicleCamera.SetActive(t);
-        vehicleCamera.GetComponent<CinemachineCamera>().Follow=lookTarget;
-        vehicleUI.ShowUI(t);
+        vehicleCamera.GetComponent<CinemachineCamera>().Follow = lookTarget;
         interactPos.gameObject.SetActive(!t);
     }
     //-------按鍵偵測---------//

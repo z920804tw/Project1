@@ -6,8 +6,6 @@ public class PlayerInventory : MonoBehaviour
 {
     [Header("組件套用")]
     [SerializeField] ThirdPersonMove thirdPersonMove;
-    [SerializeField] GameObject buttonInventoryUI;
-    public GameObject ButtonInventoryUI{get{ return buttonInventoryUI; }}
     [Header("物品欄(手部))參數")]
     public List<GameObject> slots;
     [SerializeField] int selectIndex;
@@ -20,7 +18,13 @@ public class PlayerInventory : MonoBehaviour
     void Start()
     {
         selectIndex = 0;
-        slots[selectIndex].GetComponent<PlayerInventorySlot>().selectImg.SetActive(true);
+        if (UIManager.Instance != null)
+        {
+            //從UIManager中抓取儲存格
+            slots=UIManager.Instance.inventorySlots;
+            slots[selectIndex].GetComponent<PlayerInventorySlot>().selectImg.SetActive(true);
+        }
+
     }
     //檢查物品欄是否有相同物品
     bool CheckSameItem(GameObject item)
@@ -109,10 +113,4 @@ public class PlayerInventory : MonoBehaviour
             }
         }
     }
-
-    public void InventoryUIShow(GameObject ui, bool t)
-    {
-        ui.SetActive(t);
-    }
-
 }

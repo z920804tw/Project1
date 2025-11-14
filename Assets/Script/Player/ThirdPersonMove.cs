@@ -179,7 +179,7 @@ public class ThirdPersonMove : MonoBehaviour
         }
     }
 
-    //------會從父物件接收值------//
+    //------會從父物件接收參數值------//
     //移動向量轉換
     public void OnMove(Vector2 value)
     {

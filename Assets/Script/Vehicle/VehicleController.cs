@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class VehicleController : MonoBehaviour
@@ -257,7 +258,6 @@ public class VehicleController : MonoBehaviour
         {
             currentSpeed = 0;
         }
-
     }
 
     void UpdateTurnWheelPose(Transform mesh, float rotationValue)

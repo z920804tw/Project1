@@ -14,7 +14,7 @@ public class PlayerInteract : MonoBehaviour
     [Header("Debug")]
     [SerializeField] bool canPlace;
     [SerializeField] bool canThrow;
-    bool hasUesAnim;
+    bool isThrow;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -42,25 +42,32 @@ public class PlayerInteract : MonoBehaviour
                     canThrow = false;
                     placePos = hit.point;
                     placePos.y += 1f;
+                    if (isThrow)
+                    {
+                        isThrow = false;
+                        anim.ThrowAnim(false, false);
+                    }
                 }
                 else
                 {
                     canPlace = false;
                     canThrow = true;
-                }
-                if (!hasUesAnim)
-                {
-                    hasUesAnim = true;
-                    anim.ThrowAnim(true, false);
+                    //防止重複撥放動畫
+                    if (!isThrow)
+                    {
+                        isThrow = true;
+                        anim.ThrowAnim(true, false);
+                    }
                 }
             }
             else
             {
                 canPlace = false;
                 canThrow = false;
-                if (hasUesAnim)
+
+                if (isThrow)
                 {
-                    hasUesAnim = false;
+                    isThrow = false;
                     anim.ThrowAnim(false, false);
                 }
             }
@@ -80,10 +87,12 @@ public class PlayerInteract : MonoBehaviour
             //更新物品欄
             if (playerInventory != null)
             {
-                playerInventory.slots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.inventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
                 playerInventory.SlotAmount = -1;
             }
-            anim.ThrowAnim(false, true);
+            //更新動畫
+            anim.ThrowAnim(true, true);
+            isThrow = false;
             canThrow = false;
         }
     }
@@ -98,10 +107,11 @@ public class PlayerInteract : MonoBehaviour
                 playerInventory.handObj.GetComponent<PickObject>().ColliderAndRig(true);
                 playerInventory.handObj = null;
 
-                playerInventory.slots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.inventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
                 playerInventory.SlotAmount = -1;
             }
             anim.ThrowAnim(false, false);
+            isThrow = false;
             canPlace = false;
         }
     }
@@ -119,12 +129,8 @@ public class PlayerInteract : MonoBehaviour
         IInteractable interactable = other.GetComponent<IInteractable>();
         if (interactable != null)
         {
-            if (currentTarget == null)
-            {
-                currentTarget = other.gameObject;
-                currentTarget.GetComponent<IInteractable>().ShowHint(true);
-            }
-
+            currentTarget = other.gameObject;
+            currentTarget.GetComponent<IInteractable>().ShowHint(true);
         }
     }
     void OnTriggerExit(Collider other)

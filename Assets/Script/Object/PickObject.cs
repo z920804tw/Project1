@@ -8,16 +8,12 @@ public class PickObject : MonoBehaviour, IInteractable
     public SphereCollider triggerBox;
     public BoxCollider boxCollider;
     Rigidbody rb;
-    [Header("物件套用")]
-    public GameObject hint;
     [Header("參數設定")]
     public string itemName;
     public bool canStack;
 
     [Header("互動設定")]
-    [SerializeField] bool canInteract;
-    [SerializeField] bool canPick;
-    public bool CanPick { get { return canPick; } }
+    [SerializeField] string hintText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,7 +29,7 @@ public class PickObject : MonoBehaviour, IInteractable
     }
     public void ShowHint(bool t)
     {
-        hint.SetActive(t);
+        UIManager.Instance.ShowInteractHint(t, hintText);
     }
     //-------IInteractable--------//
 
@@ -74,6 +70,4 @@ public class PickObject : MonoBehaviour, IInteractable
         Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
         Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
     }
-
-
 }

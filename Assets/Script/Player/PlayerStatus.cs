@@ -42,9 +42,6 @@ public class PlayerStatus : MonoBehaviour
         {
             playerInventory.handObj.SetActive(isNormal);
         }
-
-        playerInventory.InventoryUIShow(playerInventory.ButtonInventoryUI, isNormal);
-
         //組件設定
         playerInput.enabled = isNormal;
         playerCam.enabled = isNormal;
@@ -58,6 +55,10 @@ public class PlayerStatus : MonoBehaviour
         playerMove.followCam.SetActive(isNormal);
         playerMove.aimCam.SetActive(false);
         //攝影機設定
+
+        //UI設定
+        UIManager.Instance.ShowPlayerUI(isNormal);
+        //UI設定
 
         anim.MoveVelocity = 0;
         anim.animator.SetFloat("moveVelocity", 0);
