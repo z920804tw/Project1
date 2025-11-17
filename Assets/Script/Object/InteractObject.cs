@@ -20,5 +20,4 @@ public class InteractObject : MonoBehaviour, IInteractable
         UIManager.Instance.ShowInteractHint(t,hintText);
     }
     //-------IInteractable--------//
-
 }

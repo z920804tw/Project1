@@ -3,9 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - InteractObject
-  - PickObject
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -27,7 +25,7 @@ TagManager:
   - 
   - 
   - 
-  - VehicleCollider
+  - TriggerZone
   - 
   - 
   - 

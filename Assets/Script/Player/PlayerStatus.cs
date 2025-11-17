@@ -6,6 +6,7 @@ public class PlayerStatus : MonoBehaviour
 {
     public Status currentPlayerStatus;
     public ThirdPersonAnimation anim;
+    [SerializeField] CapsuleCollider interactCollider;
     [Header("玩家控制項")]
     public PlayerInput playerInput;
     public ThirdPersonMove playerMove;
@@ -49,6 +50,7 @@ public class PlayerStatus : MonoBehaviour
         playerInventory.enabled = isNormal;
         playerInteract.enabled = isNormal;
         GetComponent<CharacterController>().enabled = isNormal;
+        interactCollider.enabled=isNormal;
         //組件設定
 
         //攝影機設定

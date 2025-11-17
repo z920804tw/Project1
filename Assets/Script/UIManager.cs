@@ -42,8 +42,8 @@ public class UIManager : MonoBehaviour
     }
     public void UpdateVehecleUI(float speed, float fuelValue)
     {
-        vehicleSpeedText.text=$"CurrentSpeed:{Mathf.RoundToInt(speed)}km/h";
-        fuelTankCapacityImg.fillAmount=fuelValue;
+        vehicleSpeedText.text = $"CurrentSpeed:{Mathf.RoundToInt(speed)}km/h";
+        fuelTankCapacityImg.fillAmount = fuelValue;
     }
 
     public void ShowVehecleUI(bool t)

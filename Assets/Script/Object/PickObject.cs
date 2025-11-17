@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class PickObject : MonoBehaviour, IInteractable
@@ -9,22 +10,22 @@ public class PickObject : MonoBehaviour, IInteractable
     public BoxCollider boxCollider;
     Rigidbody rb;
     [Header("參數設定")]
-    public string itemName;
-    public bool canStack;
+    public ItemSO itemSO;
 
     [Header("互動設定")]
-    [SerializeField] string hintText;
+    public UnityEvent<GameObject> unityEvent;
+    string hintText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        hintText = $"{itemSO.itemName}";
     }
     //-------IInteractable--------//
     public void Interact(GameObject target)
     {
-        Debug.Log("你執行了一個事件" + "，觸發者:" + target.name);
-        CollectToInventory(target);
+        unityEvent.Invoke(target);
         ShowHint(false);
     }
     public void ShowHint(bool t)
@@ -34,7 +35,7 @@ public class PickObject : MonoBehaviour, IInteractable
     //-------IInteractable--------//
 
     //新增進物品欄
-    void CollectToInventory(GameObject target)
+    public void CollectToInventory(GameObject target)
     {
         PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
         if (playerInventory != null)

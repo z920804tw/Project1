@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerInventorySlot : MonoBehaviour
 {
     [Header("物品格子參數狀態")]
-    public string type;
+    public ItemType type;
+    public string itemName;
     public int amount;
     public bool canStack;
     public bool isOccupy;
@@ -38,7 +39,7 @@ public class PlayerInventorySlot : MonoBehaviour
         {
             amountText.text = $"{0}";
             imgText.text = $"";
-            type = $"";
+            type =ItemType.Empty;
             slotObject = null;
             isOccupy = false;
         }
@@ -48,11 +49,13 @@ public class PlayerInventorySlot : MonoBehaviour
     {
         isOccupy = true;
         slotObject = item;
-        type = item.GetComponent<PickObject>().itemName;
-        canStack = item.GetComponent<PickObject>().canStack;
+        type = slotObject.GetComponent<PickObject>().itemSO.itemType;
+        itemName=slotObject.GetComponent<PickObject>().itemSO.itemName;
+        canStack = slotObject.GetComponent<PickObject>().itemSO.canStack;
+
         amount = 1;
         amountText.text = $"{amount}";
-        imgText.text = $"{type}";
+        imgText.text = $"{itemName}";
         slotObject.SetActive(false);
     }
 }

@@ -34,7 +34,7 @@ public class PlayerInventory : MonoBehaviour
             if (i.GetComponent<PlayerInventorySlot>().isOccupy)
             {
                 //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (i.GetComponent<PlayerInventorySlot>().type == item.GetComponent<PickObject>().itemName && item.GetComponent<PickObject>().canStack)
+                if (i.GetComponent<PlayerInventorySlot>().itemName == item.GetComponent<PickObject>().itemSO.itemName && item.GetComponent<PickObject>().itemSO.canStack)
                 {
                     i.GetComponent<PlayerInventorySlot>().UpdateInfo(1);
                     Destroy(i);

@@ -2,6 +2,7 @@ using System.Collections;
 using NUnit.Framework;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class VehicleSetting : MonoBehaviour
@@ -60,6 +61,7 @@ public class VehicleSetting : MonoBehaviour
 
             //將載具功能打開
             VehicleStatus(true);
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             thirdPersonCamera.CinemachineTargetYaw = 0;
             thirdPersonCamera.CinemachineTargetPitch = 20;
 
@@ -140,17 +142,21 @@ public class VehicleSetting : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            Debug.Log("進入");
         }
+
     }
+
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            Debug.Log("離開");
+            // GetComponent<Rigidbody>().isKinematic = false;
         }
     }
-
     IEnumerator DelayVehicleStart(float value)
     {
         vehicleAudio.StartEngine(delayTime);
