@@ -14,6 +14,7 @@ public class PlayerStatus : MonoBehaviour
     public PlayerInventory playerInventory;
     public PlayerInteract playerInteract;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -68,10 +69,12 @@ public class PlayerStatus : MonoBehaviour
     //--------玩家移動--------//
     public void OnMove(InputValue value)
     {
-        playerMove.OnMove(value.Get<Vector2>());
+        Vector2 value1 = value.Get<Vector2>();
+        playerMove.OnMove(value1);
     }
     public void OnJump(InputValue value)
     {
+        if (UIManager.Instance.IsOpenBackpack) return;
         playerMove.OnJump();
     }
     public void OnRun(InputValue value)
@@ -80,6 +83,7 @@ public class PlayerStatus : MonoBehaviour
     }
     public void OnAim(InputValue value)
     {
+        if (UIManager.Instance.IsOpenBackpack) return;
         playerMove.OnAim();
     }
     //--------玩家移動--------//
@@ -87,18 +91,24 @@ public class PlayerStatus : MonoBehaviour
     //--------物品欄--------//
     public void OnSelect(InputValue value)
     {
-        float value1=value.Get<float>();
+        float value1 = value.Get<float>();
         playerInventory.OnSelect(value1);
 
         if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf)
         {
-            UIManager.Instance.UpdateSelect(-(int)value1);
+            UIManager.Instance.HintUISelect(-(int)value1);
         }
     }
     //--------物品欄--------//
     //--------玩家互動--------//
+    public void OnOpenBackpack(InputValue value)
+    {
+        UIManager.Instance.IsOpenBackpack = !UIManager.Instance.IsOpenBackpack;
+        UIManager.Instance.ShowBackpackUI(UIManager.Instance.IsOpenBackpack);
+    }
     public void OnInteract(InputValue value)
     {
+        if (UIManager.Instance.IsOpenBackpack) return;
         playerInteract.OnInteract();
     }
     public void OnThrow(InputValue value)

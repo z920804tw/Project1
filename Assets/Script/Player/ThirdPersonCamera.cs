@@ -17,7 +17,7 @@ public class ThirdPersonCamera : MonoBehaviour
     float cinemachineTargetYaw;
     float cinemachineTargetPitch;
     public float CinemachineTargetYaw { set { cinemachineTargetYaw = value; } }
-    public float CinemachineTargetPitch{set{ cinemachineTargetPitch = value; }}
+    public float CinemachineTargetPitch { set { cinemachineTargetPitch = value; } }
     float zoomValue;
     Vector2 look;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -49,10 +49,17 @@ public class ThirdPersonCamera : MonoBehaviour
     }
     public void OnLook(InputValue value)
     {
+        if (UIManager.Instance.IsOpenBackpack)
+        {
+            look=Vector2.zero;
+            return;
+        }
+
         look = value.Get<Vector2>();
     }
     public void OnZoom(InputValue value)
     {
+        if (UIManager.Instance.IsOpenBackpack) return;
         zoomValue = value.Get<float>();
     }
     public void ZoomView()

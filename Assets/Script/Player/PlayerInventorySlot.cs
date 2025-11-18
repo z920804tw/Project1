@@ -1,14 +1,19 @@
 using TMPro;
 using Unity.Properties;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInventorySlot : MonoBehaviour
 {
-    [Header("物品格子參數狀態")]
-    public ItemType type;
-    public string itemName;
-    public int amount;
-    public bool canStack;
+    [Header("物品欄參數")]
+    public ItemSO slotItemSO;
+    // [SerializeField] Image itemImg;
+    [SerializeField] string itemName;
+    public string ItemName { get { return itemName; } }
+    [SerializeField] string itemDescription;
+    [SerializeField] int amount;
+    [SerializeField] bool canStack;
+    public bool CanStack { get { return canStack; } }
     public bool isOccupy;
 
     [Header("物件套用")]
@@ -39,7 +44,7 @@ public class PlayerInventorySlot : MonoBehaviour
         {
             amountText.text = $"{0}";
             imgText.text = $"";
-            type =ItemType.Empty;
+            slotItemSO = null;
             slotObject = null;
             isOccupy = false;
         }
@@ -49,13 +54,27 @@ public class PlayerInventorySlot : MonoBehaviour
     {
         isOccupy = true;
         slotObject = item;
-        type = slotObject.GetComponent<PickObject>().itemSO.itemType;
-        itemName=slotObject.GetComponent<PickObject>().itemSO.itemName;
-        canStack = slotObject.GetComponent<PickObject>().itemSO.canStack;
+        slotItemSO = item.GetComponent<PickObject>().itemSO;
+        itemName = slotItemSO.itemName;
+        itemDescription = slotItemSO.itemDescription;
+        canStack = slotItemSO.canStack;
 
         amount = 1;
         amountText.text = $"{amount}";
         imgText.text = $"{itemName}";
         slotObject.SetActive(false);
+    }
+
+    public void SetBackpackSlotInfo(GameObject item)
+    {
+        isOccupy=true;
+        slotItemSO=item.GetComponent<PickObject>().itemSO;
+        itemName=item.GetComponent<PickObject>().itemSO.itemName;
+        itemDescription=item.GetComponent<PickObject>().itemSO.itemDescription;
+        canStack=item.GetComponent<PickObject>().itemSO.canStack;
+
+        amount=1;
+        amountText.text=$"{amount}";
+        imgText.text=$"{itemName}";
     }
 }

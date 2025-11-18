@@ -8,7 +8,11 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     [Header("Player UI")]
     [SerializeField] GameObject playerUI;
-    public List<GameObject> inventorySlots;
+    [SerializeField] GameObject backpackUI;
+    public List<GameObject> handInventorySlots;
+    public List<GameObject> backpackInventorySlots;
+    bool isOpenBackpack;
+    public bool IsOpenBackpack{get {return isOpenBackpack;} set{ isOpenBackpack=value;}}
     [Header("Vehicle UI")]
     [SerializeField] GameObject vehicleUI;
     [SerializeField] TMP_Text vehicleSpeedText;
@@ -32,15 +36,15 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         ShowPlayerUI(true);
-        selectIndex=0;
+        selectIndex = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 h= hintUI.GetComponent<RectTransform>().sizeDelta;
-        h.y=content.GetComponent<RectTransform>().sizeDelta.y;
-        hintUI.GetComponent<RectTransform>().sizeDelta=h;
+        Vector2 h = hintUI.GetComponent<RectTransform>().sizeDelta;
+        h.y = content.GetComponent<RectTransform>().sizeDelta.y;
+        hintUI.GetComponent<RectTransform>().sizeDelta = h;
     }
 
     public void ShowInteractHint(bool t)
@@ -61,9 +65,18 @@ public class UIManager : MonoBehaviour
     {
         playerUI.SetActive(t);
     }
+    //----------物品欄-----------//
+    public void ShowBackpackUI(bool t)
+    {
+        backpackUI.SetActive(t);
+    }
 
-    public void UpdateSelect(int value)
-    {   
+    //----------物品欄-----------//
+
+
+    //----------HintUI-----------//
+    public void HintUISelect(int value)
+    {
         selectIndex += value;
         if (selectIndex >= hintUIList.Count)
         {
@@ -83,4 +96,5 @@ public class UIManager : MonoBehaviour
             hintUIList[selectIndex].GetComponent<Hint>().ShowSelect(true);
         }
     }
+    //----------HintUI-----------//
 }

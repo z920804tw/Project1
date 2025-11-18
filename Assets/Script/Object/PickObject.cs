@@ -11,10 +11,10 @@ public class PickObject : MonoBehaviour, IInteractable
     Rigidbody rb;
     [Header("參數設定")]
     public ItemSO itemSO;
+    string hintText;
 
     [Header("互動設定")]
     public UnityEvent<GameObject> unityEvent;
-    string hintText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,18 +36,40 @@ public class PickObject : MonoBehaviour, IInteractable
     //新增進物品欄
     public void CollectToInventory(GameObject target)
     {
-        PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
-        if (playerInventory != null)
+        //判斷該物品是屬於哪個類別，是可拿在手上還是只能放在背包
+        if (itemSO.itemType == ItemType.PickItem)
         {
-            if (playerInventory.SlotAmount < playerInventory.slots.Count)
+            //放到手部欄位
+            PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
+            if (playerInventory != null)
             {
-                playerInventory.AddItemToInventory(this.gameObject);
-            }
-            else
-            {
-                Debug.Log("物品欄已滿");
+                if (playerInventory.SlotAmount < playerInventory.handSlots.Count)
+                {
+                    playerInventory.AddItemToHandInventory(this.gameObject);
+                }
+                else
+                {
+                    Debug.Log("物品欄(手部)已滿");
+                }
             }
         }
+        else
+        {
+            //收進BackPack欄位中
+            PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
+            if (playerInventory != null)
+            {
+                if (playerInventory.BackpackAmount < playerInventory.backpackSlots.Count)
+                {
+                    playerInventory.AddItemToBackpackInventory(this.gameObject);
+                }
+                else
+                {
+                    Debug.Log("物品欄(背包)已滿");
+                }
+            }
+        }
+
     }
     public void ColliderAndRig(bool t)
     {

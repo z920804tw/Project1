@@ -64,7 +64,7 @@ public class VehicleSetting : MonoBehaviour
                 Destroy(i);
             }
             UIManager.Instance.hintUIList.Clear();
-            target.GetComponent<PlayerStatus>().playerInteract.hintGameObjectList.Clear();
+
 
             //將載具功能打開
             VehicleStatus(true);

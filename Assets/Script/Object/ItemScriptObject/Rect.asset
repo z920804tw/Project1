@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4037d8f90c2ecc248abd65e7c2173514, type: 3}
-  m_Name: Triangle
+  m_Name: Rect
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemType: 1
-  itemName: Triangle1
+  itemType: 2
+  itemName: Rect
   itemDescription: 
   hintText: Press F Pick
   canStack: 0

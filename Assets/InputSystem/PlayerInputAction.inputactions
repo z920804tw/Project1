@@ -70,15 +70,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Pick",
-                    "type": "Button",
-                    "id": "40ecf24f-cea7-4e01-bf35-ce399442fed5",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "d78d339f-3be3-4fe6-9b11-afb4e9daf121",
@@ -109,6 +100,15 @@
                     "name": "Select",
                     "type": "Button",
                     "id": "7b417bda-702b-47dc-8f1a-003044dffc96",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "OpenBackpack",
+                    "type": "Button",
+                    "id": "eae46d10-73a6-4779-a6a2-2a81c00f53e7",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -382,17 +382,6 @@
                 },
                 {
                     "name": "",
-                    "id": "fc11c7d1-286f-4ae1-bdda-1786c34aad19",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Pick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "041bbd39-78e0-467d-9bfc-c6c5cc09918e",
                     "path": "<Keyboard>/f",
                     "interactions": "",
@@ -432,6 +421,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dd03fe1e-ac8c-4b45-868e-66bcc8d8bc82",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenBackpack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

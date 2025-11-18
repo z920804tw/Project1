@@ -14,7 +14,6 @@ public class PlayerInteract : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] LayerMask placeLayerMask;
-    public List<GameObject> hintGameObjectList;
     [SerializeField] bool canPlace;
     [SerializeField] bool canThrow;
     bool isThrow;
@@ -90,7 +89,7 @@ public class PlayerInteract : MonoBehaviour
             //更新物品欄
             if (playerInventory != null)
             {
-                UIManager.Instance.inventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
                 playerInventory.SlotAmount = -1;
             }
             //更新動畫
@@ -110,7 +109,7 @@ public class PlayerInteract : MonoBehaviour
                 playerInventory.handObj.GetComponent<PickObject>().ColliderAndRig(true);
                 playerInventory.handObj = null;
 
-                UIManager.Instance.inventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
                 playerInventory.SlotAmount = -1;
             }
             anim.ThrowAnim(false, false);
@@ -131,14 +130,13 @@ public class PlayerInteract : MonoBehaviour
             Destroy(hintUIGameObj);
 
             //Interact部分
-            hintGameObjectList.Remove(interactObj);
             interactObj.GetComponent<IInteractable>().Interact(transform.root.gameObject);
 
             if (UIManager.Instance.hintUIList.Count <= 0)
             {
                 UIManager.Instance.ShowInteractHint(false);
             }
-            UIManager.Instance.UpdateSelect(0);
+            UIManager.Instance.HintUISelect(0);
         }
     }
     //--------按鍵偵測----------//
@@ -156,10 +154,7 @@ public class PlayerInteract : MonoBehaviour
             hint.GetComponent<Hint>().SetHintInfo(other.gameObject, interactable.GetHintText());
             hint.transform.SetParent(UIManager.Instance.Content);
             UIManager.Instance.hintUIList.Add(hint);
-            UIManager.Instance.UpdateSelect(0);
-
-            //加入hintGameObjectList
-            hintGameObjectList.Add(other.gameObject);
+            UIManager.Instance.HintUISelect(0);
 
         }
     }
@@ -182,13 +177,12 @@ public class PlayerInteract : MonoBehaviour
                     }
                 }
             }
-            hintGameObjectList.Remove(other.gameObject);
 
             if (UIManager.Instance.hintUIList.Count <= 0)
             {
                 UIManager.Instance.ShowInteractHint(false);
             }
-            UIManager.Instance.UpdateSelect(0);
+            UIManager.Instance.HintUISelect(0);
         }
     }
 }
