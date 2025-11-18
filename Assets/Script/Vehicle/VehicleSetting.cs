@@ -58,6 +58,13 @@ public class VehicleSetting : MonoBehaviour
             target.transform.position = setPos.position;
             target.transform.rotation = setPos.rotation;
 
+            UIManager.Instance.ShowInteractHint(false);
+            foreach (GameObject i in UIManager.Instance.hintUIList)
+            {
+                Destroy(i);
+            }
+            UIManager.Instance.hintUIList.Clear();
+            target.GetComponent<PlayerStatus>().playerInteract.hintGameObjectList.Clear();
 
             //將載具功能打開
             VehicleStatus(true);
@@ -125,11 +132,13 @@ public class VehicleSetting : MonoBehaviour
             {
                 hasStart = !isEngineStart;
                 StartCoroutine(DelayVehicleStart(delayTime));
+                Debug.Log("啟動引擎");
             }
             else if (isEngineStart)
             {
                 hasStart = true;
                 StartCoroutine(DelayVehicleOff(delayTime));
+                Debug.Log("關閉引擎");
             }
         }
         else
@@ -143,9 +152,7 @@ public class VehicleSetting : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            Debug.Log("進入");
         }
-
     }
 
     void OnTriggerExit(Collider other)
@@ -153,8 +160,6 @@ public class VehicleSetting : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            Debug.Log("離開");
-            // GetComponent<Rigidbody>().isKinematic = false;
         }
     }
     IEnumerator DelayVehicleStart(float value)

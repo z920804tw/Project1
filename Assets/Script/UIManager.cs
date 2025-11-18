@@ -16,7 +16,12 @@ public class UIManager : MonoBehaviour
 
     [Header("Interaction UI")]
     public GameObject interactUI;
-    [SerializeField] TMP_Text hintText;
+    public List<GameObject> hintUIList;
+    [SerializeField] int selectIndex;
+    public int SelectIndex { get { return selectIndex; } }
+    [SerializeField] Transform content;
+    [SerializeField] GameObject hintUI;
+    public Transform Content { get { return content; } }
 
     public void Awake()
     {
@@ -27,18 +32,20 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         ShowPlayerUI(true);
+        selectIndex=0;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        Vector2 h= hintUI.GetComponent<RectTransform>().sizeDelta;
+        h.y=content.GetComponent<RectTransform>().sizeDelta.y;
+        hintUI.GetComponent<RectTransform>().sizeDelta=h;
     }
 
-    public void ShowInteractHint(bool t, string text)
+    public void ShowInteractHint(bool t)
     {
         interactUI.SetActive(t);
-        hintText.text = text;
     }
     public void UpdateVehecleUI(float speed, float fuelValue)
     {
@@ -53,5 +60,27 @@ public class UIManager : MonoBehaviour
     public void ShowPlayerUI(bool t)
     {
         playerUI.SetActive(t);
+    }
+
+    public void UpdateSelect(int value)
+    {   
+        selectIndex += value;
+        if (selectIndex >= hintUIList.Count)
+        {
+            selectIndex = 0;
+        }
+        else if (selectIndex < 0)
+        {
+            selectIndex = hintUIList.Count - 1;
+        }
+
+        if (hintUIList.Count > 0)
+        {
+            foreach (GameObject i in hintUIList)
+            {
+                i.GetComponent<Hint>().ShowSelect(false);
+            }
+            hintUIList[selectIndex].GetComponent<Hint>().ShowSelect(true);
+        }
     }
 }

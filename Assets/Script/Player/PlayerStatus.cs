@@ -50,7 +50,7 @@ public class PlayerStatus : MonoBehaviour
         playerInventory.enabled = isNormal;
         playerInteract.enabled = isNormal;
         GetComponent<CharacterController>().enabled = isNormal;
-        interactCollider.enabled=isNormal;
+        interactCollider.enabled = isNormal;
         //組件設定
 
         //攝影機設定
@@ -83,20 +83,17 @@ public class PlayerStatus : MonoBehaviour
         playerMove.OnAim();
     }
     //--------玩家移動--------//
-    //--------攝影機控制--------//
-    // public void OnLook(InputValue value)
-    // {
-    //     playerCam.OnLook(value.Get<Vector2>());
-    // }
-    // public void OnZoom(InputValue value)
-    // {
-    //     playerCam.OnZoom(value.Get<float>());
-    // }
-    //--------攝影機控制--------//
+
     //--------物品欄--------//
     public void OnSelect(InputValue value)
     {
-        playerInventory.OnSelect(value.Get<float>());
+        float value1=value.Get<float>();
+        playerInventory.OnSelect(value1);
+
+        if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf)
+        {
+            UIManager.Instance.UpdateSelect(-(int)value1);
+        }
     }
     //--------物品欄--------//
     //--------玩家互動--------//

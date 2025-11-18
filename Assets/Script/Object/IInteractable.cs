@@ -3,6 +3,6 @@ using UnityEngine;
 public interface IInteractable
 {
     void Interact(GameObject target);
-    void ShowHint(bool t);
-    
+    string GetHintText();
+
 }

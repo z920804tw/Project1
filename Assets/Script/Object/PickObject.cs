@@ -20,17 +20,16 @@ public class PickObject : MonoBehaviour, IInteractable
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        hintText = $"{itemSO.itemName}";
+        hintText = $"{itemSO.hintText} {itemSO.itemName}";
     }
     //-------IInteractable--------//
     public void Interact(GameObject target)
     {
         unityEvent.Invoke(target);
-        ShowHint(false);
     }
-    public void ShowHint(bool t)
+    public string GetHintText()
     {
-        UIManager.Instance.ShowInteractHint(t, hintText);
+        return hintText;
     }
     //-------IInteractable--------//
 

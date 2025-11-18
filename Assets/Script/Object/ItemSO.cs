@@ -5,5 +5,6 @@ public class ItemSO : ScriptableObject
 {
     public ItemType itemType;
     public string itemName;
+    public string hintText;
     public bool canStack;
 }

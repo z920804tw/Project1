@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,11 +8,13 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] ThirdPersonMove thirdPersonMove;
     [SerializeField] ThirdPersonAnimation anim;
     [SerializeField] PlayerInventory playerInventory;
-    [SerializeField] GameObject currentTarget;
+    [SerializeField] GameObject hintPrefab;
     GameObject mainCam;
     Vector3 placePos;
 
     [Header("Debug")]
+    [SerializeField] LayerMask placeLayerMask;
+    public List<GameObject> hintGameObjectList;
     [SerializeField] bool canPlace;
     [SerializeField] bool canThrow;
     bool isThrow;
@@ -36,7 +39,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 5f))
+                if (Physics.Raycast(ray, out hit, 5f, placeLayerMask))
                 {
                     canPlace = true;
                     canThrow = false;
@@ -117,10 +120,25 @@ public class PlayerInteract : MonoBehaviour
     }
     public void OnInteract()
     {
-        if (currentTarget != null && !thirdPersonMove.IsAim)
+        //取得當前UI的選取
+        if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf)
         {
-            currentTarget.GetComponent<IInteractable>().Interact(transform.root.gameObject);
-            currentTarget = null;
+            GameObject interactObj = UIManager.Instance.hintUIList[UIManager.Instance.SelectIndex].GetComponent<Hint>().HintGameObjcet;
+
+            //UI部分
+            GameObject hintUIGameObj = UIManager.Instance.hintUIList[UIManager.Instance.SelectIndex];
+            UIManager.Instance.hintUIList.Remove(hintUIGameObj);
+            Destroy(hintUIGameObj);
+
+            //Interact部分
+            hintGameObjectList.Remove(interactObj);
+            interactObj.GetComponent<IInteractable>().Interact(transform.root.gameObject);
+
+            if (UIManager.Instance.hintUIList.Count <= 0)
+            {
+                UIManager.Instance.ShowInteractHint(false);
+            }
+            UIManager.Instance.UpdateSelect(0);
         }
     }
     //--------按鍵偵測----------//
@@ -129,8 +147,20 @@ public class PlayerInteract : MonoBehaviour
         IInteractable interactable = other.GetComponent<IInteractable>();
         if (interactable != null)
         {
-            currentTarget = other.gameObject;
-            currentTarget.GetComponent<IInteractable>().ShowHint(true);
+            if (UIManager.Instance.hintUIList.Count == 0)
+            {
+                UIManager.Instance.ShowInteractHint(true);
+            }
+            //新增HintUI物件並記錄
+            GameObject hint = Instantiate(hintPrefab, UIManager.Instance.Content.position, Quaternion.identity);
+            hint.GetComponent<Hint>().SetHintInfo(other.gameObject, interactable.GetHintText());
+            hint.transform.SetParent(UIManager.Instance.Content);
+            UIManager.Instance.hintUIList.Add(hint);
+            UIManager.Instance.UpdateSelect(0);
+
+            //加入hintGameObjectList
+            hintGameObjectList.Add(other.gameObject);
+
         }
     }
     void OnTriggerExit(Collider other)
@@ -138,11 +168,27 @@ public class PlayerInteract : MonoBehaviour
         IInteractable interactable = other.GetComponent<IInteractable>();
         if (interactable != null)
         {
-            if (currentTarget != null && currentTarget.GetComponent<IInteractable>() == interactable)
+            //移除hintUI和物件
+            if (UIManager.Instance != null)
             {
-                currentTarget.GetComponent<IInteractable>().ShowHint(false);
-                currentTarget = null;
+                foreach (GameObject i in UIManager.Instance.hintUIList)
+                {
+                    //找到相符的紀錄物件就代表是目標
+                    if (i.GetComponent<Hint>().HintGameObjcet == other.gameObject)
+                    {
+                        UIManager.Instance.hintUIList.Remove(i);
+                        Destroy(i);
+                        break;
+                    }
+                }
             }
+            hintGameObjectList.Remove(other.gameObject);
+
+            if (UIManager.Instance.hintUIList.Count <= 0)
+            {
+                UIManager.Instance.ShowInteractHint(false);
+            }
+            UIManager.Instance.UpdateSelect(0);
         }
     }
 }

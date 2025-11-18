@@ -12,12 +12,11 @@ public class InteractObject : MonoBehaviour, IInteractable
     {
         unityEvent.Invoke(target);
         unityEvent1.Invoke();
-        ShowHint(false);
         Debug.Log("你執行了一個事件" + "，觸發者:" + target.name);
     }
-    public void ShowHint(bool t)
+    public string GetHintText()
     {
-        UIManager.Instance.ShowInteractHint(t,hintText);
+        return hintText;
     }
     //-------IInteractable--------//
 }
