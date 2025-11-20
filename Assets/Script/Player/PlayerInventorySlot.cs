@@ -24,8 +24,7 @@ public class PlayerInventorySlot : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        amountText.text = $"{amount}";
-        imgText.text = "";
+
     }
 
     // Update is called once per frame
@@ -67,14 +66,21 @@ public class PlayerInventorySlot : MonoBehaviour
 
     public void SetBackpackSlotInfo(GameObject item)
     {
-        isOccupy=true;
-        slotItemSO=item.GetComponent<PickObject>().itemSO;
-        itemName=item.GetComponent<PickObject>().itemSO.itemName;
-        itemDescription=item.GetComponent<PickObject>().itemSO.itemDescription;
-        canStack=item.GetComponent<PickObject>().itemSO.canStack;
+        isOccupy = true;
+        slotItemSO = item.GetComponent<PickObject>().itemSO;
+        itemName = item.GetComponent<PickObject>().itemSO.itemName;
+        itemDescription = item.GetComponent<PickObject>().itemSO.itemDescription;
+        canStack = item.GetComponent<PickObject>().itemSO.canStack;
 
-        amount=1;
-        amountText.text=$"{amount}";
-        imgText.text=$"{itemName}";
+        amount = 1;
+        amountText.text = $"{amount}";
+        imgText.text = $"{itemName}";
+    }
+
+    public void InitializationInfo()
+    {
+        amount=0;
+        amountText.text = $"{amount}";
+        imgText.text = "";
     }
 }

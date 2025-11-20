@@ -9,10 +9,11 @@ public class UIManager : MonoBehaviour
     [Header("Player UI")]
     [SerializeField] GameObject playerUI;
     [SerializeField] GameObject backpackUI;
+    [SerializeField] GameObject aimHint;
     public List<GameObject> handInventorySlots;
     public List<GameObject> backpackInventorySlots;
     bool isOpenBackpack;
-    public bool IsOpenBackpack{get {return isOpenBackpack;} set{ isOpenBackpack=value;}}
+    public bool IsOpenBackpack { get { return isOpenBackpack; } set { isOpenBackpack = value; } }
     [Header("Vehicle UI")]
     [SerializeField] GameObject vehicleUI;
     [SerializeField] TMP_Text vehicleSpeedText;
@@ -36,15 +37,19 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         ShowPlayerUI(true);
+        SetInventoryInfo();
         selectIndex = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 h = hintUI.GetComponent<RectTransform>().sizeDelta;
-        h.y = content.GetComponent<RectTransform>().sizeDelta.y;
-        hintUI.GetComponent<RectTransform>().sizeDelta = h;
+        if (interactUI.activeSelf)
+        {
+            Vector2 h = hintUI.GetComponent<RectTransform>().sizeDelta;
+            h.y = content.GetComponent<RectTransform>().sizeDelta.y;
+            hintUI.GetComponent<RectTransform>().sizeDelta = h;
+        }
     }
 
     public void ShowInteractHint(bool t)
@@ -65,12 +70,27 @@ public class UIManager : MonoBehaviour
     {
         playerUI.SetActive(t);
     }
+    public void ShowAimHint(bool t)
+    {
+        aimHint.SetActive(t);
+    }
     //----------物品欄-----------//
     public void ShowBackpackUI(bool t)
     {
         backpackUI.SetActive(t);
     }
-
+    public void SetInventoryInfo()
+    {
+        foreach (GameObject i in handInventorySlots)
+        {
+            i.GetComponent<PlayerInventorySlot>().InitializationInfo();
+        }
+        foreach (GameObject i in backpackInventorySlots)
+        {
+            i.GetComponent<PlayerInventorySlot>().InitializationInfo();
+        }
+        Debug.Log("物品欄初始化完成");
+    }
     //----------物品欄-----------//
 
 

@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerInteract : MonoBehaviour
 {
@@ -16,11 +15,13 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] LayerMask placeLayerMask;
     [SerializeField] bool canPlace;
     [SerializeField] bool canThrow;
-    bool isThrow;
+    [SerializeField] bool canInteract;
+    [SerializeField]bool isThrowAnim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mainCam = GameObject.FindWithTag("MainCamera");
+        canInteract = true;
     }
 
     // Update is called once per frame
@@ -38,15 +39,15 @@ public class PlayerInteract : MonoBehaviour
             {
                 Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 5f, placeLayerMask))
+                if (Physics.Raycast(ray, out hit, 8f, placeLayerMask))
                 {
                     canPlace = true;
                     canThrow = false;
                     placePos = hit.point;
                     placePos.y += 1f;
-                    if (isThrow)
+                    if (isThrowAnim)
                     {
-                        isThrow = false;
+                        isThrowAnim = false;
                         anim.ThrowAnim(false, false);
                     }
                 }
@@ -55,9 +56,9 @@ public class PlayerInteract : MonoBehaviour
                     canPlace = false;
                     canThrow = true;
                     //防止重複撥放動畫
-                    if (!isThrow)
+                    if (!isThrowAnim)
                     {
-                        isThrow = true;
+                        isThrowAnim = true;
                         anim.ThrowAnim(true, false);
                     }
                 }
@@ -67,9 +68,9 @@ public class PlayerInteract : MonoBehaviour
                 canPlace = false;
                 canThrow = false;
 
-                if (isThrow)
+                if (isThrowAnim)
                 {
-                    isThrow = false;
+                    isThrowAnim = false;
                     anim.ThrowAnim(false, false);
                 }
             }
@@ -94,7 +95,7 @@ public class PlayerInteract : MonoBehaviour
             }
             //更新動畫
             anim.ThrowAnim(true, true);
-            isThrow = false;
+            isThrowAnim = false;
             canThrow = false;
         }
     }
@@ -113,14 +114,14 @@ public class PlayerInteract : MonoBehaviour
                 playerInventory.SlotAmount = -1;
             }
             anim.ThrowAnim(false, false);
-            isThrow = false;
+            isThrowAnim = false;
             canPlace = false;
         }
     }
     public void OnInteract()
     {
         //取得當前UI的選取
-        if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf)
+        if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf && canInteract)
         {
             GameObject interactObj = UIManager.Instance.hintUIList[UIManager.Instance.SelectIndex].GetComponent<Hint>().HintGameObjcet;
 
@@ -137,6 +138,8 @@ public class PlayerInteract : MonoBehaviour
                 UIManager.Instance.ShowInteractHint(false);
             }
             UIManager.Instance.HintUISelect(0);
+
+            StartCoroutine(InteractColdDown(0.5f));
         }
     }
     //--------按鍵偵測----------//
@@ -184,5 +187,13 @@ public class PlayerInteract : MonoBehaviour
             }
             UIManager.Instance.HintUISelect(0);
         }
+    }
+
+
+    IEnumerator InteractColdDown(float delay)
+    {
+        canInteract=false;
+        yield return new WaitForSeconds(delay);
+        canInteract=true;
     }
 }

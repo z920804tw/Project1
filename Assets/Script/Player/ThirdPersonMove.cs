@@ -7,7 +7,6 @@ public class ThirdPersonMove : MonoBehaviour
 {
     public PlayerInput playerInput;
     [Header("物件綁定")]
-    public GameObject aimHint;
     GameObject mainCam;
     [SerializeField] CharacterController controller;
     [SerializeField] ThirdPersonAnimation anim;
@@ -110,7 +109,10 @@ public class ThirdPersonMove : MonoBehaviour
             //切換瞄準攝影機
             followCam.SetActive(false);
             aimCam.SetActive(true);
-            aimHint.SetActive(true);
+
+            //瞄準準新
+            UIManager.Instance.ShowAimHint(true);
+
             //產生射線
             Ray ray = new Ray(aimCam.transform.position, aimCam.transform.forward);
             RaycastHit hit;
@@ -128,7 +130,7 @@ public class ThirdPersonMove : MonoBehaviour
             lookDir.y = 0;
             Quaternion rotation = Quaternion.LookRotation(lookDir);
             transform.root.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSmoothTime * Time.deltaTime);
-            Debug.DrawRay(aimCam.transform.position, lookDir, Color.red);
+            // Debug.DrawRay(aimCam.transform.position, lookDir, Color.red);
 
             //玩家頭轉向目標點
             anim.HeadLook();
@@ -144,7 +146,7 @@ public class ThirdPersonMove : MonoBehaviour
         }
         else
         {
-            aimHint.SetActive(false);
+            UIManager.Instance.ShowAimHint(false);
             //一般移動模式
             if (inputDir != Vector3.zero)
             {

@@ -45,7 +45,7 @@ public class ThirdPersonAnimation : MonoBehaviour
             endPoint = mainCam.transform.position + mainCam.transform.forward * 10;
         }
         lookPoint.transform.position = endPoint;
-        Debug.DrawRay(mainCam.transform.position, endPoint - mainCam.transform.position, Color.red);
+        // Debug.DrawRay(mainCam.transform.position, endPoint - mainCam.transform.position, Color.red);
     }
 
     public void ResetHeadLook()
@@ -61,7 +61,7 @@ public class ThirdPersonAnimation : MonoBehaviour
     }
     public void GetOnVehicle(bool t)
     {
-        animator.SetBool("isSit", t);
+        animator.SetBool("onVehicle", t);
     }
 
     public void MoveAnimState(Vector3 moveInput, bool isRun)
@@ -123,25 +123,25 @@ public class ThirdPersonAnimation : MonoBehaviour
 
     public void ThrowAnim(bool isAim, bool isThrow)
     {
-
-        StopCoroutine("AnimLayerDelay");
+        StopAllCoroutines();
+        float starValue =animator.GetLayerWeight(1);
         if (isAim)
         {
             if (isThrow)
             {
                 animator.SetTrigger("isThrow");
-                StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
+                StartCoroutine(AnimLayerDelay(1, starValue, 0, 0.8f));
             }
             else
             {
                 animator.SetBool("aimThrow", true);
-                StartCoroutine(AnimLayerDelay(1, 0, 1, 1f));
+                StartCoroutine(AnimLayerDelay(1, starValue, 1, 0.8f));
             }
         }
         else
         {
             animator.SetBool("aimThrow", false);
-            StartCoroutine(AnimLayerDelay(1, 1, 0, 1f));
+            StartCoroutine(AnimLayerDelay(1, starValue, 0, 0.8f));
         }
     }
 
