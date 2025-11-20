@@ -39,7 +39,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 8f, placeLayerMask))
+                if (Physics.Raycast(ray, out hit, 6f, placeLayerMask))
                 {
                     canPlace = true;
                     canThrow = false;

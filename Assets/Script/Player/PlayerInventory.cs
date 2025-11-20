@@ -60,6 +60,7 @@ public class PlayerInventory : MonoBehaviour
         bool hasItem = CheckHandSameItem(item);
         if (!hasItem)
         {
+            item.SetActive(false);
             foreach (GameObject i in handSlots)
             {
                 PlayerInventorySlot slot = i.GetComponent<PlayerInventorySlot>();
@@ -90,7 +91,7 @@ public class PlayerInventory : MonoBehaviour
         {
             //先將手中物品設定成null，目的是為了確保如果最後物品欄有空欄位並且選擇框是選在空的欄位上時，可以上handObj也是空的
             handObj = null;
-            //先將全部的物品都設定關閉
+            //先將全部的物品、選取UI都設定關閉
             foreach (GameObject slot in handSlots)
             {
                 PlayerInventorySlot pis = slot.GetComponent<PlayerInventorySlot>();

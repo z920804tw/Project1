@@ -43,9 +43,13 @@ public class PlayerInventorySlot : MonoBehaviour
         {
             amountText.text = $"{0}";
             imgText.text = $"";
+
             slotItemSO = null;
             slotObject = null;
+            itemName="";
+            itemDescription="";
             isOccupy = false;
+            canStack=false;
         }
 
     }
@@ -61,7 +65,6 @@ public class PlayerInventorySlot : MonoBehaviour
         amount = 1;
         amountText.text = $"{amount}";
         imgText.text = $"{itemName}";
-        slotObject.SetActive(false);
     }
 
     public void SetBackpackSlotInfo(GameObject item)

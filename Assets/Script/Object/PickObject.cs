@@ -81,7 +81,7 @@ public class PickObject : MonoBehaviour, IInteractable
     {
         ColliderAndRig(true);
         Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
-        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
+        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), true);
         rb.AddForce(dir, ForceMode.Impulse);
         StartCoroutine(WaitReset());
     }
@@ -90,6 +90,6 @@ public class PickObject : MonoBehaviour, IInteractable
     {
         yield return new WaitForSeconds(0.5f);
         Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
-        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
+        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), false);
     }
 }
