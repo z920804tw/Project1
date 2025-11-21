@@ -1,8 +1,6 @@
 using System.Collections;
-using NUnit.Framework;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class VehicleSetting : MonoBehaviour
@@ -14,7 +12,6 @@ public class VehicleSetting : MonoBehaviour
     [SerializeField] VehicleFuelTank vehicleFuelTank;
     ThirdPersonCamera thirdPersonCamera;
     [Header("元件套用")]
-    [SerializeField] GameObject vehicleCamera;
     [SerializeField] Transform interactPos;
     [SerializeField] Transform exitPos;
     [SerializeField] Transform setPos;
@@ -69,8 +66,8 @@ public class VehicleSetting : MonoBehaviour
             //將載具功能打開
             VehicleStatus(true);
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            thirdPersonCamera.CinemachineTargetYaw = 0;
-            thirdPersonCamera.CinemachineTargetPitch = 20;
+            // thirdPersonCamera.CinemachineTargetYaw = 0;
+            // thirdPersonCamera.CinemachineTargetPitch = 20;
 
             Target = target;
             isOccupy = true;
@@ -87,7 +84,6 @@ public class VehicleSetting : MonoBehaviour
 
             target.GetComponent<PlayerStatus>().SetStatus(Status.Normal);
             target.GetComponent<PlayerStatus>().anim.GetOnVehicle(false);
-
 
             isOccupy = false;
             Target = null;
@@ -110,8 +106,7 @@ public class VehicleSetting : MonoBehaviour
         thirdPersonCamera.enabled = t;
         UIManager.Instance.ShowVehecleUI(t);
 
-        vehicleCamera.SetActive(t);
-        vehicleCamera.GetComponent<CinemachineCamera>().Follow = lookTarget;
+        CameraManager.Instance.vehicleCam.GetComponent<CinemachineCamera>().Follow = lookTarget;
         interactPos.gameObject.SetActive(!t);
     }
     //-------按鍵偵測---------//

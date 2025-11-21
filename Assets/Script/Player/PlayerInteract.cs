@@ -16,7 +16,7 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] bool canPlace;
     [SerializeField] bool canThrow;
     [SerializeField] bool canInteract;
-    [SerializeField]bool isThrowAnim;
+    [SerializeField] bool isThrowAnim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -75,6 +75,14 @@ public class PlayerInteract : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ResetThrowPlace()
+    {
+        canThrow=false;
+        canPlace=false;
+        isThrowAnim=false;
+        anim.ThrowAnim(false,false);
     }
     //--------按鍵偵測----------//
     public void OnThrow()
@@ -139,7 +147,7 @@ public class PlayerInteract : MonoBehaviour
             }
             UIManager.Instance.HintUISelect(0);
 
-            StartCoroutine(InteractColdDown(0.5f));
+            StartCoroutine(InteractColdDown(0.2f));
         }
     }
     //--------按鍵偵測----------//
@@ -192,8 +200,8 @@ public class PlayerInteract : MonoBehaviour
 
     IEnumerator InteractColdDown(float delay)
     {
-        canInteract=false;
+        canInteract = false;
         yield return new WaitForSeconds(delay);
-        canInteract=true;
+        canInteract = true;
     }
 }

@@ -12341,7 +12341,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1582748832}
-  - component: {fileID: 1582748833}
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
@@ -12366,22 +12365,6 @@ Transform:
   - {fileID: 198174185}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1582748833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1582748831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa46ffb1eaadb044aa1ca6c098e19e71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraManager
-  currentCameraMode: 0
-  playerThirdPersonNormalCam: {fileID: 1752108498}
-  playerAimCam: {fileID: 1027443550}
-  vehicleCam: {fileID: 456632045}
 --- !u!1 &1586654795
 GameObject:
   m_ObjectHideFlags: 0
@@ -34096,7 +34079,6 @@ GameObject:
   - component: {fileID: 4627164569664751928}
   - component: {fileID: 5338885700024349763}
   - component: {fileID: 3324165158524016900}
-  - component: {fileID: 5338885700024349764}
   m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
@@ -36479,6 +36461,7 @@ MonoBehaviour:
   vehicleAudio: {fileID: 1341975362522547536}
   vehicleController: {fileID: 5148270646283533011}
   vehicleFuelTank: {fileID: 4000343599942813301}
+  vehicleCamera: {fileID: 456632045}
   interactPos: {fileID: 6270127927673304235}
   exitPos: {fileID: 931630681627092131}
   setPos: {fileID: 2702540638805237813}
@@ -38387,29 +38370,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.586112, y: 0.905315, z: 3.4489112}
-  m_Center: {x: 0.007534504, y: -0.0068596303, z: -0.2923472}
---- !u!65 &5338885700024349764
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4578405360815700482}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.22323227, y: 1.206721, z: 1.0125284}
-  m_Center: {x: -0.012529373, y: 0.103360474, z: 1.9356592}
+  m_Size: {x: 1.586112, y: 0.905315, z: 4.4073443}
+  m_Center: {x: 0.007534504, y: -0.0068596303, z: 0.18686938}
 --- !u!4 &5344088582681937911
 Transform:
   m_ObjectHideFlags: 0
@@ -46540,6 +46502,8 @@ MonoBehaviour:
     m_Bits: 1719
   sphereRadius: 0.25
   sphereDistance: 0
+  followCam: {fileID: 1752108498}
+  aimCam: {fileID: 1027443550}
   isAim: 0
 --- !u!23 &7544725308453798994
 MeshRenderer:

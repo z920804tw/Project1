@@ -30,14 +30,17 @@ public class ThirdPersonMove : MonoBehaviour
     Vector3 jumpVelecity;
 
     [Header("瞄準")]
-    public GameObject followCam;
-    public GameObject aimCam;
+    Transform aimCam;
     [SerializeField] bool isAim;
-    public bool IsAim { get { return isAim; } }
+    public bool IsAim { get { return isAim; } set { isAim = value; } }
 
 
 
-
+    void OnEnable()
+    {
+        isRun=false;
+        wasRun=false;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -45,6 +48,8 @@ public class ThirdPersonMove : MonoBehaviour
         {
             mainCam = GameObject.FindWithTag("MainCamera");
         }
+
+        aimCam = CameraManager.Instance.playerAimCam.transform;
     }
 
     // Update is called once per frame
@@ -107,10 +112,10 @@ public class ThirdPersonMove : MonoBehaviour
         if (isAim)
         {
             //切換瞄準攝影機
-            followCam.SetActive(false);
-            aimCam.SetActive(true);
+            if (CameraManager.Instance == null) return;
+            CameraManager.Instance.SetCameraMode(CameraMode.Aim);
 
-            //瞄準準新
+            //瞄準準心UI
             UIManager.Instance.ShowAimHint(true);
 
             //產生射線
@@ -146,7 +151,6 @@ public class ThirdPersonMove : MonoBehaviour
         }
         else
         {
-            UIManager.Instance.ShowAimHint(false);
             //一般移動模式
             if (inputDir != Vector3.zero)
             {
@@ -158,9 +162,9 @@ public class ThirdPersonMove : MonoBehaviour
             }
 
             anim.ResetHeadLook();
+            UIManager.Instance.ShowAimHint(false);
 
-            followCam.SetActive(true);
-            aimCam.SetActive(false);
+            CameraManager.Instance.SetCameraMode(CameraMode.Normal);
 
             //瞄準結束後如果有在瞄準期間按下奔跑按鍵就在瞄準結束後再賦予奔跑的功能
             if (wasRun)

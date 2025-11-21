@@ -21,6 +21,11 @@ public class ThirdPersonCamera : MonoBehaviour
     float zoomValue;
     Vector2 look;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void OnEnable()
+    {
+        cinemachineTargetYaw = 0;
+        cinemachineTargetPitch = 20;
+    }
     void Start()
     {
         //找攝影機
@@ -30,6 +35,8 @@ public class ThirdPersonCamera : MonoBehaviour
             //儲存攝影機的Y軸
             cinemachineTargetYaw = mainCam.transform.eulerAngles.y;
         }
+        cinemachineTargetYaw = 0;
+        cinemachineTargetPitch = 20;
     }
 
     // Update is called once per frame
@@ -51,7 +58,7 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         if (UIManager.Instance.IsOpenBackpack)
         {
-            look=Vector2.zero;
+            look = Vector2.zero;
             return;
         }
 

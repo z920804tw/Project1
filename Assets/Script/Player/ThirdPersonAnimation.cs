@@ -145,7 +145,6 @@ public class ThirdPersonAnimation : MonoBehaviour
         }
     }
 
-
     //負責開關Layer的權重延遲
     IEnumerator AnimLayerDelay(int layer, float start, float end, float duration)
     {

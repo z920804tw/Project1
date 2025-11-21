@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum Status { Normal, InVehicle }
+public enum Status { Normal, Climb, InVehicle, Inventory, Dialogue, }
 public class PlayerStatus : MonoBehaviour
 {
     public Status currentPlayerStatus;
@@ -30,42 +30,77 @@ public class PlayerStatus : MonoBehaviour
     public void SetStatus(Status status)
     {
         currentPlayerStatus = status;
-        bool isNormal;
-        if (status == Status.Normal)
+        switch (currentPlayerStatus)
         {
-            isNormal = true;
-        }
-        else
-        {
-            isNormal = false;
-        }
+            case Status.Normal:
+                SetNormalStatus();
+                break;
+            case Status.Climb:
+                break;
 
-        if (playerInventory.handObj != null)
-        {
-            playerInventory.handObj.SetActive(isNormal);
+            case Status.InVehicle:
+                SetVehicleStatus();
+                break;
+
+            case Status.Inventory:
+                SetOpenInventoryStatus();
+                break;
+
+            case Status.Dialogue:
+                break;
+
+            default:
+                break;
         }
-        //組件設定
-        playerInput.enabled = isNormal;
-        playerCam.enabled = isNormal;
-        playerMove.enabled = isNormal;
-        playerInventory.enabled = isNormal;
-        playerInteract.enabled = isNormal;
-        GetComponent<CharacterController>().enabled = isNormal;
-        interactCollider.enabled = isNormal;
-        //組件設定
-
-        //攝影機設定
-        playerMove.followCam.SetActive(isNormal);
-        playerMove.aimCam.SetActive(false);
-        //攝影機設定
-
-        //UI設定
-        UIManager.Instance.ShowPlayerUI(isNormal);
-        //UI設定
 
         anim.MoveVelocity = 0;
         anim.animator.SetFloat("moveVelocity", 0);
     }
+    //-------------------------------狀態設定------------------------------//
+    //一般行走功能，大部分功能都開啟，包含了移動、攝影機移動、背包、互動、碰撞相等等功能
+    void SetAllComponet(bool t) //玩家功能全域控制
+    {
+        if (playerInventory.handObj != null)
+        {
+            playerInventory.handObj.SetActive(t);
+        }
+        playerInput.enabled = t;
+        playerMove.enabled = t;
+        playerCam.enabled = t;
+        playerInventory.enabled = t;
+        playerInteract.enabled = t;
+        GetComponent<CharacterController>().enabled = t;
+        interactCollider.enabled = t;
+
+        // playerCam.CinemachineTargetYaw = 0;
+        // playerCam.CinemachineTargetPitch = 20;
+
+        UIManager.Instance.ShowPlayerUI(t);
+    }
+    void SetNormalStatus()
+    {
+        SetAllComponet(true);
+        CameraManager.Instance.SetCameraMode(CameraMode.Normal);
+
+    }
+    void SetVehicleStatus()
+    {
+        SetAllComponet(false);
+        CameraManager.Instance.SetCameraMode(CameraMode.InVehicle);
+    }
+    void SetOpenInventoryStatus()
+    {
+        playerMove.IsAim = false;
+        playerInteract.ResetThrowPlace();
+        CameraManager.Instance.SetCameraMode(CameraMode.Normal);
+
+        playerMove.enabled = false;
+        playerCam.enabled = false;
+        playerInteract.enabled = false;
+
+    }
+    //-------------------------------狀態設定------------------------------//
+
     //--------玩家移動--------//
     public void OnMove(InputValue value)
     {
@@ -105,10 +140,18 @@ public class PlayerStatus : MonoBehaviour
     {
         UIManager.Instance.IsOpenBackpack = !UIManager.Instance.IsOpenBackpack;
         UIManager.Instance.ShowBackpackUI(UIManager.Instance.IsOpenBackpack);
+        if (!UIManager.Instance.IsOpenBackpack)
+        {
+            SetStatus(Status.Normal);
+        }
+        else
+        {
+            SetStatus(Status.Inventory);
+        }
     }
     public void OnInteract(InputValue value)
     {
-        if (UIManager.Instance.IsOpenBackpack) return;
+        if (UIManager.Instance.IsOpenBackpack || playerMove.IsAim) return;
         playerInteract.OnInteract();
     }
     public void OnThrow(InputValue value)

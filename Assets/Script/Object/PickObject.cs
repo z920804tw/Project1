@@ -88,7 +88,7 @@ public class PickObject : MonoBehaviour, IInteractable
 
     IEnumerator WaitReset()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
         Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), false);
     }
