@@ -127,7 +127,11 @@ public class PlayerStatus : MonoBehaviour
     public void OnSelect(InputValue value)
     {
         float value1 = value.Get<float>();
-        playerInventory.OnSelect(value1);
+        if (!UIManager.Instance.interactUI.activeSelf)
+        {
+            playerInventory.OnSelect(value1);
+        }
+
 
         if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf)
         {
