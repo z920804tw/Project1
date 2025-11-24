@@ -4,6 +4,7 @@ using UnityEngine;
 public class ItemSO : ScriptableObject
 {
     public ItemType itemType;
+    public int itemID;
     public string itemName;
     public string itemDescription;
     public string hintText;

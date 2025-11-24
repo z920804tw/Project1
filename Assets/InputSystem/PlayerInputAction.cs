@@ -791,7 +791,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""67465e21-d5b5-4e90-bf56-1595be61ecca"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -800,7 +800,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""91faf152-1bd1-41f2-bbf6-bcc9ba4a23bc"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -816,9 +816,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Click"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""67966ee1-1489-4c3c-ba42-08425bef094d"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

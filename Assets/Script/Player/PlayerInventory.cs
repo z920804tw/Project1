@@ -29,7 +29,7 @@ public class PlayerInventory : MonoBehaviour
             handSlots = UIManager.Instance.handInventorySlots;
             handSlots[selectIndex].GetComponent<PlayerInventorySlot>().selectImg.SetActive(true);
 
-            backpackSlots=UIManager.Instance.backpackInventorySlots;
+            backpackSlots=UIManager.Instance.backpack.backpackInventorySlots;
         }
 
     }
@@ -41,8 +41,8 @@ public class PlayerInventory : MonoBehaviour
         {
             if (i.GetComponent<PlayerInventorySlot>().isOccupy)
             {
-                //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (i.GetComponent<PlayerInventorySlot>().slotItemSO.itemName == item.GetComponent<PickObject>().itemSO.itemName && item.GetComponent<PickObject>().itemSO.canStack)
+                //檢查該物品的itemID是否與撿取的一樣，並且檢查是否能夠堆疊
+                if (i.GetComponent<PlayerInventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && item.GetComponent<PickObject>().itemSO.canStack)
                 {
                     i.GetComponent<PlayerInventorySlot>().UpdateInfo(1);
                     Destroy(item);
@@ -131,7 +131,7 @@ public class PlayerInventory : MonoBehaviour
             if (i.GetComponent<PlayerInventorySlot>().isOccupy)
             {
                 //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (i.GetComponent<PlayerInventorySlot>().ItemName == item.GetComponent<PickObject>().itemSO.itemName && i.GetComponent<PlayerInventorySlot>().CanStack)
+                if (i.GetComponent<PlayerInventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && i.GetComponent<PlayerInventorySlot>().CanStack)
                 {
                     i.GetComponent<PlayerInventorySlot>().UpdateInfo(1);
                     Destroy(item);

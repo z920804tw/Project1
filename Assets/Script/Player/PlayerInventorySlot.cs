@@ -10,8 +10,12 @@ public class PlayerInventorySlot : MonoBehaviour
     // [SerializeField] Image itemImg;
     [SerializeField] string itemName;
     public string ItemName { get { return itemName; } }
+    [SerializeField] int itemID;
+    public int ItemID { get { return itemID; } }
     [SerializeField] string itemDescription;
+    public string ItemDescription { get { return itemDescription; } }
     [SerializeField] int amount;
+    public int Amount { get { return amount; } set { amount = value; } }
     [SerializeField] bool canStack;
     public bool CanStack { get { return canStack; } }
     public bool isOccupy;
@@ -46,10 +50,10 @@ public class PlayerInventorySlot : MonoBehaviour
 
             slotItemSO = null;
             slotObject = null;
-            itemName="";
-            itemDescription="";
+            itemName = "";
+            itemDescription = "";
             isOccupy = false;
-            canStack=false;
+            canStack = false;
         }
 
     }
@@ -59,6 +63,7 @@ public class PlayerInventorySlot : MonoBehaviour
         slotObject = item;
         slotItemSO = item.GetComponent<PickObject>().itemSO;
         itemName = slotItemSO.itemName;
+        itemID = slotItemSO.itemID;
         itemDescription = slotItemSO.itemDescription;
         canStack = slotItemSO.canStack;
 
@@ -72,6 +77,7 @@ public class PlayerInventorySlot : MonoBehaviour
         isOccupy = true;
         slotItemSO = item.GetComponent<PickObject>().itemSO;
         itemName = item.GetComponent<PickObject>().itemSO.itemName;
+        itemID = slotItemSO.itemID;
         itemDescription = item.GetComponent<PickObject>().itemSO.itemDescription;
         canStack = item.GetComponent<PickObject>().itemSO.canStack;
 
@@ -80,9 +86,43 @@ public class PlayerInventorySlot : MonoBehaviour
         imgText.text = $"{itemName}";
     }
 
+    public void SetSwitchSlotInfo(ItemSO itemSO, int amountValue)
+    {
+        if (itemSO != null)
+        {
+            isOccupy = true;
+            slotItemSO = itemSO;
+            itemName = slotItemSO.itemName;
+            itemID = slotItemSO.itemID;
+            itemDescription = slotItemSO.itemDescription;
+            canStack = slotItemSO.canStack;
+
+            amount = amountValue;
+            amountText.text = $"{amount}";
+            imgText.text = $"{itemName}";
+            Debug.Log("套用舊到新");
+        }
+        else
+        {
+            isOccupy = false;
+            slotItemSO = null;
+            itemName = $"";
+            itemID = -1;
+            itemDescription = $"";
+            canStack = false;
+
+            amount = 0;
+            amountText.text = $"{amount}";
+            imgText.text = $"{itemName}";
+            Debug.Log("套用新到舊");
+        }
+
+    }
+
     public void InitializationInfo()
     {
-        amount=0;
+        itemID = -1;
+        amount = 0;
         amountText.text = $"{amount}";
         imgText.text = "";
     }

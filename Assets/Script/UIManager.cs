@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+    public PlayerInput UIInput;
     [Header("Player UI")]
     [SerializeField] GameObject playerUI;
     [SerializeField] GameObject backpackUI;
     [SerializeField] GameObject aimHint;
     public List<GameObject> handInventorySlots;
-    public List<GameObject> backpackInventorySlots;
+    public PlayerBackpack backpack;
     bool isOpenBackpack;
     public bool IsOpenBackpack { get { return isOpenBackpack; } set { isOpenBackpack = value; } }
     [Header("Vehicle UI")]
@@ -78,6 +81,7 @@ public class UIManager : MonoBehaviour
     public void ShowBackpackUI(bool t)
     {
         backpackUI.SetActive(t);
+        UIInput.enabled = t;
     }
     public void SetInventoryInfo()
     {
@@ -85,11 +89,19 @@ public class UIManager : MonoBehaviour
         {
             i.GetComponent<PlayerInventorySlot>().InitializationInfo();
         }
-        foreach (GameObject i in backpackInventorySlots)
+        foreach(GameObject i in backpack.backpackInventorySlots)
         {
             i.GetComponent<PlayerInventorySlot>().InitializationInfo();
         }
+        backpack.ResetBackpackSlotInfo();
         Debug.Log("物品欄初始化完成");
+    }
+    public void OnClick(InputValue value)
+    {
+        if (backpack != null)
+        {
+            backpack.SelectBackPackSlot();
+        }
     }
     //----------物品欄-----------//
 

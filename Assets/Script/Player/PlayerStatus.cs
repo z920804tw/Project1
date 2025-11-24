@@ -72,31 +72,33 @@ public class PlayerStatus : MonoBehaviour
         GetComponent<CharacterController>().enabled = t;
         interactCollider.enabled = t;
 
-        // playerCam.CinemachineTargetYaw = 0;
-        // playerCam.CinemachineTargetPitch = 20;
 
-        UIManager.Instance.ShowPlayerUI(t);
     }
     void SetNormalStatus()
     {
         SetAllComponet(true);
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
+        UIManager.Instance.ShowPlayerUI(true);
+        GameManager.Instance.ShowCursor(false);
 
     }
     void SetVehicleStatus()
     {
         SetAllComponet(false);
+        UIManager.Instance.ShowPlayerUI(false);
         CameraManager.Instance.SetCameraMode(CameraMode.InVehicle);
     }
     void SetOpenInventoryStatus()
     {
         playerMove.IsAim = false;
         playerInteract.ResetThrowPlace();
-        CameraManager.Instance.SetCameraMode(CameraMode.Normal);
 
         playerMove.enabled = false;
         playerCam.enabled = false;
         playerInteract.enabled = false;
+
+        CameraManager.Instance.SetCameraMode(CameraMode.Normal);
+        GameManager.Instance.ShowCursor(true);
 
     }
     //-------------------------------狀態設定------------------------------//
@@ -147,6 +149,7 @@ public class PlayerStatus : MonoBehaviour
         if (!UIManager.Instance.IsOpenBackpack)
         {
             SetStatus(Status.Normal);
+            UIManager.Instance.backpack.ResetBackpackSlotInfo();
         }
         else
         {

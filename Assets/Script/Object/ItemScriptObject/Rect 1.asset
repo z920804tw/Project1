@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Rect 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemType: 2
+  itemID: 1
   itemName: Rect1
-  itemDescription: 
+  itemDescription: This is Rect1
   hintText: Press F Pick
   canStack: 1
