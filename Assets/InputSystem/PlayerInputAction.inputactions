@@ -430,7 +430,7 @@
                     "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "OpenBackpack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -778,6 +778,24 @@
                     "type": "PassThrough",
                     "id": "8f680dd3-8f59-465b-b4e6-f123d946ca48",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Drag",
+                    "type": "Button",
+                    "id": "cada7f10-8812-4b9c-affc-9928f215f4f0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold(duration=1)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseBackpack",
+                    "type": "Button",
+                    "id": "33062403-584c-4628-9705-69b46b74285a",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1199,6 +1217,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "51e1b254-ac3a-451a-9662-fbd7425a3bd9",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce19b31e-1518-474b-9497-43f737e75029",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "CloseBackpack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

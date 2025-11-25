@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-    public PlayerInput UIInput;
+    PlayerInput playerInput;
     [Header("Player UI")]
     [SerializeField] GameObject playerUI;
     [SerializeField] GameObject backpackUI;
@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
     {
         ShowPlayerUI(true);
         SetInventoryInfo();
+        playerInput = GameManager.Instance.playerInput;
         selectIndex = 0;
     }
 
@@ -81,7 +82,6 @@ public class UIManager : MonoBehaviour
     public void ShowBackpackUI(bool t)
     {
         backpackUI.SetActive(t);
-        UIInput.enabled = t;
     }
     public void SetInventoryInfo()
     {
@@ -89,22 +89,49 @@ public class UIManager : MonoBehaviour
         {
             i.GetComponent<PlayerInventorySlot>().InitializationInfo();
         }
-        foreach(GameObject i in backpack.backpackInventorySlots)
+        foreach (GameObject i in backpack.backpackInventorySlots)
         {
             i.GetComponent<PlayerInventorySlot>().InitializationInfo();
         }
         backpack.ResetBackpackSlotInfo();
         Debug.Log("物品欄初始化完成");
     }
-    public void OnClick(InputValue value)
+
+
+    //----------物品欄-----------//
+
+    //------按鍵控制---------//
+    public void OnClick(InputAction.CallbackContext ctx)
     {
         if (backpack != null)
         {
             backpack.SelectBackPackSlot();
         }
     }
-    //----------物品欄-----------//
+    public void OnCloseBackpack(InputAction.CallbackContext ctx)
+    {
+        backpackUI.SetActive(false);
+        backpack.ResetBackpackSlotInfo();
+        isOpenBackpack=false;
+        
+        DisSubAllUIInput();
+        GameObject.FindWithTag("Player").GetComponent<PlayerStatus>().SetStatus(Status.Normal);
+        Debug.Log("關閉背包");
+    }
 
+    public void OnDrag(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            Debug.Log("拖曳");
+
+        }
+        else if (ctx.canceled)
+        {
+            Debug.Log("放開");
+        }
+    }
+    //------按鍵控制---------//
 
     //----------HintUI-----------//
     public void HintUISelect(int value)
@@ -129,4 +156,31 @@ public class UIManager : MonoBehaviour
         }
     }
     //----------HintUI-----------//
+
+    public void SubAllUIInput()
+    {
+        playerInput.actions["Click"].performed += OnClick;
+        playerInput.actions["Click"].canceled += OnClick;
+
+        playerInput.actions["Drag"].performed += OnDrag;
+        playerInput.actions["Drag"].canceled += OnDrag;
+
+        playerInput.actions["CloseBackpack"].performed += OnCloseBackpack;
+        playerInput.actions["CloseBackpack"].canceled += OnCloseBackpack;
+        
+        Debug.Log("監聽背包控制");
+    }
+    public void DisSubAllUIInput()
+    {
+        playerInput.actions["Click"].performed -= OnClick;
+        playerInput.actions["Click"].canceled -= OnClick;
+
+        playerInput.actions["Drag"].performed -= OnDrag;
+        playerInput.actions["Drag"].canceled -= OnDrag;
+
+        playerInput.actions["CloseBackpack"].performed -= OnCloseBackpack;
+        playerInput.actions["CloseBackpack"].canceled -= OnCloseBackpack;
+
+        Debug.Log("取消監聽背包控制");
+    }
 }

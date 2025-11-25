@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class ThirdPersonCamera : MonoBehaviour
 {
+    PlayerInput playerInput;
     [SerializeField] GameObject mainCam;
     [Header("Cinemachine")]
     [SerializeField] CinemachineThirdPersonFollow cinemachineThirdPersonFollow;
@@ -23,6 +24,7 @@ public class ThirdPersonCamera : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        playerInput = GameManager.Instance.playerInput;
         cinemachineTargetYaw = 0;
         cinemachineTargetPitch = 20;
     }
@@ -37,6 +39,7 @@ public class ThirdPersonCamera : MonoBehaviour
         }
         cinemachineTargetYaw = 0;
         cinemachineTargetPitch = 20;
+
     }
 
     // Update is called once per frame
@@ -54,20 +57,13 @@ public class ThirdPersonCamera : MonoBehaviour
 
 
     }
-    public void OnLook(InputValue value)
+    public void OnLook(InputAction.CallbackContext ctx)
     {
-        if (UIManager.Instance.IsOpenBackpack)
-        {
-            look = Vector2.zero;
-            return;
-        }
-
-        look = value.Get<Vector2>();
+        look = ctx.ReadValue<Vector2>();
     }
-    public void OnZoom(InputValue value)
+    public void OnZoom(InputAction.CallbackContext ctx)
     {
-        if (UIManager.Instance.IsOpenBackpack) return;
-        zoomValue = value.Get<float>();
+        zoomValue = ctx.ReadValue<float>();
     }
     public void ZoomView()
     {
@@ -91,6 +87,23 @@ public class ThirdPersonCamera : MonoBehaviour
         }
         cinemachineThirdPersonFollow.CameraDistance = endPos;
     }
+    public void Stop()
+    {
+        look=Vector2.zero;
+    }
+    public void SubAllCameraInput()
+    {
+        playerInput.actions["Look"].performed += OnLook;
+        playerInput.actions["Look"].canceled += OnLook;
+        playerInput.actions["Zoom"].performed += OnZoom;
+        playerInput.actions["Zoom"].canceled += OnZoom;
+    }
 
-
+    public void DisSubAllCameraInput()
+    {
+        playerInput.actions["Look"].performed -= OnLook;
+        playerInput.actions["Look"].canceled -= OnLook;
+        playerInput.actions["Zoom"].performed -= OnZoom;
+        playerInput.actions["Zoom"].canceled -= OnZoom;
+    }
 }

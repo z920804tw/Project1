@@ -6,10 +6,10 @@ using UnityEngine.InputSystem;
 public class VehicleSetting : MonoBehaviour
 {
     [Header("組件設定")]
-    [SerializeField] PlayerInput vehicleInput;
     [SerializeField] VehicleAudio vehicleAudio;
     [SerializeField] VehicleController vehicleController;
     [SerializeField] VehicleFuelTank vehicleFuelTank;
+    PlayerInput vehicleInput;
     ThirdPersonCamera thirdPersonCamera;
     [Header("元件套用")]
     [SerializeField] Transform interactPos;
@@ -27,6 +27,7 @@ public class VehicleSetting : MonoBehaviour
     void Start()
     {
         thirdPersonCamera = GetComponent<ThirdPersonCamera>();
+        vehicleInput = GameManager.Instance.playerInput;
         isEngineStart = false;
     }
 
@@ -66,9 +67,11 @@ public class VehicleSetting : MonoBehaviour
             //將載具功能打開
             VehicleStatus(true);
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            // thirdPersonCamera.CinemachineTargetYaw = 0;
-            // thirdPersonCamera.CinemachineTargetPitch = 20;
 
+            //啟用載具、載具攝影機控制監聽
+            SubAllVehicleInput();
+            thirdPersonCamera.SubAllCameraInput();
+            
             Target = target;
             isOccupy = true;
         }
@@ -76,7 +79,10 @@ public class VehicleSetting : MonoBehaviour
         {
             //下車動作
             //將載具功能關閉
+            DisSubAllVehicleInput();
+            thirdPersonCamera.DisSubAllCameraInput();
             VehicleStatus(false);
+
             //將玩家相關設定關閉
             target.transform.SetParent(null);
             target.transform.position = exitPos.position;
@@ -101,7 +107,6 @@ public class VehicleSetting : MonoBehaviour
 
     void VehicleStatus(bool t)
     {
-        vehicleInput.enabled = t;
         vehicleController.enabled = t;
         thirdPersonCamera.enabled = t;
         UIManager.Instance.ShowVehecleUI(t);
@@ -111,7 +116,7 @@ public class VehicleSetting : MonoBehaviour
     }
     //-------按鍵偵測---------//
     //下車按鍵
-    void OnLeave(InputValue value)
+    void OnLeave(InputAction.CallbackContext ctx)
     {
         if (isOccupy && vehicleController.CurrentSpeed < 1.5f)
         {
@@ -119,7 +124,7 @@ public class VehicleSetting : MonoBehaviour
         }
     }
     //引擎按鍵
-    void OnEngineSwitch(InputValue value)
+    void OnEngineSwitch(InputAction.CallbackContext ctx)
     {
         if (vehicleFuelTank.HaveFuel)
         {
@@ -140,6 +145,11 @@ public class VehicleSetting : MonoBehaviour
         {
             Debug.Log("油箱沒有油，無法啟動引擎");
         }
+    }
+
+    void OnMove(InputAction.CallbackContext ctx)
+    {
+        vehicleController.vehicleInput = ctx.ReadValue<Vector2>();
     }
     //-------按鍵偵測---------//
     void OnTriggerEnter(Collider other)
@@ -170,5 +180,26 @@ public class VehicleSetting : MonoBehaviour
         isEngineStart = false;
         yield return new WaitForSeconds(value);
         hasStart = false;
+    }
+
+    public void SubAllVehicleInput()
+    {
+        vehicleInput.actions["Move"].performed += OnMove;
+        vehicleInput.actions["Move"].canceled += OnMove;
+
+        vehicleInput.actions["Leave"].performed += OnLeave;
+        vehicleInput.actions["EngineSwitch"].performed += OnEngineSwitch;
+        Debug.Log("監聽車輛控制");
+    }
+
+    public void DisSubAllVehicleInput()
+    {
+        vehicleInput.actions["Move"].performed -= OnMove;
+        vehicleInput.actions["Move"].canceled -= OnMove;
+
+        vehicleInput.actions["Leave"].performed -= OnLeave;
+        vehicleInput.actions["EngineSwitch"].performed -= OnEngineSwitch;
+
+        Debug.Log("取消監聽車輛控制");
     }
 }

@@ -16,8 +16,8 @@ public class ThirdPersonMove : MonoBehaviour
     [SerializeField] float rotationSmoothTime = 1f;
     Vector2 moveInput;
     Vector3 inputDir;
-    bool isRun = false;
-    bool wasRun = false;
+    [SerializeField]bool isRun = false;
+    [SerializeField]bool wasRun = false;
 
     [Header("跳躍參數設定")]
     [SerializeField] float jumpHeight = 1.5f;
@@ -38,8 +38,8 @@ public class ThirdPersonMove : MonoBehaviour
 
     void OnEnable()
     {
-        isRun=false;
-        wasRun=false;
+        isRun = false;
+        wasRun = false;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -183,6 +183,13 @@ public class ThirdPersonMove : MonoBehaviour
         {
             return false;
         }
+    }
+    public void Stop()
+    {
+        isRun=false;
+        wasRun=false;
+        isAim=false;
+        inputDir=Vector3.zero;
     }
 
     //------會從父物件接收參數值------//

@@ -1,12 +1,14 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public PlayerInput playerInput;
 
     void Awake()
     {
-        Instance=this;
+        Instance = this;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,5 +33,11 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 
+    }
+
+    public void SwitchInputMode(string mode)
+    {
+        playerInput.SwitchCurrentActionMap(mode);
+        Debug.Log($"切換至:{mode} Input");
     }
 }

@@ -8,23 +8,17 @@ public class PlayerStatus : MonoBehaviour
     public ThirdPersonAnimation anim;
     [SerializeField] CapsuleCollider interactCollider;
     [Header("玩家控制項")]
-    public PlayerInput playerInput;
+    PlayerInput playerInput;
     public ThirdPersonMove playerMove;
     public ThirdPersonCamera playerCam;
     public PlayerInventory playerInventory;
     public PlayerInteract playerInteract;
 
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentPlayerStatus = Status.Normal;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        playerInput = GameManager.Instance.playerInput;
+        SetStatus(Status.Normal);
     }
 
     public void SetStatus(Status status)
@@ -64,7 +58,7 @@ public class PlayerStatus : MonoBehaviour
         {
             playerInventory.handObj.SetActive(t);
         }
-        playerInput.enabled = t;
+
         playerMove.enabled = t;
         playerCam.enabled = t;
         playerInventory.enabled = t;
@@ -76,59 +70,80 @@ public class PlayerStatus : MonoBehaviour
     }
     void SetNormalStatus()
     {
+        //切換控制模式並監聽玩家、玩家攝影機控制
+        GameManager.Instance.SwitchInputMode("Player");
+        SubPlayerAllInput();
+        playerCam.SubAllCameraInput();
+
         SetAllComponet(true);
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
         UIManager.Instance.ShowPlayerUI(true);
         GameManager.Instance.ShowCursor(false);
-
     }
     void SetVehicleStatus()
     {
+        //取消玩家、攝影機監聽，並切換控制模式為載具
+        DisSubPlayerAllInput();
+        playerCam.DisSubAllCameraInput();
+        GameManager.Instance.SwitchInputMode("Vehicle");
+
         SetAllComponet(false);
         UIManager.Instance.ShowPlayerUI(false);
         CameraManager.Instance.SetCameraMode(CameraMode.InVehicle);
     }
+    //開啟背包
     void SetOpenInventoryStatus()
     {
-        playerMove.IsAim = false;
+        //取消玩家按鍵監聽、攝影機按鍵監聽
+        DisSubPlayerAllInput();
+        playerCam.Stop();
+        playerCam.DisSubAllCameraInput();
+
+        //停止玩家相關設定
+        playerMove.Stop();
         playerInteract.ResetThrowPlace();
 
-        playerMove.enabled = false;
-        playerCam.enabled = false;
-        playerInteract.enabled = false;
-
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
+
         GameManager.Instance.ShowCursor(true);
+        GameManager.Instance.SwitchInputMode("UI");
+
+        UIManager.Instance.IsOpenBackpack = true;
+        UIManager.Instance.SubAllUIInput();
+        UIManager.Instance.ShowBackpackUI(UIManager.Instance.IsOpenBackpack);
+
 
     }
     //-------------------------------狀態設定------------------------------//
 
     //--------玩家移動--------//
-    public void OnMove(InputValue value)
+    public void OnMove(InputAction.CallbackContext ctx)
     {
-        Vector2 value1 = value.Get<Vector2>();
+        Vector2 value1 = ctx.ReadValue<Vector2>();
         playerMove.OnMove(value1);
     }
-    public void OnJump(InputValue value)
+    public void OnJump(InputAction.CallbackContext ctx)
     {
-        if (UIManager.Instance.IsOpenBackpack) return;
         playerMove.OnJump();
     }
-    public void OnRun(InputValue value)
+    public void OnRun(InputAction.CallbackContext ctx)
     {
-        playerMove.OnRun();
+        if (ctx.performed)
+        {
+            playerMove.OnRun();
+        }
+
     }
-    public void OnAim(InputValue value)
+    public void OnAim(InputAction.CallbackContext ctx)
     {
-        if (UIManager.Instance.IsOpenBackpack) return;
         playerMove.OnAim();
     }
     //--------玩家移動--------//
 
     //--------物品欄--------//
-    public void OnSelect(InputValue value)
+    public void OnSelect(InputAction.CallbackContext ctx)
     {
-        float value1 = value.Get<float>();
+        float value1 = ctx.ReadValue<float>();
         if (!UIManager.Instance.interactUI.activeSelf)
         {
             playerInventory.OnSelect(value1);
@@ -142,33 +157,88 @@ public class PlayerStatus : MonoBehaviour
     }
     //--------物品欄--------//
     //--------玩家互動--------//
-    public void OnOpenBackpack(InputValue value)
+    public void OnOpenBackpack(InputAction.CallbackContext ctx)
     {
-        UIManager.Instance.IsOpenBackpack = !UIManager.Instance.IsOpenBackpack;
-        UIManager.Instance.ShowBackpackUI(UIManager.Instance.IsOpenBackpack);
-        if (!UIManager.Instance.IsOpenBackpack)
-        {
-            SetStatus(Status.Normal);
-            UIManager.Instance.backpack.ResetBackpackSlotInfo();
-        }
-        else
+        if (ctx.performed)
         {
             SetStatus(Status.Inventory);
         }
     }
-    public void OnInteract(InputValue value)
+    public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (UIManager.Instance.IsOpenBackpack || playerMove.IsAim) return;
         playerInteract.OnInteract();
     }
-    public void OnThrow(InputValue value)
+    public void OnThrow(InputAction.CallbackContext ctx)
     {
         playerInteract.OnThrow();
     }
-    public void OnPlace(InputValue value)
+    public void OnPlace(InputAction.CallbackContext ctx)
     {
         playerInteract.OnPlace();
     }
     //--------玩家互動--------//
 
+
+    public void SubPlayerAllInput()
+    {
+        playerInput.actions["Move"].performed += OnMove;
+        playerInput.actions["Move"].canceled += OnMove;
+
+        playerInput.actions["Jump"].performed += OnJump;
+        playerInput.actions["Jump"].canceled += OnJump;
+
+        playerInput.actions["Run"].performed += OnRun;
+        playerInput.actions["Run"].canceled += OnRun;
+
+        playerInput.actions["Aim"].performed += OnAim;
+        playerInput.actions["Aim"].canceled += OnAim;
+
+        playerInput.actions["Select"].performed += OnSelect;
+        playerInput.actions["Select"].canceled += OnSelect;
+
+        playerInput.actions["OpenBackpack"].performed += OnOpenBackpack;
+        playerInput.actions["OpenBackpack"].canceled += OnOpenBackpack;
+
+        playerInput.actions["Interact"].performed += OnInteract;
+        playerInput.actions["Interact"].canceled += OnInteract;
+
+        playerInput.actions["Throw"].performed += OnThrow;
+        playerInput.actions["Throw"].canceled += OnThrow;
+
+        playerInput.actions["Place"].performed += OnPlace;
+        playerInput.actions["Place"].canceled += OnPlace;
+        Debug.Log("監聽玩家控制");
+    }
+
+    void DisSubPlayerAllInput()
+    {
+        playerInput.actions["Move"].performed -= OnMove;
+        playerInput.actions["Move"].canceled -= OnMove;
+
+        playerInput.actions["Jump"].performed -= OnJump;
+        playerInput.actions["Jump"].canceled -= OnJump;
+
+        playerInput.actions["Run"].performed -= OnRun;
+        playerInput.actions["Run"].canceled -= OnRun;
+
+        playerInput.actions["Aim"].performed -= OnAim;
+        playerInput.actions["Aim"].canceled -= OnAim;
+
+        playerInput.actions["Select"].performed -= OnSelect;
+        playerInput.actions["Select"].canceled -= OnSelect;
+
+        playerInput.actions["OpenBackpack"].performed -= OnOpenBackpack;
+        playerInput.actions["OpenBackpack"].canceled -= OnOpenBackpack;
+
+        playerInput.actions["Interact"].performed -= OnInteract;
+        playerInput.actions["Interact"].canceled -= OnInteract;
+
+        playerInput.actions["Throw"].performed -= OnThrow;
+        playerInput.actions["Throw"].canceled -= OnThrow;
+
+        playerInput.actions["Place"].performed -= OnPlace;
+        playerInput.actions["Place"].canceled -= OnPlace;
+        Debug.Log("取消監聽玩家控制");
+    }
 }

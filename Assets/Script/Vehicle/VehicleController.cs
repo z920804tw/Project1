@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class VehicleController : MonoBehaviour
 {
-    public PlayerInputAction vehicleInput;
+    // public PlayerInputAction vehicleInput;
+    public Vector2 vehicleInput;
     [SerializeField] VehicleSetting vehicleSetting;
     [SerializeField] Rigidbody rb;
     [Header("車體參數設定")]
@@ -41,19 +42,6 @@ public class VehicleController : MonoBehaviour
 
     [SerializeField] float pitch;
     float rotateValue;
-
-    void Awake()
-    {
-        vehicleInput = new PlayerInputAction();
-    }
-    void OnEnable()
-    {
-        vehicleInput.Enable();
-    }
-    void ODisable()
-    {
-        vehicleInput.Disable();
-    }
     void Start()
     {
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
@@ -103,7 +91,7 @@ public class VehicleController : MonoBehaviour
     }
     void VehicleInput()
     {
-        currentInput = Vector2.SmoothDamp(currentInput, vehicleInput.Vehicle.Move.ReadValue<Vector2>(), ref smoothInputVelocity, smoothInputSpeed);
+        currentInput = Vector2.SmoothDamp(currentInput, vehicleInput, ref smoothInputVelocity, smoothInputSpeed);
 
         currentInput.x = Number(currentInput.x);
         currentInput.y = Number(currentInput.y);
@@ -182,7 +170,7 @@ public class VehicleController : MonoBehaviour
     void BreakVehicle()
     {
         float currentBreakForce = 0;
-        float verticalInputValue = vehicleInput.Vehicle.Move.ReadValue<Vector2>().y;
+        float verticalInputValue = vehicleInput.y;
         if (Input.GetKey(KeyCode.Space))
         {
             currentBreakForce = breakForce;
