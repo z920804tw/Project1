@@ -74,8 +74,9 @@ public class PlayerStatus : MonoBehaviour
         GameManager.Instance.SwitchInputMode("Player");
         SubPlayerAllInput();
         playerCam.SubAllCameraInput();
-
+        
         SetAllComponet(true);
+        
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
         UIManager.Instance.ShowPlayerUI(true);
         GameManager.Instance.ShowCursor(false);
@@ -85,9 +86,8 @@ public class PlayerStatus : MonoBehaviour
         //取消玩家、攝影機監聽，並切換控制模式為載具
         DisSubPlayerAllInput();
         playerCam.DisSubAllCameraInput();
-        GameManager.Instance.SwitchInputMode("Vehicle");
-
         SetAllComponet(false);
+
         UIManager.Instance.ShowPlayerUI(false);
         CameraManager.Instance.SetCameraMode(CameraMode.InVehicle);
     }

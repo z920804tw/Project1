@@ -69,9 +69,10 @@ public class VehicleSetting : MonoBehaviour
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 
             //啟用載具、載具攝影機控制監聽
+            GameManager.Instance.SwitchInputMode("Vehicle");
             SubAllVehicleInput();
             thirdPersonCamera.SubAllCameraInput();
-            
+
             Target = target;
             isOccupy = true;
         }

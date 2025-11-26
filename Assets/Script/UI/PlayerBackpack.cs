@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,6 +18,7 @@ public class PlayerBackpack : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] PlayerInventorySlot currentSelectSlot;
+    PlayerInventorySlot hoverSlot;
     [SerializeField] bool isSwitchItem;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,7 +29,7 @@ public class PlayerBackpack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        HoverSlot();
     }
 
     public void SelectBackPackSlot()
@@ -90,7 +93,52 @@ public class PlayerBackpack : MonoBehaviour
                 }
             }
         }
+    }
 
+    void HoverSlot()
+    {
+        //取得當前滑鼠指到的物品欄UI
+        PointerEventData data = new PointerEventData(eventSystem);
+        data.position = Input.mousePosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(data, results);
+        foreach (RaycastResult result in results)
+        {
+            if (hoverSlot == null) //檢查有沒有紀錄，如果沒有就去做檢查有沒有碰到新的Slot
+            {
+                PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                if (slot != null)
+                {
+                    hoverSlot = slot;
+                    Image bgImg = slot.bgImg;
+                    StartCoroutine(TranslateSlotHoverColor(bgImg, new Color32(255, 190, 108, 200), 0.1f));
+                }
+                return;
+            }
+            else
+            {
+                PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                if (slot != null)
+                {
+                    if (slot != hoverSlot)
+                    {
+                        //先將舊的改回原本顏色
+                        StartCoroutine(TranslateSlotHoverColor(hoverSlot.bgImg, new Color32(176, 176, 176, 200), 0.1f));
+                        //再來記錄新的
+                        hoverSlot = slot;
+                        Image bgImg = slot.bgImg;
+                        StartCoroutine(TranslateSlotHoverColor(bgImg, new Color32(255, 190, 108, 200), 0.1f));
+                    }
+                }
+                else
+                {
+                    StartCoroutine(TranslateSlotHoverColor(hoverSlot.bgImg, new Color32(176, 176, 176, 200), 0.1f));
+                    hoverSlot = null;
+                }
+                return;
+            }
+        }
     }
     //切換物品的按鈕
     public void SwitchItem()
@@ -106,9 +154,63 @@ public class PlayerBackpack : MonoBehaviour
         {
             currentSelectSlot.selectImg.SetActive(false);
         }
+        if (hoverSlot != null)
+        {
+            hoverSlot.bgImg.color = new Color32(176, 176, 176, 200);
+        }
 
         currentSelectSlot = null;
+        hoverSlot = null;
         slotItemName.text = "";
         slotItemDescription.text = "";
+    }
+    public void AutoArrangeBackpackSlot()
+    {
+        PlayerInventorySlot targetSlot = null;
+        PlayerInventorySlot newSlot = null;
+        int currentIndex = 0;
+        foreach (GameObject i in backpackInventorySlots)
+        {
+            //找到目標，並將目標往前方的空位移動
+            if (i.GetComponent<PlayerInventorySlot>().isOccupy)
+            {
+                targetSlot = i.GetComponent<PlayerInventorySlot>();
+            }
+            else
+            {
+                currentIndex++;
+                continue;
+            }
+
+            for (int y = currentIndex; y >= 0; y--)
+            {
+                if (backpackInventorySlots[y].GetComponent<PlayerInventorySlot>().isOccupy == false)
+                {
+                    newSlot = backpackInventorySlots[y].GetComponent<PlayerInventorySlot>();
+                }
+            }
+            if (newSlot != null)
+            {
+                //交換slot內容，將目標slot的資訊轉移到空的newSlot上，並且重製原本的targetSlot資訊
+                newSlot.SetSwitchSlotInfo(targetSlot.slotItemSO,targetSlot.Amount);
+                targetSlot.InitializationInfo();
+                Debug.Log("整理完成");
+            }
+        }
+
+    }
+
+    IEnumerator TranslateSlotHoverColor(Image target, Color end, float duration)
+    {
+        float timer = 0;
+        Color start = target.color;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            target.color = Color.Lerp(start, end, timer / duration);
+            yield return null;
+        }
+
+        target.color = end;
     }
 }

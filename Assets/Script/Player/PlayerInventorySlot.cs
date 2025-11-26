@@ -23,6 +23,7 @@ public class PlayerInventorySlot : MonoBehaviour
     [Header("物件套用")]
     public GameObject slotObject;
     public GameObject selectImg;
+    public Image bgImg;
     public TMP_Text amountText;
     public TMP_Text imgText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -121,9 +122,15 @@ public class PlayerInventorySlot : MonoBehaviour
 
     public void InitializationInfo()
     {
+        isOccupy=false;
+        slotItemSO=null;
+        itemName=$"";
         itemID = -1;
+        itemDescription=$"";
+        canStack=false;
+
         amount = 0;
         amountText.text = $"{amount}";
-        imgText.text = "";
+        imgText.text = $"{itemName}";
     }
 }
