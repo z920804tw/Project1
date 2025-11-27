@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4037d8f90c2ecc248abd65e7c2173514, type: 3}
-  m_Name: Cube 2
+  m_Name: Tool_3
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemType: 1
-  itemName: Cube2
-  hintText: Press F Pick
+  itemID: 2
+  itemName: Tool_3
+  itemDescription: This is Tool_3
+  hintText: Press F To Pick
   canStack: 0

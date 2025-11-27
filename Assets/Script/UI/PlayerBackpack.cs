@@ -18,6 +18,7 @@ public class PlayerBackpack : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] PlayerInventorySlot currentSelectSlot;
+
     PlayerInventorySlot hoverSlot;
     [SerializeField] bool isSwitchItem;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -57,15 +58,16 @@ public class PlayerBackpack : MonoBehaviour
                 PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
                 if (slot != null)
                 {
-                    PlayerInventorySlot temporary = new PlayerInventorySlot();
-                    temporary.slotItemSO = slot.slotItemSO;
-                    temporary.Amount = slot.Amount;
+                    ItemSO temporary = slot.slotItemSO;
+                    int amount = slot.Amount;
 
                     slot.SetSwitchSlotInfo(currentSelectSlot.slotItemSO, currentSelectSlot.Amount);
-                    currentSelectSlot.SetSwitchSlotInfo(temporary.slotItemSO, temporary.Amount);
+                    currentSelectSlot.SetSwitchSlotInfo(temporary, amount);
 
                     SwitchItem(); //重製switch開關
                     SelectBackPackSlot();
+
+                    temporary = null;
 
                     Destroy(temporary);
 
@@ -147,6 +149,21 @@ public class PlayerBackpack : MonoBehaviour
             isSwitchItem = !isSwitchItem;
     }
 
+    public void UseItem()
+    {
+        if (currentSelectSlot != null)
+        {
+            if (currentSelectSlot.slotItemSO.itemEffectList.Count > 0)
+            {
+                foreach (IItemEffect effectSo in currentSelectSlot.slotItemSO.itemEffectList)
+                {
+                    effectSo.ItemEffect();
+                }
+                currentSelectSlot.UpdateInfo(-1);
+            }
+        }
+    }
+
     //重製背包資訊
     public void ResetBackpackSlotInfo()
     {
@@ -192,7 +209,7 @@ public class PlayerBackpack : MonoBehaviour
             if (newSlot != null)
             {
                 //交換slot內容，將目標slot的資訊轉移到空的newSlot上，並且重製原本的targetSlot資訊
-                newSlot.SetSwitchSlotInfo(targetSlot.slotItemSO,targetSlot.Amount);
+                newSlot.SetSwitchSlotInfo(targetSlot.slotItemSO, targetSlot.Amount);
                 targetSlot.InitializationInfo();
                 Debug.Log("整理完成");
             }

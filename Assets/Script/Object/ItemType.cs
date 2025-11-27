@@ -4,7 +4,7 @@ using UnityEngine;
 public enum ItemType
 {
     Empty,
-    PickItem,
-    NormalItem,
+    HandItem,  //手部可拿
+    NormalItem, //可放進背包
     SpecialItem,
 }

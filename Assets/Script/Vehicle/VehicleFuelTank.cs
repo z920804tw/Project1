@@ -11,7 +11,6 @@ public class VehicleFuelTank : MonoBehaviour
     [SerializeField] float maxFuel;
     public float MaxFuel { get { return maxFuel; } }
     [SerializeField] float fuelConsumption;
-    public float fuelValue;
 
     [SerializeField] bool haveFuel;
     public bool HaveFuel { get { return haveFuel; } }
@@ -26,7 +25,6 @@ public class VehicleFuelTank : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        fuelValue = currentFuel / maxFuel;
         CheckHaveFuel();
         
         if (!vehicleSetting.IsEngineStart)

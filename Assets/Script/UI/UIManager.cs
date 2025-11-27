@@ -20,6 +20,9 @@ public class UIManager : MonoBehaviour
     [Header("Vehicle UI")]
     [SerializeField] GameObject vehicleUI;
     [SerializeField] TMP_Text vehicleSpeedText;
+    [SerializeField] Image vehicleSpeedImg;
+
+    [SerializeField] TMP_Text fuelTankCapacityText;
     [SerializeField] Image fuelTankCapacityImg;
 
     [Header("Interaction UI")]
@@ -60,10 +63,14 @@ public class UIManager : MonoBehaviour
     {
         interactUI.SetActive(t);
     }
-    public void UpdateVehecleUI(float speed, float fuelValue)
+    public void UpdateVehecleUI(float speed, float maxSpeed, float fuelValue, float maxFuel)
     {
-        vehicleSpeedText.text = $"CurrentSpeed:{Mathf.RoundToInt(speed)}km/h";
-        fuelTankCapacityImg.fillAmount = fuelValue;
+        vehicleSpeedText.text = $"Speed:{Mathf.RoundToInt(speed)}km/h";
+
+        if (maxSpeed != 0) vehicleSpeedImg.fillAmount = speed / maxSpeed;
+        
+        fuelTankCapacityText.text = $"{fuelValue}/{maxFuel}";
+        fuelTankCapacityImg.fillAmount = fuelValue / maxFuel;
     }
 
     public void ShowVehecleUI(bool t)
@@ -112,8 +119,8 @@ public class UIManager : MonoBehaviour
     {
         backpackUI.SetActive(false);
         backpack.ResetBackpackSlotInfo();
-        isOpenBackpack=false;
-        
+        isOpenBackpack = false;
+
         DisSubAllUIInput();
         GameObject.FindWithTag("Player").GetComponent<PlayerStatus>().SetStatus(Status.Normal);
         Debug.Log("關閉背包");
@@ -167,7 +174,7 @@ public class UIManager : MonoBehaviour
 
         playerInput.actions["CloseBackpack"].performed += OnCloseBackpack;
         playerInput.actions["CloseBackpack"].canceled += OnCloseBackpack;
-        
+
         Debug.Log("監聽背包控制");
     }
     public void DisSubAllUIInput()

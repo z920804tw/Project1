@@ -17,6 +17,9 @@ public class VehicleController : MonoBehaviour
     [SerializeField] float slopeTorqueBoost = 1.5f; // 在爬坡時增加多少倍扭力
     [SerializeField] float slopeAngleThreshold = 5f; // 超過多少度視為坡道
 
+    float maxSpeed;
+    public float MaxSpeed { get { return maxSpeed; } }
+
 
     [Header("輪子 Collider")]
     public WheelCollider frontWheel;
@@ -45,7 +48,7 @@ public class VehicleController : MonoBehaviour
     void Start()
     {
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
-
+        maxSpeed = forwardMaxSpeed*5;
         horizontalInput = 0;
         verticalInput = 0;
     }
@@ -215,6 +218,7 @@ public class VehicleController : MonoBehaviour
     {
         Vector3 speed = rb.linearVelocity;
         Vector3 limitSpeed;
+        //如果是前進
         if (leftTorque > 0 && rightTorque > 0)
         {
             if (pitch > slopeAngleThreshold)
@@ -231,7 +235,9 @@ public class VehicleController : MonoBehaviour
                 limitSpeed = speed.normalized * forwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
+            maxSpeed = forwardMaxSpeed*5;
         }
+        //如果是倒退
         else if (leftTorque < 0 && rightTorque < 0)
         {
             //後退
@@ -240,6 +246,7 @@ public class VehicleController : MonoBehaviour
                 limitSpeed = speed.normalized * backwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
+            maxSpeed=backwardMaxSpeed*5;
         }
         currentSpeed = rb.linearVelocity.magnitude * 5f;
         if (currentSpeed < 0.01f)

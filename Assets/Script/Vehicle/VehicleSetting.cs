@@ -36,10 +36,12 @@ public class VehicleSetting : MonoBehaviour
     {
         if (isOccupy)
         {
+            //檢查車輛油量
             CheckFuelTankCapacity();
+            //更新車輛UI
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.UpdateVehecleUI(vehicleController.CurrentSpeed, vehicleFuelTank.fuelValue);
+                UIManager.Instance.UpdateVehecleUI(vehicleController.CurrentSpeed,vehicleController.MaxSpeed, vehicleFuelTank.CurrentFuel,vehicleFuelTank.MaxFuel);
             }
         }
     }

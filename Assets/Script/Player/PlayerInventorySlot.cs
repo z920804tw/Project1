@@ -46,15 +46,16 @@ public class PlayerInventorySlot : MonoBehaviour
         }
         else if (amount <= 0)
         {
-            amountText.text = $"{0}";
-            imgText.text = $"";
-
             slotItemSO = null;
             slotObject = null;
             itemName = "";
             itemDescription = "";
             isOccupy = false;
             canStack = false;
+
+            amountText.text = $"{0}";
+            imgText.text = $"";
+
         }
 
     }
@@ -122,12 +123,12 @@ public class PlayerInventorySlot : MonoBehaviour
 
     public void InitializationInfo()
     {
-        isOccupy=false;
-        slotItemSO=null;
-        itemName=$"";
+        isOccupy = false;
+        slotItemSO = null;
+        itemName = $"";
         itemID = -1;
-        itemDescription=$"";
-        canStack=false;
+        itemDescription = $"";
+        canStack = false;
 
         amount = 0;
         amountText.text = $"{amount}";

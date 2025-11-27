@@ -6,8 +6,8 @@ using UnityEngine.Events;
 public class PickObject : MonoBehaviour, IInteractable
 {
     [Header("組件套用")]
-    public SphereCollider triggerBox;
-    public BoxCollider boxCollider;
+    [SerializeField] SphereCollider triggerBox;
+    [SerializeField] Collider collider1;
     Rigidbody rb;
     [Header("參數設定")]
     public ItemSO itemSO;
@@ -37,7 +37,7 @@ public class PickObject : MonoBehaviour, IInteractable
     public void CollectToInventory(GameObject target)
     {
         //判斷該物品是屬於哪個類別，是可拿在手上還是只能放在背包
-        if (itemSO.itemType == ItemType.PickItem)
+        if (itemSO.itemType == ItemType.HandItem)
         {
             //放到手部欄位
             PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
@@ -80,7 +80,7 @@ public class PickObject : MonoBehaviour, IInteractable
     public void Throw(Vector3 dir)
     {
         ColliderAndRig(true);
-        Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
+        Physics.IgnoreCollision(collider1, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
         Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), true);
         rb.AddForce(dir, ForceMode.Impulse);
         StartCoroutine(WaitReset());
@@ -89,7 +89,7 @@ public class PickObject : MonoBehaviour, IInteractable
     IEnumerator WaitReset()
     {
         yield return new WaitForSeconds(1f);
-        Physics.IgnoreCollision(boxCollider, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
+        Physics.IgnoreCollision(collider1, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
         Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), false);
     }
 }
