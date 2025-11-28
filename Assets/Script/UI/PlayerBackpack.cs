@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,8 +17,9 @@ public class PlayerBackpack : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] PlayerInventorySlot currentSelectSlot;
-
-    PlayerInventorySlot hoverSlot;
+    [SerializeField] GameObject dragSlot = null;
+    [SerializeField] PlayerInventorySlot firstSlot = null;
+    PlayerInventorySlot hoverSlot = null;
     [SerializeField] bool isSwitchItem;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,11 +31,11 @@ public class PlayerBackpack : MonoBehaviour
     void Update()
     {
         HoverSlot();
+        DragSlot();
     }
 
     public void SelectBackPackSlot()
     {
-
         //取得當前滑鼠指到的物品欄UI
         PointerEventData data = new PointerEventData(eventSystem);
         data.position = Input.mousePosition;
@@ -97,6 +97,96 @@ public class PlayerBackpack : MonoBehaviour
         }
     }
 
+    //長按拖曳
+    public void DragSlot()
+    {
+        if (UIManager.Instance.IsDrag)
+        {
+            if (dragSlot == null)
+            {
+                //取得滑鼠當前的slot物件
+                //取得當前滑鼠指到的物品欄UI
+                PointerEventData data = new PointerEventData(eventSystem);
+                data.position = Input.mousePosition;
+
+                List<RaycastResult> results = new List<RaycastResult>();
+                raycaster.Raycast(data, results);
+                foreach (RaycastResult result in results)
+                {
+                    PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                    if (slot != null && slot.IsOccupy)
+                    {
+                        dragSlot = Instantiate(slot.gameObject, Input.mousePosition, Quaternion.identity);
+                        dragSlot.transform.SetParent(transform);
+                        dragSlot.GetComponent<PlayerInventorySlot>().bgImg.raycastTarget = false;
+                        dragSlot.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
+                        firstSlot = slot;
+                        slot.InitializationInfo();
+                        return;
+                    }
+                }
+            }
+            else if (dragSlot != null)
+            {
+                //物件跟隨滑鼠移動
+                dragSlot.transform.position = Input.mousePosition;
+            }
+        }
+        else if (!UIManager.Instance.IsDrag) //放開
+        {
+            if (dragSlot != null && firstSlot != null)
+            {
+                //取得當前滑鼠指到的物品欄UI
+                PointerEventData data = new PointerEventData(eventSystem);
+                data.position = Input.mousePosition;
+                List<RaycastResult> results = new List<RaycastResult>();
+                raycaster.Raycast(data, results);
+                if (results.Count > 0)
+                {
+                    foreach (RaycastResult result in results)
+                    {
+                        PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                        //將拖曳的slot預覽物件資訊給予新的Slot欄位
+                        if (slot != null)
+                        {
+                            PlayerInventorySlot newSlot = dragSlot.GetComponent<PlayerInventorySlot>();
+                            if (slot != firstSlot)
+                            {
+                                ItemSO temporary = slot.slotItemSO;
+                                int amount = slot.Amount;
+
+                                slot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
+                                firstSlot.SetSwitchSlotInfo(temporary, amount);
+
+                                Destroy(dragSlot);
+                                dragSlot = null;
+                                firstSlot = null;
+                            }
+                            else
+                            {
+                                firstSlot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
+                                Destroy(dragSlot);
+                                dragSlot = null;
+                                firstSlot = null;
+                            }
+                        }
+                        return;
+                    }
+                }
+                else
+                {
+                    PlayerInventorySlot newSlot = dragSlot.GetComponent<PlayerInventorySlot>();
+                    firstSlot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
+                    Destroy(dragSlot);
+                    dragSlot = null;
+                    firstSlot = null;
+                }
+
+            }
+        }
+    }
+
     void HoverSlot()
     {
         //取得當前滑鼠指到的物品欄UI
@@ -105,42 +195,49 @@ public class PlayerBackpack : MonoBehaviour
 
         List<RaycastResult> results = new List<RaycastResult>();
         raycaster.Raycast(data, results);
-        foreach (RaycastResult result in results)
+        if (results.Count > 0)
         {
-            if (hoverSlot == null) //檢查有沒有紀錄，如果沒有就去做檢查有沒有碰到新的Slot
+            foreach (RaycastResult result in results)
             {
-                PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
-                if (slot != null)
+                if (hoverSlot == null) //檢查有沒有紀錄，如果沒有就去做檢查有沒有碰到新的Slot
                 {
-                    hoverSlot = slot;
-                    Image bgImg = slot.bgImg;
-                    StartCoroutine(TranslateSlotHoverColor(bgImg, new Color32(255, 190, 108, 200), 0.1f));
-                }
-                return;
-            }
-            else
-            {
-                PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
-                if (slot != null)
-                {
-                    if (slot != hoverSlot)
+                    PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                    if (slot != null)
                     {
-                        //先將舊的改回原本顏色
-                        StartCoroutine(TranslateSlotHoverColor(hoverSlot.bgImg, new Color32(176, 176, 176, 200), 0.1f));
-                        //再來記錄新的
                         hoverSlot = slot;
                         Image bgImg = slot.bgImg;
                         StartCoroutine(TranslateSlotHoverColor(bgImg, new Color32(255, 190, 108, 200), 0.1f));
                     }
+
                 }
                 else
                 {
-                    StartCoroutine(TranslateSlotHoverColor(hoverSlot.bgImg, new Color32(176, 176, 176, 200), 0.1f));
-                    hoverSlot = null;
+                    PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                    if (slot != null)
+                    {
+                        if (slot != hoverSlot)
+                        {
+                            //先將舊的改回原本顏色
+                            StartCoroutine(TranslateSlotHoverColor(hoverSlot.bgImg, new Color32(176, 176, 176, 200), 0.1f));
+                            //再來記錄新的
+                            hoverSlot = slot;
+                            Image bgImg = slot.bgImg;
+                            StartCoroutine(TranslateSlotHoverColor(bgImg, new Color32(255, 190, 108, 200), 0.1f));
+                        }
+                    }
                 }
                 return;
             }
         }
+        else
+        {
+            if (hoverSlot != null)
+            {
+                StartCoroutine(TranslateSlotHoverColor(hoverSlot.bgImg, new Color32(176, 176, 176, 200), 0.1f));
+                hoverSlot = null;
+            }
+        }
+
     }
     //切換物品的按鈕
     public void SwitchItem()
@@ -151,13 +248,14 @@ public class PlayerBackpack : MonoBehaviour
 
     public void UseItem()
     {
-        if (currentSelectSlot != null)
+        GameObject player = GameObject.FindWithTag("Player");
+        if (currentSelectSlot != null && player != null)
         {
-            if (currentSelectSlot.slotItemSO.itemEffectList.Count > 0)
+            if (currentSelectSlot.slotItemSO != null && currentSelectSlot.slotItemSO.itemEffectList.Count > 0)
             {
                 foreach (IItemEffect effectSo in currentSelectSlot.slotItemSO.itemEffectList)
                 {
-                    effectSo.ItemEffect();
+                    effectSo.ItemEffect(player);
                 }
                 currentSelectSlot.UpdateInfo(-1);
             }
@@ -178,8 +276,12 @@ public class PlayerBackpack : MonoBehaviour
 
         currentSelectSlot = null;
         hoverSlot = null;
+        if (dragSlot != null) Destroy(dragSlot);
+        dragSlot = null;
+        firstSlot = null;
         slotItemName.text = "";
         slotItemDescription.text = "";
+
     }
     public void AutoArrangeBackpackSlot()
     {
@@ -189,7 +291,7 @@ public class PlayerBackpack : MonoBehaviour
         foreach (GameObject i in backpackInventorySlots)
         {
             //找到目標，並將目標往前方的空位移動
-            if (i.GetComponent<PlayerInventorySlot>().isOccupy)
+            if (i.GetComponent<PlayerInventorySlot>().IsOccupy)
             {
                 targetSlot = i.GetComponent<PlayerInventorySlot>();
             }
@@ -201,7 +303,7 @@ public class PlayerBackpack : MonoBehaviour
 
             for (int y = currentIndex; y >= 0; y--)
             {
-                if (backpackInventorySlots[y].GetComponent<PlayerInventorySlot>().isOccupy == false)
+                if (backpackInventorySlots[y].GetComponent<PlayerInventorySlot>().IsOccupy == false)
                 {
                     newSlot = backpackInventorySlots[y].GetComponent<PlayerInventorySlot>();
                 }

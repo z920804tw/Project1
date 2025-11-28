@@ -4,8 +4,8 @@ using UnityEngine;
 public class HealItemSO : ScriptableObject, IItemEffect
 {
     public int amount;
-    public void ItemEffect()
+    public void ItemEffect(GameObject target)
     {
-        Debug.Log($"回復 {amount} HP");
+        Debug.Log($"回復 {target} 的 {amount} HP");
     }
 }

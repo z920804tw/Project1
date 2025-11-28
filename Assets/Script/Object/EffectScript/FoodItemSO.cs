@@ -4,8 +4,8 @@ using UnityEngine;
 public class FoodItemSO : ScriptableObject, IItemEffect
 {
     public int amount;
-    public void ItemEffect()
+    public void ItemEffect(GameObject target)
     {
-        Debug.Log($"回復 {amount} 飽食度");
+        Debug.Log($"回復 {target} 的 {amount} 飽食度");
     }
 }

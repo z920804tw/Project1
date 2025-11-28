@@ -15,8 +15,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject aimHint;
     public List<GameObject> handInventorySlots;
     public PlayerBackpack backpack;
-    bool isOpenBackpack;
-    public bool IsOpenBackpack { get { return isOpenBackpack; } set { isOpenBackpack = value; } }
+    bool isDrag;
+    public bool IsDrag{get {return isDrag;}}
     [Header("Vehicle UI")]
     [SerializeField] GameObject vehicleUI;
     [SerializeField] TMP_Text vehicleSpeedText;
@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
         vehicleSpeedText.text = $"Speed:{Mathf.RoundToInt(speed)}km/h";
 
         if (maxSpeed != 0) vehicleSpeedImg.fillAmount = speed / maxSpeed;
-        
+
         fuelTankCapacityText.text = $"{fuelValue}/{maxFuel}";
         fuelTankCapacityImg.fillAmount = fuelValue / maxFuel;
     }
@@ -119,7 +119,6 @@ public class UIManager : MonoBehaviour
     {
         backpackUI.SetActive(false);
         backpack.ResetBackpackSlotInfo();
-        isOpenBackpack = false;
 
         DisSubAllUIInput();
         GameObject.FindWithTag("Player").GetComponent<PlayerStatus>().SetStatus(Status.Normal);
@@ -128,14 +127,19 @@ public class UIManager : MonoBehaviour
 
     public void OnDrag(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        if (!isDrag)
         {
-            Debug.Log("拖曳");
-
+            if (ctx.performed)
+            {
+                isDrag=true;
+            }
         }
-        else if (ctx.canceled)
+        else
         {
-            Debug.Log("放開");
+            if (ctx.canceled)
+            {
+                isDrag=false;
+            }
         }
     }
     //------按鍵控制---------//

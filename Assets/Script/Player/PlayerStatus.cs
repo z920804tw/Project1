@@ -108,10 +108,8 @@ public class PlayerStatus : MonoBehaviour
         GameManager.Instance.ShowCursor(true);
         GameManager.Instance.SwitchInputMode("UI");
 
-        UIManager.Instance.IsOpenBackpack = true;
         UIManager.Instance.SubAllUIInput();
-        UIManager.Instance.ShowBackpackUI(UIManager.Instance.IsOpenBackpack);
-
+        UIManager.Instance.ShowBackpackUI(true);
 
     }
     //-------------------------------狀態設定------------------------------//
@@ -166,7 +164,6 @@ public class PlayerStatus : MonoBehaviour
     }
     public void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (UIManager.Instance.IsOpenBackpack || playerMove.IsAim) return;
         playerInteract.OnInteract();
     }
     public void OnThrow(InputAction.CallbackContext ctx)

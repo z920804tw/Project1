@@ -18,7 +18,8 @@ public class PlayerInventorySlot : MonoBehaviour
     public int Amount { get { return amount; } set { amount = value; } }
     [SerializeField] bool canStack;
     public bool CanStack { get { return canStack; } }
-    public bool isOccupy;
+    bool isOccupy;
+    public bool IsOccupy{get {return isOccupy;}}
 
     [Header("物件套用")]
     public GameObject slotObject;

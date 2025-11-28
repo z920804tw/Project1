@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IItemEffect
 {
-    void ItemEffect();
+    void ItemEffect(GameObject target);
 }

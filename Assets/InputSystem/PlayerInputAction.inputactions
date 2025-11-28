@@ -788,7 +788,7 @@
                     "id": "cada7f10-8812-4b9c-affc-9928f215f4f0",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold(duration=1)",
+                    "interactions": "Hold(duration=0.25)",
                     "initialStateCheck": false
                 },
                 {

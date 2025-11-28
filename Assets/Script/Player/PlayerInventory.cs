@@ -39,7 +39,7 @@ public class PlayerInventory : MonoBehaviour
     {
         foreach (GameObject i in handSlots)
         {
-            if (i.GetComponent<PlayerInventorySlot>().isOccupy)
+            if (i.GetComponent<PlayerInventorySlot>().IsOccupy)
             {
                 //檢查該物品的itemID是否與撿取的一樣，並且檢查是否能夠堆疊
                 if (i.GetComponent<PlayerInventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && item.GetComponent<PickObject>().itemSO.canStack)
@@ -64,7 +64,7 @@ public class PlayerInventory : MonoBehaviour
             foreach (GameObject i in handSlots)
             {
                 PlayerInventorySlot slot = i.GetComponent<PlayerInventorySlot>();
-                if (!slot.isOccupy)
+                if (!slot.IsOccupy)
                 {
                     //設定物品欄位資訊
                     slot.SetInfo(item);
@@ -128,7 +128,7 @@ public class PlayerInventory : MonoBehaviour
     {
         foreach (GameObject i in backpackSlots)
         {
-            if (i.GetComponent<PlayerInventorySlot>().isOccupy)
+            if (i.GetComponent<PlayerInventorySlot>().IsOccupy)
             {
                 //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
                 if (i.GetComponent<PlayerInventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && i.GetComponent<PlayerInventorySlot>().CanStack)
@@ -151,7 +151,7 @@ public class PlayerInventory : MonoBehaviour
             foreach (GameObject i in backpackSlots)
             {
                 PlayerInventorySlot slot = i.GetComponent<PlayerInventorySlot>();
-                if (!slot.isOccupy)
+                if (!slot.IsOccupy)
                 {
                     //設定物品欄位資訊
                     slot.SetBackpackSlotInfo(item);
