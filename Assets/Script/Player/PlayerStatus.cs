@@ -13,6 +13,7 @@ public class PlayerStatus : MonoBehaviour
     public ThirdPersonCamera playerCam;
     public PlayerInventory playerInventory;
     public PlayerInteract playerInteract;
+    public Climb playerClimb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,6 +31,7 @@ public class PlayerStatus : MonoBehaviour
                 SetNormalStatus();
                 break;
             case Status.Climb:
+                SetClimbStatus();
                 break;
 
             case Status.InVehicle:
@@ -74,9 +76,9 @@ public class PlayerStatus : MonoBehaviour
         GameManager.Instance.SwitchInputMode("Player");
         SubPlayerAllInput();
         playerCam.SubAllCameraInput();
-        
+
         SetAllComponet(true);
-        
+
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
         UIManager.Instance.ShowPlayerUI(true);
         GameManager.Instance.ShowCursor(false);
@@ -106,12 +108,28 @@ public class PlayerStatus : MonoBehaviour
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
 
         GameManager.Instance.ShowCursor(true);
-        GameManager.Instance.SwitchInputMode("UI");
+        GameManager.Instance.SwitchInputMode("Inventory");
 
-        UIManager.Instance.SubAllUIInput();
+        UIManager.Instance.SubPlayerInventoryInput();
         UIManager.Instance.ShowBackpackUI(true);
 
     }
+    //攀爬
+    void SetClimbStatus()
+    {
+        //取消玩家一般移動監聽、玩家移動、互動功能
+        DisSubPlayerAllInput();
+        playerCam.DisSubAllCameraInput();
+        playerMove.enabled = false;
+        playerInteract.enabled = false;
+        interactCollider.enabled=false;
+
+        GameManager.Instance.SwitchInputMode("Climb");
+        playerClimb.SubClimbInput();
+        playerCam.SubAllCameraInput();
+        playerClimb.enabled = true;
+    }
+
     //-------------------------------狀態設定------------------------------//
 
     //--------玩家移動--------//

@@ -15,8 +15,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject aimHint;
     public List<GameObject> handInventorySlots;
     public PlayerBackpack backpack;
-    bool isDrag;
-    public bool IsDrag{get {return isDrag;}}
     [Header("Vehicle UI")]
     [SerializeField] GameObject vehicleUI;
     [SerializeField] TMP_Text vehicleSpeedText;
@@ -107,42 +105,7 @@ public class UIManager : MonoBehaviour
 
     //----------物品欄-----------//
 
-    //------按鍵控制---------//
-    public void OnClick(InputAction.CallbackContext ctx)
-    {
-        if (backpack != null)
-        {
-            backpack.SelectBackPackSlot();
-        }
-    }
-    public void OnCloseBackpack(InputAction.CallbackContext ctx)
-    {
-        backpackUI.SetActive(false);
-        backpack.ResetBackpackSlotInfo();
 
-        DisSubAllUIInput();
-        GameObject.FindWithTag("Player").GetComponent<PlayerStatus>().SetStatus(Status.Normal);
-        Debug.Log("關閉背包");
-    }
-
-    public void OnDrag(InputAction.CallbackContext ctx)
-    {
-        if (!isDrag)
-        {
-            if (ctx.performed)
-            {
-                isDrag=true;
-            }
-        }
-        else
-        {
-            if (ctx.canceled)
-            {
-                isDrag=false;
-            }
-        }
-    }
-    //------按鍵控制---------//
 
     //----------HintUI-----------//
     public void HintUISelect(int value)
@@ -168,30 +131,11 @@ public class UIManager : MonoBehaviour
     }
     //----------HintUI-----------//
 
-    public void SubAllUIInput()
+    //訂閱玩家物品欄輸入監聽事件
+    public void SubPlayerInventoryInput()
     {
-        playerInput.actions["Click"].performed += OnClick;
-        playerInput.actions["Click"].canceled += OnClick;
-
-        playerInput.actions["Drag"].performed += OnDrag;
-        playerInput.actions["Drag"].canceled += OnDrag;
-
-        playerInput.actions["CloseBackpack"].performed += OnCloseBackpack;
-        playerInput.actions["CloseBackpack"].canceled += OnCloseBackpack;
-
-        Debug.Log("監聽背包控制");
+        backpack.SubAllUIInput();
     }
-    public void DisSubAllUIInput()
-    {
-        playerInput.actions["Click"].performed -= OnClick;
-        playerInput.actions["Click"].canceled -= OnClick;
 
-        playerInput.actions["Drag"].performed -= OnDrag;
-        playerInput.actions["Drag"].canceled -= OnDrag;
-
-        playerInput.actions["CloseBackpack"].performed -= OnCloseBackpack;
-        playerInput.actions["CloseBackpack"].canceled -= OnCloseBackpack;
-
-        Debug.Log("取消監聽背包控制");
-    }
+    //訂閱其他UI監聽事件
 }

@@ -89,7 +89,7 @@ public class ThirdPersonCamera : MonoBehaviour
     }
     public void Stop()
     {
-        look=Vector2.zero;
+        look = Vector2.zero;
     }
     public void SubAllCameraInput()
     {
@@ -97,6 +97,7 @@ public class ThirdPersonCamera : MonoBehaviour
         playerInput.actions["Look"].canceled += OnLook;
         playerInput.actions["Zoom"].performed += OnZoom;
         playerInput.actions["Zoom"].canceled += OnZoom;
+        Debug.Log("監聽攝影機");
     }
 
     public void DisSubAllCameraInput()
@@ -105,5 +106,6 @@ public class ThirdPersonCamera : MonoBehaviour
         playerInput.actions["Look"].canceled -= OnLook;
         playerInput.actions["Zoom"].performed -= OnZoom;
         playerInput.actions["Zoom"].canceled -= OnZoom;
+        Debug.Log("取消監聽攝影機");
     }
 }

@@ -28,7 +28,6 @@ public class PlayerInteract : MonoBehaviour
     void Update()
     {
         CheckPlaceAndThrow();
-
     }
 
     void CheckPlaceAndThrow()
@@ -79,10 +78,10 @@ public class PlayerInteract : MonoBehaviour
 
     public void ResetThrowPlace()
     {
-        canThrow=false;
-        canPlace=false;
-        isThrowAnim=false;
-        anim.ThrowAnim(false,false);
+        canThrow = false;
+        canPlace = false;
+        isThrowAnim = false;
+        anim.ThrowAnim(false, false);
     }
     //--------按鍵偵測----------//
     public void OnThrow()

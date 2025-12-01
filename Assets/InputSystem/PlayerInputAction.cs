@@ -775,7 +775,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""UI"",
+            ""name"": ""Inventory"",
             ""id"": ""6be56234-01d9-4588-b86d-1a731a2e4104"",
             ""actions"": [
                 {
@@ -1329,6 +1329,118 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Climb"",
+            ""id"": ""3b1750cb-38a5-48a7-afe8-d7e7d750506d"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""e76cf415-2a00-4ad0-a331-f360192e2ed6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ba3a4712-862b-4bcd-999d-4970fa93f767"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""f33fe882-6b8d-4d45-b964-62043e33242b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""9ab9c4e8-00c5-48d6-80d7-8ffee0f6e360"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""1d14d883-9857-425a-80f7-eb65d0cfa6eb"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d6c894d3-c0f6-4c9b-baa0-e0e173083117"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d535d14-44c4-4b1e-adc1-4ace68b45a20"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09fbe9bb-f150-4071-960f-dd8787d9cdd6"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa7f4c8e-79a3-4f23-8ff0-0a2e8aca6ab6"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse;Touch"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e526172c-196f-46d0-826c-afcfcf36fe84"",
+                    ""path"": ""<Joystick>/{Hatswitch}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1415,27 +1527,33 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Vehicle_Look = m_Vehicle.FindAction("Look", throwIfNotFound: true);
         m_Vehicle_Leave = m_Vehicle.FindAction("Leave", throwIfNotFound: true);
         m_Vehicle_EngineSwitch = m_Vehicle.FindAction("EngineSwitch", throwIfNotFound: true);
-        // UI
-        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
-        m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
-        m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
-        m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
-        m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
-        m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
-        m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
-        m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
-        m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
-        m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        m_UI_Drag = m_UI.FindAction("Drag", throwIfNotFound: true);
-        m_UI_CloseBackpack = m_UI.FindAction("CloseBackpack", throwIfNotFound: true);
+        // Inventory
+        m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
+        m_Inventory_Navigate = m_Inventory.FindAction("Navigate", throwIfNotFound: true);
+        m_Inventory_Submit = m_Inventory.FindAction("Submit", throwIfNotFound: true);
+        m_Inventory_Cancel = m_Inventory.FindAction("Cancel", throwIfNotFound: true);
+        m_Inventory_Point = m_Inventory.FindAction("Point", throwIfNotFound: true);
+        m_Inventory_Click = m_Inventory.FindAction("Click", throwIfNotFound: true);
+        m_Inventory_ScrollWheel = m_Inventory.FindAction("ScrollWheel", throwIfNotFound: true);
+        m_Inventory_MiddleClick = m_Inventory.FindAction("MiddleClick", throwIfNotFound: true);
+        m_Inventory_RightClick = m_Inventory.FindAction("RightClick", throwIfNotFound: true);
+        m_Inventory_TrackedDevicePosition = m_Inventory.FindAction("TrackedDevicePosition", throwIfNotFound: true);
+        m_Inventory_TrackedDeviceOrientation = m_Inventory.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_Inventory_Drag = m_Inventory.FindAction("Drag", throwIfNotFound: true);
+        m_Inventory_CloseBackpack = m_Inventory.FindAction("CloseBackpack", throwIfNotFound: true);
+        // Climb
+        m_Climb = asset.FindActionMap("Climb", throwIfNotFound: true);
+        m_Climb_Move = m_Climb.FindAction("Move", throwIfNotFound: true);
+        m_Climb_Zoom = m_Climb.FindAction("Zoom", throwIfNotFound: true);
+        m_Climb_Look = m_Climb.FindAction("Look", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInputAction.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Vehicle.enabled, "This will cause a leak and performance issues, PlayerInputAction.Vehicle.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputAction.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Inventory.enabled, "This will cause a leak and performance issues, PlayerInputAction.Inventory.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Climb.enabled, "This will cause a leak and performance issues, PlayerInputAction.Climb.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1865,84 +1983,84 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     /// </summary>
     public VehicleActions @Vehicle => new VehicleActions(this);
 
-    // UI
-    private readonly InputActionMap m_UI;
-    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_Navigate;
-    private readonly InputAction m_UI_Submit;
-    private readonly InputAction m_UI_Cancel;
-    private readonly InputAction m_UI_Point;
-    private readonly InputAction m_UI_Click;
-    private readonly InputAction m_UI_ScrollWheel;
-    private readonly InputAction m_UI_MiddleClick;
-    private readonly InputAction m_UI_RightClick;
-    private readonly InputAction m_UI_TrackedDevicePosition;
-    private readonly InputAction m_UI_TrackedDeviceOrientation;
-    private readonly InputAction m_UI_Drag;
-    private readonly InputAction m_UI_CloseBackpack;
+    // Inventory
+    private readonly InputActionMap m_Inventory;
+    private List<IInventoryActions> m_InventoryActionsCallbackInterfaces = new List<IInventoryActions>();
+    private readonly InputAction m_Inventory_Navigate;
+    private readonly InputAction m_Inventory_Submit;
+    private readonly InputAction m_Inventory_Cancel;
+    private readonly InputAction m_Inventory_Point;
+    private readonly InputAction m_Inventory_Click;
+    private readonly InputAction m_Inventory_ScrollWheel;
+    private readonly InputAction m_Inventory_MiddleClick;
+    private readonly InputAction m_Inventory_RightClick;
+    private readonly InputAction m_Inventory_TrackedDevicePosition;
+    private readonly InputAction m_Inventory_TrackedDeviceOrientation;
+    private readonly InputAction m_Inventory_Drag;
+    private readonly InputAction m_Inventory_CloseBackpack;
     /// <summary>
-    /// Provides access to input actions defined in input action map "UI".
+    /// Provides access to input actions defined in input action map "Inventory".
     /// </summary>
-    public struct UIActions
+    public struct InventoryActions
     {
         private @PlayerInputAction m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public UIActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InventoryActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "UI/Navigate".
+        /// Provides access to the underlying input action "Inventory/Navigate".
         /// </summary>
-        public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
+        public InputAction @Navigate => m_Wrapper.m_Inventory_Navigate;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Submit".
+        /// Provides access to the underlying input action "Inventory/Submit".
         /// </summary>
-        public InputAction @Submit => m_Wrapper.m_UI_Submit;
+        public InputAction @Submit => m_Wrapper.m_Inventory_Submit;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Cancel".
+        /// Provides access to the underlying input action "Inventory/Cancel".
         /// </summary>
-        public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
+        public InputAction @Cancel => m_Wrapper.m_Inventory_Cancel;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Point".
+        /// Provides access to the underlying input action "Inventory/Point".
         /// </summary>
-        public InputAction @Point => m_Wrapper.m_UI_Point;
+        public InputAction @Point => m_Wrapper.m_Inventory_Point;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Click".
+        /// Provides access to the underlying input action "Inventory/Click".
         /// </summary>
-        public InputAction @Click => m_Wrapper.m_UI_Click;
+        public InputAction @Click => m_Wrapper.m_Inventory_Click;
         /// <summary>
-        /// Provides access to the underlying input action "UI/ScrollWheel".
+        /// Provides access to the underlying input action "Inventory/ScrollWheel".
         /// </summary>
-        public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
+        public InputAction @ScrollWheel => m_Wrapper.m_Inventory_ScrollWheel;
         /// <summary>
-        /// Provides access to the underlying input action "UI/MiddleClick".
+        /// Provides access to the underlying input action "Inventory/MiddleClick".
         /// </summary>
-        public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
+        public InputAction @MiddleClick => m_Wrapper.m_Inventory_MiddleClick;
         /// <summary>
-        /// Provides access to the underlying input action "UI/RightClick".
+        /// Provides access to the underlying input action "Inventory/RightClick".
         /// </summary>
-        public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
+        public InputAction @RightClick => m_Wrapper.m_Inventory_RightClick;
         /// <summary>
-        /// Provides access to the underlying input action "UI/TrackedDevicePosition".
+        /// Provides access to the underlying input action "Inventory/TrackedDevicePosition".
         /// </summary>
-        public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
+        public InputAction @TrackedDevicePosition => m_Wrapper.m_Inventory_TrackedDevicePosition;
         /// <summary>
-        /// Provides access to the underlying input action "UI/TrackedDeviceOrientation".
+        /// Provides access to the underlying input action "Inventory/TrackedDeviceOrientation".
         /// </summary>
-        public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        public InputAction @TrackedDeviceOrientation => m_Wrapper.m_Inventory_TrackedDeviceOrientation;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Drag".
+        /// Provides access to the underlying input action "Inventory/Drag".
         /// </summary>
-        public InputAction @Drag => m_Wrapper.m_UI_Drag;
+        public InputAction @Drag => m_Wrapper.m_Inventory_Drag;
         /// <summary>
-        /// Provides access to the underlying input action "UI/CloseBackpack".
+        /// Provides access to the underlying input action "Inventory/CloseBackpack".
         /// </summary>
-        public InputAction @CloseBackpack => m_Wrapper.m_UI_CloseBackpack;
+        public InputAction @CloseBackpack => m_Wrapper.m_Inventory_CloseBackpack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public InputActionMap Get() { return m_Wrapper.m_Inventory; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1950,9 +2068,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="InventoryActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(InventoryActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1960,11 +2078,11 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="UIActions" />
-        public void AddCallbacks(IUIActions instance)
+        /// <seealso cref="InventoryActions" />
+        public void AddCallbacks(IInventoryActions instance)
         {
-            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_InventoryActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InventoryActionsCallbackInterfaces.Add(instance);
             @Navigate.started += instance.OnNavigate;
             @Navigate.performed += instance.OnNavigate;
             @Navigate.canceled += instance.OnNavigate;
@@ -2009,8 +2127,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="UIActions" />
-        private void UnregisterCallbacks(IUIActions instance)
+        /// <seealso cref="InventoryActions" />
+        private void UnregisterCallbacks(IInventoryActions instance)
         {
             @Navigate.started -= instance.OnNavigate;
             @Navigate.performed -= instance.OnNavigate;
@@ -2051,12 +2169,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UIActions.UnregisterCallbacks(IUIActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />.
         /// </summary>
-        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
-        public void RemoveCallbacks(IUIActions instance)
+        /// <seealso cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />
+        public void RemoveCallbacks(IInventoryActions instance)
         {
-            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_InventoryActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -2066,21 +2184,139 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
-        public void SetCallbacks(IUIActions instance)
+        /// <seealso cref="InventoryActions.AddCallbacks(IInventoryActions)" />
+        /// <seealso cref="InventoryActions.RemoveCallbacks(IInventoryActions)" />
+        /// <seealso cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />
+        public void SetCallbacks(IInventoryActions instance)
         {
-            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_InventoryActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_InventoryActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="UIActions" /> instance referencing this action map.
+    /// Provides a new <see cref="InventoryActions" /> instance referencing this action map.
     /// </summary>
-    public UIActions @UI => new UIActions(this);
+    public InventoryActions @Inventory => new InventoryActions(this);
+
+    // Climb
+    private readonly InputActionMap m_Climb;
+    private List<IClimbActions> m_ClimbActionsCallbackInterfaces = new List<IClimbActions>();
+    private readonly InputAction m_Climb_Move;
+    private readonly InputAction m_Climb_Zoom;
+    private readonly InputAction m_Climb_Look;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Climb".
+    /// </summary>
+    public struct ClimbActions
+    {
+        private @PlayerInputAction m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public ClimbActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Climb/Move".
+        /// </summary>
+        public InputAction @Move => m_Wrapper.m_Climb_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "Climb/Zoom".
+        /// </summary>
+        public InputAction @Zoom => m_Wrapper.m_Climb_Zoom;
+        /// <summary>
+        /// Provides access to the underlying input action "Climb/Look".
+        /// </summary>
+        public InputAction @Look => m_Wrapper.m_Climb_Look;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Climb; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="ClimbActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(ClimbActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="ClimbActions" />
+        public void AddCallbacks(IClimbActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ClimbActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ClimbActionsCallbackInterfaces.Add(instance);
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="ClimbActions" />
+        private void UnregisterCallbacks(IClimbActions instance)
+        {
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="ClimbActions.UnregisterCallbacks(IClimbActions)" />.
+        /// </summary>
+        /// <seealso cref="ClimbActions.UnregisterCallbacks(IClimbActions)" />
+        public void RemoveCallbacks(IClimbActions instance)
+        {
+            if (m_Wrapper.m_ClimbActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="ClimbActions.AddCallbacks(IClimbActions)" />
+        /// <seealso cref="ClimbActions.RemoveCallbacks(IClimbActions)" />
+        /// <seealso cref="ClimbActions.UnregisterCallbacks(IClimbActions)" />
+        public void SetCallbacks(IClimbActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ClimbActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ClimbActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="ClimbActions" /> instance referencing this action map.
+    /// </summary>
+    public ClimbActions @Climb => new ClimbActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -2282,11 +2518,11 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnEngineSwitch(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Inventory" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-    /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-    public interface IUIActions
+    /// <seealso cref="InventoryActions.AddCallbacks(IInventoryActions)" />
+    /// <seealso cref="InventoryActions.RemoveCallbacks(IInventoryActions)" />
+    public interface IInventoryActions
     {
         /// <summary>
         /// Method invoked when associated input action "Navigate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -2372,5 +2608,34 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCloseBackpack(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Climb" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="ClimbActions.AddCallbacks(IClimbActions)" />
+    /// <seealso cref="ClimbActions.RemoveCallbacks(IClimbActions)" />
+    public interface IClimbActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Zoom" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnZoom(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLook(InputAction.CallbackContext context);
     }
 }
