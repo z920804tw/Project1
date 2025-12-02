@@ -124,7 +124,7 @@ public class ThirdPersonAnimation : MonoBehaviour
     public void ThrowAnim(bool isAim, bool isThrow)
     {
         StopAllCoroutines();
-        float starValue =animator.GetLayerWeight(1);
+        float starValue = animator.GetLayerWeight(1);
         if (isAim)
         {
             if (isThrow)
@@ -144,6 +144,22 @@ public class ThirdPersonAnimation : MonoBehaviour
             StartCoroutine(AnimLayerDelay(1, starValue, 0, 0.8f));
         }
     }
+    public void SetClimbAnim(bool t)
+    {
+        animator.SetBool("isClimb", t);
+    }
+
+    public void PlayAnim(bool t)
+    {
+        if (t)
+        {
+            animator.speed = 1;
+        }
+        else
+        {
+            animator.speed=0;
+        }
+    }
 
     //負責開關Layer的權重延遲
     IEnumerator AnimLayerDelay(int layer, float start, float end, float duration)
@@ -157,7 +173,6 @@ public class ThirdPersonAnimation : MonoBehaviour
 
             yield return null;
         }
-        Debug.Log("完成");
         animator.SetLayerWeight(layer, end);
     }
 

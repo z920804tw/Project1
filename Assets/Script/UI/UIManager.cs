@@ -131,11 +131,6 @@ public class UIManager : MonoBehaviour
     }
     //----------HintUI-----------//
 
-    //訂閱玩家物品欄輸入監聽事件
-    public void SubPlayerInventoryInput()
-    {
-        backpack.SubAllUIInput();
-    }
 
     //訂閱其他UI監聽事件
 }

@@ -157,7 +157,7 @@ public class PlayerBackpack : MonoBehaviour
                         if (slot != null)
                         {
                             PlayerInventorySlot newSlot = dragSlot.GetComponent<PlayerInventorySlot>();
-                            if (slot != firstSlot)
+                            if (slot != firstSlot) //如果放開時的欄位與拖曳的欄位不一樣的話就交換
                             {
                                 ItemSO temporary = slot.slotItemSO;
                                 int amount = slot.Amount;
@@ -169,7 +169,7 @@ public class PlayerBackpack : MonoBehaviour
                                 dragSlot = null;
                                 firstSlot = null;
                             }
-                            else
+                            else //如果是一樣的話就覆蓋
                             {
                                 firstSlot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
                                 Destroy(dragSlot);
@@ -180,7 +180,7 @@ public class PlayerBackpack : MonoBehaviour
                         return;
                     }
                 }
-                else
+                else //如果是陣列是<=0的話就將拖曳的物件直接回到原本的slot位置上
                 {
                     PlayerInventorySlot newSlot = dragSlot.GetComponent<PlayerInventorySlot>();
                     firstSlot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);

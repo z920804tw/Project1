@@ -16,8 +16,8 @@ public class ThirdPersonMove : MonoBehaviour
     [SerializeField] float rotationSmoothTime = 1f;
     Vector2 moveInput;
     Vector3 inputDir;
-    [SerializeField]bool isRun = false;
-    [SerializeField]bool wasRun = false;
+    [SerializeField] bool isRun = false;
+    [SerializeField] bool wasRun = false;
 
     [Header("跳躍參數設定")]
     [SerializeField] float jumpHeight = 1.5f;
@@ -25,14 +25,16 @@ public class ThirdPersonMove : MonoBehaviour
     public LayerMask groundLayer;
     [SerializeField] float sphereRadius;
     [SerializeField] float sphereDistance;
+    [SerializeField] bool drawVisualSphere;
     bool isGround = true;
     bool wasGround = true; //紀錄上一楨是否在地面上
     Vector3 jumpVelecity;
 
     [Header("瞄準")]
-    Transform aimCam;
     [SerializeField] bool isAim;
     public bool IsAim { get { return isAim; } set { isAim = value; } }
+    Transform aimCam;
+
 
 
 
@@ -186,10 +188,10 @@ public class ThirdPersonMove : MonoBehaviour
     }
     public void Stop()
     {
-        isRun=false;
-        wasRun=false;
-        isAim=false;
-        inputDir=Vector3.zero;
+        isRun = false;
+        wasRun = false;
+        isAim = false;
+        inputDir = Vector3.zero;
     }
 
     //------會從父物件接收參數值------//
@@ -226,6 +228,7 @@ public class ThirdPersonMove : MonoBehaviour
     //------會從父物件接收值------//
     void OnDrawGizmos()
     {
+        if(!drawVisualSphere) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position + Vector3.down * sphereDistance, sphereRadius);
     }

@@ -103,7 +103,7 @@ public class PlayerInventorySlot : MonoBehaviour
             amount = amountValue;
             amountText.text = $"{amount}";
             imgText.text = $"{itemName}";
-            Debug.Log("套用舊到新");
+            Debug.Log("兩個欄位資訊互換(有東西)");
         }
         else
         {
@@ -117,7 +117,7 @@ public class PlayerInventorySlot : MonoBehaviour
             amount = 0;
             amountText.text = $"{amount}";
             imgText.text = $"{itemName}";
-            Debug.Log("套用新到舊");
+            Debug.Log("兩個欄位資訊互換(沒東西)");
         }
 
     }

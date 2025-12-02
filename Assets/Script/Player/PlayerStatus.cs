@@ -67,8 +67,6 @@ public class PlayerStatus : MonoBehaviour
         playerInteract.enabled = t;
         GetComponent<CharacterController>().enabled = t;
         interactCollider.enabled = t;
-
-
     }
     void SetNormalStatus()
     {
@@ -110,7 +108,7 @@ public class PlayerStatus : MonoBehaviour
         GameManager.Instance.ShowCursor(true);
         GameManager.Instance.SwitchInputMode("Inventory");
 
-        UIManager.Instance.SubPlayerInventoryInput();
+        UIManager.Instance.backpack.SubAllUIInput();
         UIManager.Instance.ShowBackpackUI(true);
 
     }
@@ -122,12 +120,14 @@ public class PlayerStatus : MonoBehaviour
         playerCam.DisSubAllCameraInput();
         playerMove.enabled = false;
         playerInteract.enabled = false;
-        interactCollider.enabled=false;
+        interactCollider.enabled = false;
 
         GameManager.Instance.SwitchInputMode("Climb");
         playerClimb.SubClimbInput();
         playerCam.SubAllCameraInput();
         playerClimb.enabled = true;
+
+        anim.SetClimbAnim(true);
     }
 
     //-------------------------------狀態設定------------------------------//
@@ -135,12 +135,23 @@ public class PlayerStatus : MonoBehaviour
     //--------玩家移動--------//
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        Vector2 value1 = ctx.ReadValue<Vector2>();
-        playerMove.OnMove(value1);
+        if (ctx.performed)
+        {
+            Vector2 value1 = ctx.ReadValue<Vector2>();
+            playerMove.OnMove(value1);
+        }
+        else if (ctx.canceled)
+        {
+            playerMove.OnMove(Vector2.zero);
+        }
     }
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        playerMove.OnJump();
+        if (ctx.performed)
+        {
+            playerMove.OnJump();
+        }
+
     }
     public void OnRun(InputAction.CallbackContext ctx)
     {
@@ -152,7 +163,11 @@ public class PlayerStatus : MonoBehaviour
     }
     public void OnAim(InputAction.CallbackContext ctx)
     {
-        playerMove.OnAim();
+        if (ctx.performed)
+        {
+            playerMove.OnAim();
+        }
+
     }
     //--------玩家移動--------//
 
@@ -166,7 +181,7 @@ public class PlayerStatus : MonoBehaviour
         }
 
 
-        if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf)
+        if (UIManager.Instance.interactUI.activeSelf)
         {
             UIManager.Instance.HintUISelect(-(int)value1);
         }
@@ -182,14 +197,17 @@ public class PlayerStatus : MonoBehaviour
     }
     public void OnInteract(InputAction.CallbackContext ctx)
     {
+        if(ctx.performed && !playerMove.IsAim)
         playerInteract.OnInteract();
     }
     public void OnThrow(InputAction.CallbackContext ctx)
     {
+        if(ctx.performed)
         playerInteract.OnThrow();
     }
     public void OnPlace(InputAction.CallbackContext ctx)
     {
+        if(ctx.performed)
         playerInteract.OnPlace();
     }
     //--------玩家互動--------//

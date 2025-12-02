@@ -13,14 +13,18 @@ public class Climb : MonoBehaviour
     [Header("參數設定")]
     [SerializeField] float climbSpeed;
     [SerializeField] bool isPress;
-
     [SerializeField] float sphereRadius;
     [SerializeField] float sphereDistanceBottom;
     [SerializeField] float sphereDistanceTop;
 
+    [Header("Debug")]
+    [SerializeField] Ladder currentLadder;
+    [SerializeField] float delayTime;
+    [SerializeField] bool isTranslate;
+    [SerializeField] bool drawVisualSphere;
 
     Vector3 climbDir;
-    bool isLeaveing;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,23 +34,38 @@ public class Climb : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isPress && !isLeaveing)
+        //檢查是否在切換中，如果不是才能執行以下的內容
+        if (!isTranslate)
         {
-            player.transform.position += climbSpeed * climbDir * Time.deltaTime;
+            if (isPress)
+            {
+                player.transform.position += climbSpeed * climbDir * Time.deltaTime;
+                float ClimbSpeed = climbDir.y;
+                player.GetComponent<PlayerStatus>().anim.PlayAnim(true);
+                player.GetComponent<PlayerStatus>().anim.animator.SetFloat("climbSpeed", ClimbSpeed);
+            }
+            else
+            {
+                player.GetComponent<PlayerStatus>().anim.PlayAnim(false);
+            }
+
+
+
+            if (CheckBottom())
+            {
+                currentLadder.ExitLadder(ladderExitbottom);
+                StartCoroutine(DelayLeaveClimb());
+            }
+            if (CheckTop())
+            {
+                currentLadder.ExitLadder(ladderExitTop);
+                StartCoroutine(DelayLeaveClimb());
+            }
         }
 
-        if (CheckBottom() && !isLeaveing)
-        {
-            isLeaveing = true;
-            StartCoroutine(DelayLeaveClimb(ladderExitbottom));
-        }
-        if (CheckTop() && !isLeaveing)
-        {
-            isLeaveing = true;
-            StartCoroutine(DelayLeaveClimb(ladderExitTop));
-        }
     }
 
+    //-------檢查是否有觸碰到離開點----------//
     bool CheckBottom()
     {
         return Physics.CheckSphere(transform.position + -transform.up * sphereDistanceBottom, sphereRadius, groundLayer);
@@ -56,10 +75,13 @@ public class Climb : MonoBehaviour
     {
         return Physics.CheckSphere(transform.position + transform.up * sphereDistanceTop, sphereRadius, groundLayer);
     }
+    //-------檢查是否有觸碰到離開點----------//
 
+    //-------按鍵監聽-----------//
     void ClimbDir(InputAction.CallbackContext ctx)
     {
         climbDir = ctx.ReadValue<Vector2>();
+
         if (ctx.performed)
         {
             isPress = true;
@@ -69,7 +91,7 @@ public class Climb : MonoBehaviour
             isPress = false;
         }
     }
-    public void SubClimbInput()
+    public void SubClimbInput() //訂閱攀爬需要用的按鍵
     {
         if (playerInput == null)
         {
@@ -81,22 +103,28 @@ public class Climb : MonoBehaviour
 
         Debug.Log("監聽玩家攀爬");
     }
-    public void DisSubClimbInput()
+    public void DisSubClimbInput() //取消訂閱
     {
         playerInput.actions["Move"].performed -= ClimbDir;
         playerInput.actions["Move"].canceled -= ClimbDir;
 
         Debug.Log("取消監聽玩家攀爬");
     }
-
-    public void SetExitPos(Transform top, Transform bottom)
+    //-------按鍵監聽-----------//
+    public void SetClimbInfo(Ladder target, Transform top, Transform bottom) //設定攀爬的基本資訊
     {
+        currentLadder = target;
         ladderExitTop = top;
         ladderExitbottom = bottom;
+
+        isTranslate = true;
+
+        StartCoroutine(DelayReset());
     }
 
     void OnDrawGizmos()
     {
+        if(!drawVisualSphere) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position + Vector3.down * sphereDistanceBottom, sphereRadius);
         Gizmos.DrawWireSphere(transform.position + Vector3.up * sphereDistanceTop, sphereRadius);
@@ -104,23 +132,34 @@ public class Climb : MonoBehaviour
 
 
 
-    IEnumerator DelayLeaveClimb(Transform exitPos)
+    IEnumerator DelayLeaveClimb() //延遲退出攀爬模式
     {
-        Debug.Log("可退出攀爬模式");
-        player.transform.position = exitPos.position;
-        yield return new WaitForSeconds(0.2f);
+        Debug.Log("退出攀爬模式");
+        isTranslate = true;
+        PlayerStatus playerStatus = player.GetComponent<PlayerStatus>();
+        playerStatus.anim.SetClimbAnim(false);
+        playerStatus.anim.PlayAnim(true);
 
+        yield return new WaitForSeconds(delayTime);
         DisSubClimbInput();
-        player.GetComponent<PlayerStatus>().playerCam.DisSubAllCameraInput();
-        player.GetComponent<PlayerStatus>().SetStatus(Status.Normal);
+        playerStatus.playerCam.DisSubAllCameraInput();
+        playerStatus.SetStatus(Status.Normal);
+
 
         ladderExitTop = null;
         ladderExitbottom = null;
+        currentLadder = null;
 
         isPress = false;
-        isLeaveing = false;
+        isTranslate = false;
         climbDir = Vector3.zero;
 
         this.enabled = false;
+    }
+
+    IEnumerator DelayReset()
+    {
+        yield return new WaitForSeconds(delayTime);
+        isTranslate = false;
     }
 }
