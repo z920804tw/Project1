@@ -144,9 +144,27 @@ public class ThirdPersonAnimation : MonoBehaviour
             StartCoroutine(AnimLayerDelay(1, starValue, 0, 0.8f));
         }
     }
-    public void SetClimbAnim(bool t)
+    public void SetClimbAnim(bool t, string exitPos)
     {
-        animator.SetBool("isClimb", t);
+        if (t)
+        {
+            animator.SetBool("isClimb", true);
+        }
+        else
+        {
+            //檢查是往下還是往上
+            if (exitPos == "Top")
+            {
+                animator.SetTrigger("ClimbTopExit");
+                animator.SetBool("isClimb", false);
+            }
+            else if (exitPos == "Bottom")
+            {
+                Debug.Log("底部");
+                animator.SetBool("isClimb", false);
+            }
+        }
+
     }
 
     public void PlayAnim(bool t)
@@ -157,7 +175,7 @@ public class ThirdPersonAnimation : MonoBehaviour
         }
         else
         {
-            animator.speed=0;
+            animator.speed = 0;
         }
     }
 

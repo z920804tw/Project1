@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public class Ladder : MonoBehaviour
@@ -36,8 +37,12 @@ public class Ladder : MonoBehaviour
             player.SetStatus(Status.Climb);
             player.playerClimb.SetClimbInfo(this, topEndPos, bottomEndPos);
 
-            Quaternion rot = transform.rotation;
-            StartCoroutine(SmoothTranslate(player.gameObject, player.transform.position, btmPos, rot, 0.5f));
+            //移動和旋轉至到目標點
+            player.transform.DOMove(btmPos, 0.5f).SetEase(Ease.InOutSine);
+            player.transform.DORotate(transform.eulerAngles, 0.5f).SetEase(Ease.InOutSine);
+
+            // Quaternion rot = transform.rotation;
+            // StartCoroutine(SmoothTranslate(player.gameObject, player.transform.position, btmPos, rot, 0.5f));
         }
     }
 
@@ -51,8 +56,9 @@ public class Ladder : MonoBehaviour
             player.SetStatus(Status.Climb);
             player.playerClimb.SetClimbInfo(this, topEndPos, bottomEndPos);
 
-            Quaternion rot = transform.rotation;
-            StartCoroutine(SmoothTranslate(player.gameObject, player.transform.position, topPos.position, rot, 0.5f));
+            //移動和旋轉至到目標點
+            player.transform.DOMove(topPos.position, 0.8f).SetEase(Ease.InOutSine);
+            player.transform.DORotate(transform.eulerAngles, 0.5f).SetEase(Ease.InOutSine);
         }
     }
     //-------------UnityEvent使用---------------//
@@ -61,9 +67,10 @@ public class Ladder : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            Quaternion rot = transform.rotation;
 
-            StartCoroutine(SmoothTranslate(currentTarget, currentTarget.transform.position, exitPos.position, rot, 0.5f));
+            //移動和旋轉至到目標點
+            currentTarget.transform.DOMove(exitPos.position, 1f).SetEase(Ease.InOutSine);
+            currentTarget.transform.DORotate(transform.eulerAngles, 0.5f).SetEase(Ease.InOutSine);
             StartCoroutine(ResetInfo());
         }
     }

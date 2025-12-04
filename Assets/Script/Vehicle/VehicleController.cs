@@ -48,7 +48,7 @@ public class VehicleController : MonoBehaviour
     void Start()
     {
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
-        maxSpeed = forwardMaxSpeed*5;
+        maxSpeed = forwardMaxSpeed * 5;
         horizontalInput = 0;
         verticalInput = 0;
     }
@@ -58,6 +58,7 @@ public class VehicleController : MonoBehaviour
     {
         // 接收輸入
         VehicleInput();
+
     }
 
     void FixedUpdate()
@@ -150,6 +151,7 @@ public class VehicleController : MonoBehaviour
             }
             return;
         }
+
         // 設定驅動扭力
         float currentAcceleration = accelerationMultiplier * maxMotorTorque * verticalInput;
         float turnFactor = horizontalInput * maxMotorTurn; // 0.3 表示最大增加/減少 30% 扭力  
@@ -235,7 +237,7 @@ public class VehicleController : MonoBehaviour
                 limitSpeed = speed.normalized * forwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
-            maxSpeed = forwardMaxSpeed*5;
+            maxSpeed = forwardMaxSpeed * 5;
         }
         //如果是倒退
         else if (leftTorque < 0 && rightTorque < 0)
@@ -246,7 +248,7 @@ public class VehicleController : MonoBehaviour
                 limitSpeed = speed.normalized * backwardMaxSpeed;
                 rb.linearVelocity = new Vector3(limitSpeed.x, rb.linearVelocity.y, limitSpeed.z);
             }
-            maxSpeed=backwardMaxSpeed*5;
+            maxSpeed = backwardMaxSpeed * 5;
         }
         currentSpeed = rb.linearVelocity.magnitude * 5f;
         if (currentSpeed < 0.01f)
@@ -268,7 +270,7 @@ public class VehicleController : MonoBehaviour
         Vector3 pos;
         Quaternion quat;
         col.GetWorldPose(out pos, out quat);
-        mesh.position = pos;
+        mesh.position = pos+new Vector3(0,0.05f,0);
 
         if (mesh != leftWheelsTransform[0] && mesh != rightWheelsTransform[0])
         {

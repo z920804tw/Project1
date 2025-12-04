@@ -74,7 +74,6 @@ public class PlayerStatus : MonoBehaviour
         GameManager.Instance.SwitchInputMode("Player");
         SubPlayerAllInput();
         playerCam.SubAllCameraInput();
-
         SetAllComponet(true);
 
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
@@ -86,6 +85,7 @@ public class PlayerStatus : MonoBehaviour
         //取消玩家、攝影機監聽，並切換控制模式為載具
         DisSubPlayerAllInput();
         playerCam.DisSubAllCameraInput();
+        playerMove.ResetMove();
         SetAllComponet(false);
 
         UIManager.Instance.ShowPlayerUI(false);
@@ -100,7 +100,7 @@ public class PlayerStatus : MonoBehaviour
         playerCam.DisSubAllCameraInput();
 
         //停止玩家相關設定
-        playerMove.Stop();
+        playerMove.ResetMove();
         playerInteract.ResetThrowPlace();
 
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
@@ -118,6 +118,7 @@ public class PlayerStatus : MonoBehaviour
         //取消玩家一般移動監聽、玩家移動、互動功能
         DisSubPlayerAllInput();
         playerCam.DisSubAllCameraInput();
+        playerMove.ResetMove();
         playerMove.enabled = false;
         playerInteract.enabled = false;
         interactCollider.enabled = false;
@@ -127,7 +128,7 @@ public class PlayerStatus : MonoBehaviour
         playerCam.SubAllCameraInput();
         playerClimb.enabled = true;
 
-        anim.SetClimbAnim(true);
+        anim.SetClimbAnim(true, "");
     }
 
     //-------------------------------狀態設定------------------------------//
@@ -197,18 +198,18 @@ public class PlayerStatus : MonoBehaviour
     }
     public void OnInteract(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed && !playerMove.IsAim)
-        playerInteract.OnInteract();
+        if (ctx.performed && !playerMove.IsAim)
+            playerInteract.OnInteract();
     }
     public void OnThrow(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed)
-        playerInteract.OnThrow();
+        if (ctx.performed)
+            playerInteract.OnThrow();
     }
     public void OnPlace(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed)
-        playerInteract.OnPlace();
+        if (ctx.performed)
+            playerInteract.OnPlace();
     }
     //--------玩家互動--------//
 

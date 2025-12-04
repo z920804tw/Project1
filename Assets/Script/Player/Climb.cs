@@ -54,12 +54,12 @@ public class Climb : MonoBehaviour
             if (CheckBottom())
             {
                 currentLadder.ExitLadder(ladderExitbottom);
-                StartCoroutine(DelayLeaveClimb());
+                StartCoroutine(DelayLeaveClimb("Bottom"));
             }
             if (CheckTop())
             {
                 currentLadder.ExitLadder(ladderExitTop);
-                StartCoroutine(DelayLeaveClimb());
+                StartCoroutine(DelayLeaveClimb("Top"));
             }
         }
 
@@ -132,12 +132,12 @@ public class Climb : MonoBehaviour
 
 
 
-    IEnumerator DelayLeaveClimb() //延遲退出攀爬模式
+    IEnumerator DelayLeaveClimb(string exitPos) //延遲退出攀爬模式
     {
         Debug.Log("退出攀爬模式");
         isTranslate = true;
         PlayerStatus playerStatus = player.GetComponent<PlayerStatus>();
-        playerStatus.anim.SetClimbAnim(false);
+        playerStatus.anim.SetClimbAnim(false,exitPos);
         playerStatus.anim.PlayAnim(true);
 
         yield return new WaitForSeconds(delayTime);

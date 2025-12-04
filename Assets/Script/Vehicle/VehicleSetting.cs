@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,7 @@ public class VehicleSetting : MonoBehaviour
     [SerializeField] VehicleAudio vehicleAudio;
     [SerializeField] VehicleController vehicleController;
     [SerializeField] VehicleFuelTank vehicleFuelTank;
+    [SerializeField] VehicleTrack vehicleTrack;
     PlayerInput vehicleInput;
     ThirdPersonCamera thirdPersonCamera;
     [Header("元件套用")]
@@ -41,7 +43,7 @@ public class VehicleSetting : MonoBehaviour
             //更新車輛UI
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.UpdateVehecleUI(vehicleController.CurrentSpeed,vehicleController.MaxSpeed, vehicleFuelTank.CurrentFuel,vehicleFuelTank.MaxFuel);
+                UIManager.Instance.UpdateVehecleUI(vehicleController.CurrentSpeed, vehicleController.MaxSpeed, vehicleFuelTank.CurrentFuel, vehicleFuelTank.MaxFuel);
             }
         }
     }
@@ -55,8 +57,8 @@ public class VehicleSetting : MonoBehaviour
             target.GetComponent<PlayerStatus>().anim.GetOnVehicle(true);
 
             target.transform.SetParent(setPos);
-            target.transform.position = setPos.position;
-            target.transform.rotation = setPos.rotation;
+            target.transform.DOMove(setPos.position, 1f).SetEase(Ease.InOutSine);
+            target.transform.DORotate(setPos.eulerAngles, 1f).SetEase(Ease.Linear);
 
             UIManager.Instance.ShowInteractHint(false);
             foreach (GameObject i in UIManager.Instance.hintUIList)
@@ -89,15 +91,14 @@ public class VehicleSetting : MonoBehaviour
             //將玩家相關設定關閉
             target.transform.SetParent(null);
             target.transform.position = exitPos.position;
-            target.transform.rotation = exitPos.rotation;
+            target.transform.DORotate(exitPos.eulerAngles, 1f).SetEase(Ease.Linear);
 
             target.GetComponent<PlayerStatus>().SetStatus(Status.Normal);
             target.GetComponent<PlayerStatus>().anim.GetOnVehicle(false);
-
             isOccupy = false;
-            Target = null;
         }
     }
+
     void CheckFuelTankCapacity()
     {
         //沒有油就關閉引擎
@@ -112,6 +113,7 @@ public class VehicleSetting : MonoBehaviour
     {
         vehicleController.enabled = t;
         thirdPersonCamera.enabled = t;
+        vehicleTrack.enabled=t;
         UIManager.Instance.ShowVehecleUI(t);
 
         CameraManager.Instance.vehicleCam.GetComponent<CinemachineCamera>().Follow = lookTarget;

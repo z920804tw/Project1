@@ -186,7 +186,7 @@ public class ThirdPersonMove : MonoBehaviour
             return false;
         }
     }
-    public void Stop()
+    public void ResetMove()
     {
         isRun = false;
         wasRun = false;
