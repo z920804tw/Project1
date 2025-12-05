@@ -4,7 +4,7 @@ using UnityEngine;
 public class VehicleController : MonoBehaviour
 {
     // public PlayerInputAction vehicleInput;
-    public Vector2 vehicleInput;
+
     [SerializeField] VehicleSetting vehicleSetting;
     [SerializeField] Rigidbody rb;
     [Header("車體參數設定")]
@@ -39,6 +39,7 @@ public class VehicleController : MonoBehaviour
     public float CurrentSpeed { get { return currentSpeed; } }
     float horizontalInput;
     float verticalInput;
+    public Vector2 vehicleInput;
     [SerializeField] Vector2 currentInput;
     public Vector2 CurrentInput { get { return currentInput; } }
     Vector2 smoothInputVelocity;
@@ -270,7 +271,7 @@ public class VehicleController : MonoBehaviour
         Vector3 pos;
         Quaternion quat;
         col.GetWorldPose(out pos, out quat);
-        mesh.position = pos+new Vector3(0,0.05f,0);
+        mesh.position = pos + new Vector3(0, 0.05f, 0);
 
         if (mesh != leftWheelsTransform[0] && mesh != rightWheelsTransform[0])
         {

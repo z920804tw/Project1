@@ -929,7 +929,11 @@ MonoBehaviour:
   - {fileID: 69021127}
   - {fileID: 1422900216}
   trackSpeed: 0.15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1025
   isMove: 0
+  rb: {fileID: 815514416705484810}
 --- !u!1 &98274298
 GameObject:
   m_ObjectHideFlags: 0
@@ -43768,7 +43772,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf08b8975d104ba449a689a96a8bf57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VehicleController
-  vehicleInput: {x: 0, y: 0}
   vehicleSetting: {fileID: 5045181286173405996}
   rb: {fileID: 815514416705484810}
   maxMotorTorque: 200
@@ -43814,6 +43817,7 @@ MonoBehaviour:
   rightTorque: 0
   smoothInputSpeed: 0.35
   currentSpeed: 0
+  vehicleInput: {x: 0, y: 0}
   currentInput: {x: 0, y: 0}
   pitch: 0
 --- !u!1 &5150138610087671458
