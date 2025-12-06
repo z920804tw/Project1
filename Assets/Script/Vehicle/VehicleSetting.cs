@@ -61,11 +61,11 @@ public class VehicleSetting : MonoBehaviour
             target.transform.DORotate(setPos.eulerAngles, 1f).SetEase(Ease.Linear);
 
             UIManager.Instance.ShowInteractHint(false);
-            foreach (GameObject i in UIManager.Instance.hintUIList)
+            foreach (GameObject i in UIManager.Instance.interactUI.GetComponent<InteractUI>().hintUIList)
             {
                 Destroy(i);
             }
-            UIManager.Instance.hintUIList.Clear();
+            UIManager.Instance.interactUI.GetComponent<InteractUI>().hintUIList.Clear();
 
 
             //將載具功能打開

@@ -117,19 +117,22 @@ public class PlayerBackpack : MonoBehaviour
 
                 List<RaycastResult> results = new List<RaycastResult>();
                 raycaster.Raycast(data, results);
-                foreach (RaycastResult result in results)
+                if (results.Count > 0)
                 {
-                    PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
-                    if (slot != null && slot.IsOccupy)
+                    foreach (RaycastResult result in results)
                     {
-                        dragSlot = Instantiate(slot.gameObject, Input.mousePosition, Quaternion.identity);
-                        dragSlot.transform.SetParent(transform);
-                        dragSlot.GetComponent<PlayerInventorySlot>().bgImg.raycastTarget = false;
-                        dragSlot.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+                        PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                        if (slot != null && slot.IsOccupy)
+                        {
+                            dragSlot = Instantiate(slot.gameObject, Input.mousePosition, Quaternion.identity);
+                            dragSlot.transform.SetParent(transform);
+                            dragSlot.GetComponent<PlayerInventorySlot>().bgImg.raycastTarget = false;
+                            dragSlot.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
 
-                        firstSlot = slot;
-                        slot.InitializationInfo();
-                        return;
+                            firstSlot = slot;
+                            slot.InitializationInfo();
+                            return;
+                        }
                     }
                 }
             }
@@ -388,7 +391,7 @@ public class PlayerBackpack : MonoBehaviour
     }
     public void DisSubAllUIInput()
     {
-        
+
         playerInput.actions["Click"].performed -= OnClick;
         playerInput.actions["Click"].canceled -= OnClick;
 
@@ -400,4 +403,6 @@ public class PlayerBackpack : MonoBehaviour
 
         Debug.Log("取消監聽背包控制");
     }
+
+
 }

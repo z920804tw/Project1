@@ -25,13 +25,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Interaction UI")]
     public GameObject interactUI;
-    public List<GameObject> hintUIList;
-    [SerializeField] int selectIndex;
-    public int SelectIndex { get { return selectIndex; } }
-    [SerializeField] Transform content;
-    [SerializeField] GameObject hintUI;
-    public Transform Content { get { return content; } }
 
+    [Header("Dialogue UI")]
+    public DialogueUI dialogueUI;
     public void Awake()
     {
         Instance = this;
@@ -43,18 +39,13 @@ public class UIManager : MonoBehaviour
         ShowPlayerUI(true);
         SetInventoryInfo();
         playerInput = GameManager.Instance.playerInput;
-        selectIndex = 0;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (interactUI.activeSelf)
-        {
-            Vector2 h = hintUI.GetComponent<RectTransform>().sizeDelta;
-            h.y = content.GetComponent<RectTransform>().sizeDelta.y;
-            hintUI.GetComponent<RectTransform>().sizeDelta = h;
-        }
+
     }
 
     public void ShowInteractHint(bool t)
@@ -79,6 +70,10 @@ public class UIManager : MonoBehaviour
     {
         playerUI.SetActive(t);
     }
+    public void ShowDialogueUI(bool t)
+    {
+        dialogueUI.gameObject.SetActive(t);
+    }
     public void ShowAimHint(bool t)
     {
         aimHint.SetActive(t);
@@ -99,7 +94,6 @@ public class UIManager : MonoBehaviour
             i.GetComponent<PlayerInventorySlot>().InitializationInfo();
         }
         backpack.ResetBackpackSlotInfo();
-        Debug.Log("物品欄初始化完成");
     }
 
 
@@ -107,29 +101,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    //----------HintUI-----------//
-    public void HintUISelect(int value)
-    {
-        selectIndex += value;
-        if (selectIndex >= hintUIList.Count)
-        {
-            selectIndex = 0;
-        }
-        else if (selectIndex < 0)
-        {
-            selectIndex = hintUIList.Count - 1;
-        }
 
-        if (hintUIList.Count > 0)
-        {
-            foreach (GameObject i in hintUIList)
-            {
-                i.GetComponent<Hint>().ShowSelect(false);
-            }
-            hintUIList[selectIndex].GetComponent<Hint>().ShowSelect(true);
-        }
-    }
-    //----------HintUI-----------//
 
 
     //訂閱其他UI監聽事件

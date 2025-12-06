@@ -1,6 +1,7 @@
 using TMPro;
 using Unity.Properties;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PlayerInventorySlot : MonoBehaviour

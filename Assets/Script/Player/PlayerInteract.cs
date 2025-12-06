@@ -130,21 +130,22 @@ public class PlayerInteract : MonoBehaviour
         //取得當前UI的選取
         if (UIManager.Instance != null && UIManager.Instance.interactUI.activeSelf && canInteract)
         {
-            GameObject interactObj = UIManager.Instance.hintUIList[UIManager.Instance.SelectIndex].GetComponent<Hint>().HintGameObjcet;
+            InteractUI interactUI = UIManager.Instance.interactUI.GetComponent<InteractUI>();
+            GameObject interactObj = interactUI.hintUIList[interactUI.SelectIndex].GetComponent<Hint>().HintGameObjcet;
 
             //UI部分
-            GameObject hintUIGameObj = UIManager.Instance.hintUIList[UIManager.Instance.SelectIndex];
-            UIManager.Instance.hintUIList.Remove(hintUIGameObj);
+            GameObject hintUIGameObj = interactUI.hintUIList[interactUI.SelectIndex];
+            interactUI.hintUIList.Remove(hintUIGameObj);
             Destroy(hintUIGameObj);
 
             //Interact部分
             interactObj.GetComponent<IInteractable>().Interact(transform.root.gameObject);
 
-            if (UIManager.Instance.hintUIList.Count <= 0)
+            if (interactUI.hintUIList.Count <= 0)
             {
                 UIManager.Instance.ShowInteractHint(false);
             }
-            UIManager.Instance.HintUISelect(0);
+            interactUI.HintUISelect(0);
 
             StartCoroutine(InteractColdDown(0.2f));
         }
@@ -153,46 +154,48 @@ public class PlayerInteract : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         IInteractable interactable = other.GetComponent<IInteractable>();
+        InteractUI interactUI = UIManager.Instance.interactUI.GetComponent<InteractUI>();
         if (interactable != null)
         {
-            if (UIManager.Instance.hintUIList.Count == 0)
+            if (interactUI.hintUIList.Count == 0)
             {
                 UIManager.Instance.ShowInteractHint(true);
             }
             //新增HintUI物件並記錄
-            GameObject hint = Instantiate(hintPrefab, UIManager.Instance.Content.position, Quaternion.identity);
+            GameObject hint = Instantiate(hintPrefab, interactUI.Content.position, Quaternion.identity);
             hint.GetComponent<Hint>().SetHintInfo(other.gameObject, interactable.GetHintText());
-            hint.transform.SetParent(UIManager.Instance.Content);
-            UIManager.Instance.hintUIList.Add(hint);
-            UIManager.Instance.HintUISelect(0);
+            hint.transform.SetParent(interactUI.Content);
+            interactUI.hintUIList.Add(hint);
+            interactUI.HintUISelect(0);
 
         }
     }
     void OnTriggerExit(Collider other)
     {
         IInteractable interactable = other.GetComponent<IInteractable>();
+        InteractUI interactUI = UIManager.Instance.interactUI.GetComponent<InteractUI>();
         if (interactable != null)
         {
             //移除hintUI和物件
             if (UIManager.Instance != null)
             {
-                foreach (GameObject i in UIManager.Instance.hintUIList)
+                foreach (GameObject i in interactUI.hintUIList)
                 {
                     //找到相符的紀錄物件就代表是目標
                     if (i.GetComponent<Hint>().HintGameObjcet == other.gameObject)
                     {
-                        UIManager.Instance.hintUIList.Remove(i);
+                        interactUI.hintUIList.Remove(i);
                         Destroy(i);
                         break;
                     }
                 }
             }
 
-            if (UIManager.Instance.hintUIList.Count <= 0)
+            if (interactUI.hintUIList.Count <= 0)
             {
                 UIManager.Instance.ShowInteractHint(false);
             }
-            UIManager.Instance.HintUISelect(0);
+            interactUI.HintUISelect(0);
         }
     }
 

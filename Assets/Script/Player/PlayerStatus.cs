@@ -43,6 +43,7 @@ public class PlayerStatus : MonoBehaviour
                 break;
 
             case Status.Dialogue:
+                SetDialogueStatus();
                 break;
 
             default:
@@ -130,6 +131,25 @@ public class PlayerStatus : MonoBehaviour
 
         anim.SetClimbAnim(true, "");
     }
+    //對話
+    void SetDialogueStatus()
+    {
+        //關閉玩家監聽與相關設定
+        DisSubPlayerAllInput();
+        playerCam.DisSubAllCameraInput();
+        playerMove.ResetMove();
+        playerInteract.enabled = false;
+
+        //將玩家UI關閉
+        UIManager.Instance.ShowPlayerUI(false);
+        UIManager.Instance.ShowDialogueUI(true);
+        UIManager.Instance.dialogueUI.SetDialogueInfo(this.gameObject);
+
+        //開啟對話模式
+        GameManager.Instance.ShowCursor(true);
+        playerCam.SubAllCameraInput();
+        Debug.Log("切換成對話模式");
+    }
 
     //-------------------------------狀態設定------------------------------//
 
@@ -184,7 +204,12 @@ public class PlayerStatus : MonoBehaviour
 
         if (UIManager.Instance.interactUI.activeSelf)
         {
-            UIManager.Instance.HintUISelect(-(int)value1);
+            InteractUI interactUI = UIManager.Instance.interactUI.GetComponent<InteractUI>();
+            if (interactUI != null)
+            {
+                interactUI.HintUISelect(-(int)value1);
+            }
+
         }
     }
     //--------物品欄--------//
