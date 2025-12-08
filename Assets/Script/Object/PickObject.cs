@@ -6,15 +6,15 @@ using UnityEngine.Events;
 public class PickObject : MonoBehaviour, IInteractable
 {
     [Header("組件套用")]
-    [SerializeField] SphereCollider triggerBox;
-    [SerializeField] Collider collider1;
+    public SphereCollider triggerBox;
+    public Collider collider1;
     Rigidbody rb;
     [Header("參數設定")]
     public ItemSO itemSO;
     string hintText;
 
     [Header("互動設定")]
-    public UnityEvent<GameObject> unityEvent;
+    public UnityEvent<GameObject> interactUnityEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,7 +25,7 @@ public class PickObject : MonoBehaviour, IInteractable
     //-------IInteractable--------//
     public void Interact(GameObject target)
     {
-        unityEvent.Invoke(target);
+        interactUnityEvent.Invoke(target);
     }
     public string GetHintText()
     {
@@ -43,7 +43,7 @@ public class PickObject : MonoBehaviour, IInteractable
             PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
             if (playerInventory != null)
             {
-                HandInventory playerHand =UIManager.Instance.playerHand;
+                HandInventory playerHand = UIManager.Instance.playerHand;
                 if (playerHand.HandSlotAmount < playerHand.handInventorySlots.Count)
                 {
                     playerInventory.AddItemToHandInventory(this.gameObject);
@@ -61,7 +61,7 @@ public class PickObject : MonoBehaviour, IInteractable
             if (playerInventory != null)
             {
                 //檢查背包的當前物件數量是否有沒有滿
-                Inventory playerBackpack=UIManager.Instance.backpack;
+                Inventory playerBackpack = UIManager.Instance.backpack;
                 if (playerBackpack.CurrentSlotAmount < playerBackpack.backpackInventorySlots.Count)
                 {
                     playerInventory.AddItemToBackpackInventory(this.gameObject);
@@ -78,21 +78,5 @@ public class PickObject : MonoBehaviour, IInteractable
     {
         triggerBox.enabled = t;
         rb.isKinematic = !t;
-    }
-
-    public void Throw(Vector3 dir)
-    {
-        ColliderAndRig(true);
-        Physics.IgnoreCollision(collider1, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
-        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), true);
-        rb.AddForce(dir, ForceMode.Impulse);
-        StartCoroutine(WaitReset());
-    }
-
-    IEnumerator WaitReset()
-    {
-        yield return new WaitForSeconds(1f);
-        Physics.IgnoreCollision(collider1, GameObject.FindWithTag("Player").GetComponent<Collider>(), false);
-        Physics.IgnoreCollision(triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), false);
     }
 }

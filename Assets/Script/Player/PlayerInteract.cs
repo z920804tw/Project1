@@ -8,122 +8,42 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] ThirdPersonAnimation anim;
     [SerializeField] PlayerInventory playerInventory;
     [SerializeField] GameObject hintPrefab;
-    GameObject mainCam;
-    Vector3 placePos;
-
     [Header("Debug")]
-    [SerializeField] LayerMask placeLayerMask;
-    [SerializeField] bool canPlace;
-    [SerializeField] bool canThrow;
     [SerializeField] bool canInteract;
-    [SerializeField] bool isThrowAnim;
+    bool isUse;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mainCam = GameObject.FindWithTag("MainCamera");
+        // mainCam = GameObject.FindWithTag("MainCamera");
         canInteract = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (thirdPersonMove.IsAim)
+        if (playerInventory.handObj != null)
         {
-            //如果有瞄準就執行手部物件的功能
-            if (playerInventory.handObj != null)
+            if (thirdPersonMove.IsAim && !isUse)
             {
-                CheckPlaceAndThrow();
-            }
-        }
-        else
-        {
-            canPlace = false;
-            canThrow = false;
+                IUse item = playerInventory.handObj.GetComponent<IUse>();
+                if (item != null)
+                {
+                    isUse=true;
+                    item.UseObject(transform.root.gameObject);
+                }
 
-            if (isThrowAnim)
-            {
-                isThrowAnim = false;
-                anim.ThrowAnim(false, false);
             }
-        }
-    }
+            else if (!thirdPersonMove.IsAim && isUse)
+            {
+               
+                IUse item = playerInventory.handObj.GetComponent<IUse>();
+                if (item != null)
+                {
+                    isUse=false;
+                    item.ResetUse();
+                }
 
-    void CheckPlaceAndThrow()
-    {
-        Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 6f, placeLayerMask))
-        {
-            canPlace = true;
-            canThrow = false;
-            placePos = hit.point;
-            placePos.y += 1f;
-            if (isThrowAnim)
-            {
-                isThrowAnim = false;
-                anim.ThrowAnim(false, false);
             }
-        }
-        else
-        {
-            canPlace = false;
-            canThrow = true;
-            //防止重複撥放動畫
-            if (!isThrowAnim)
-            {
-                isThrowAnim = true;
-                anim.ThrowAnim(true, false);
-            }
-        }
-    }
-
-    public void ResetThrowPlace()
-    {
-        canThrow = false;
-        canPlace = false;
-        isThrowAnim = false;
-        anim.ThrowAnim(false, false);
-    }
-    //--------按鍵偵測----------//
-    public void OnThrow()
-    {
-        if (canThrow)
-        {
-            //給予撿取物件丟的功能
-            Vector3 dir = mainCam.transform.forward * 10 + transform.up * 5;
-            playerInventory.handObj.transform.SetParent(null);
-            playerInventory.handObj.GetComponent<PickObject>().Throw(dir);
-            playerInventory.handObj = null;
-
-            //更新物品欄
-            if (playerInventory != null)
-            {
-                UIManager.Instance.playerHand.handInventorySlots[playerInventory.SelectIndex].GetComponent<HandInventorySlot>().UpdateInfo(-1);
-                UIManager.Instance.playerHand.HandSlotAmount--;
-            }
-            //更新動畫
-            anim.ThrowAnim(true, true);
-            isThrowAnim = false;
-            canThrow = false;
-        }
-    }
-    public void OnPlace()
-    {
-        if (canPlace)
-        {
-            if (playerInventory != null)
-            {
-                playerInventory.handObj.transform.SetParent(null);
-                playerInventory.handObj.transform.position = placePos;
-                playerInventory.handObj.GetComponent<PickObject>().ColliderAndRig(true);
-                playerInventory.handObj = null;
-
-                UIManager.Instance.playerHand.handInventorySlots[playerInventory.SelectIndex].GetComponent<HandInventorySlot>().UpdateInfo(-1);
-                UIManager.Instance.playerHand.HandSlotAmount--;
-            }
-            anim.ThrowAnim(false, false);
-            isThrowAnim = false;
-            canPlace = false;
         }
     }
     public void OnInteract()

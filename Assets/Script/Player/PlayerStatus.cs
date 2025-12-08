@@ -102,7 +102,7 @@ public class PlayerStatus : MonoBehaviour
 
         //停止玩家相關設定
         playerMove.ResetMove();
-        playerInteract.ResetThrowPlace();
+        // playerInteract.ResetThrowPlace();
 
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
 
@@ -186,7 +186,6 @@ public class PlayerStatus : MonoBehaviour
     {
         if (ctx.performed)
         {
-            Debug.Log("瞄準");
             playerMove.OnAim();
         }
 
@@ -231,12 +230,32 @@ public class PlayerStatus : MonoBehaviour
     public void OnThrow(InputAction.CallbackContext ctx)
     {
         if (ctx.performed)
-            playerInteract.OnThrow();
+        {
+            if (playerInventory.handObj != null)
+            {
+                ThrowPlaceItem throwPlaceItem = playerInventory.handObj.GetComponent<ThrowPlaceItem>();
+                if (throwPlaceItem != null && throwPlaceItem.canThrow)
+                {
+                    throwPlaceItem.Throw();
+                    Debug.Log("丟");
+                }
+            }
+        }
     }
     public void OnPlace(InputAction.CallbackContext ctx)
     {
         if (ctx.performed)
-            playerInteract.OnPlace();
+        {
+            if (playerInventory.handObj != null)
+            {
+                ThrowPlaceItem throwPlaceItem = playerInventory.handObj.GetComponent<ThrowPlaceItem>();
+                if (throwPlaceItem != null && throwPlaceItem.canPlace)
+                {
+                    throwPlaceItem.Place();
+                    Debug.Log("放置");
+                }
+            }
+        }
     }
     //--------玩家互動--------//
 

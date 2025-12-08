@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class ThirdPersonMove : MonoBehaviour
 {
-    public PlayerInput playerInput;
     [Header("物件綁定")]
     GameObject mainCam;
     [SerializeField] CharacterController controller;

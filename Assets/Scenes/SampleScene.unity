@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 4275010}
   - component: {fileID: 4275009}
   - component: {fileID: 4275008}
+  - component: {fileID: 4275011}
   m_Layer: 9
   m_Name: Tool_1
   m_TagString: Untagged
@@ -248,7 +249,7 @@ MonoBehaviour:
   triggerBox: {fileID: 4275010}
   collider1: {fileID: 4275004}
   itemSO: {fileID: 11400000, guid: 8edfd075853f4544283746b20cb74e95, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4275008}
@@ -311,6 +312,26 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4275011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4275003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08e7f0c329852b42a591b907d46def8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrowPlaceItem
+  mainCam: {fileID: 0}
+  pickObject: {fileID: 0}
+  placeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1207
+  canPlace: 0
+  canThrow: 0
+  isThrowAnim: 0
 --- !u!1 &8237348
 GameObject:
   m_ObjectHideFlags: 0
@@ -3982,7 +4003,7 @@ MonoBehaviour:
   triggerBox: {fileID: 476516815}
   collider1: {fileID: 476516816}
   itemSO: {fileID: 11400000, guid: ad07d94e47878d54f8c93018d564dec2, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 476516813}
@@ -5485,7 +5506,7 @@ MonoBehaviour:
   triggerBox: {fileID: 601477175}
   collider1: {fileID: 601477176}
   itemSO: {fileID: 11400000, guid: cce2ff867cf9f964a83a8520c03ec0cf, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 601477173}
@@ -5677,7 +5698,7 @@ MonoBehaviour:
   triggerBox: {fileID: 608963571}
   collider1: {fileID: 608963572}
   itemSO: {fileID: 11400000, guid: cce2ff867cf9f964a83a8520c03ec0cf, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 608963569}
@@ -10589,6 +10610,7 @@ GameObject:
   - component: {fileID: 1097593187}
   - component: {fileID: 1097593189}
   - component: {fileID: 1097593188}
+  - component: {fileID: 1097593190}
   m_Layer: 9
   m_Name: Tool_3
   m_TagString: Untagged
@@ -10726,7 +10748,7 @@ MonoBehaviour:
   triggerBox: {fileID: 1097593187}
   collider1: {fileID: 1097593183}
   itemSO: {fileID: 11400000, guid: 14a6b68a0e25f844ab821b8e148bc2e7, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1097593188}
@@ -10768,6 +10790,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1097593190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097593182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08e7f0c329852b42a591b907d46def8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrowPlaceItem
+  mainCam: {fileID: 0}
+  pickObject: {fileID: 0}
+  placeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1207
+  canPlace: 0
+  canThrow: 0
+  isThrowAnim: 0
 --- !u!1 &1103111361
 GameObject:
   m_ObjectHideFlags: 0
@@ -12433,6 +12475,7 @@ GameObject:
   - component: {fileID: 1334020316}
   - component: {fileID: 1334020322}
   - component: {fileID: 1334020321}
+  - component: {fileID: 1334020323}
   m_Layer: 9
   m_Name: Tool_4
   m_TagString: Untagged
@@ -12570,7 +12613,7 @@ MonoBehaviour:
   triggerBox: {fileID: 1334020316}
   collider1: {fileID: 1334020317}
   itemSO: {fileID: 11400000, guid: 1f686b2723829db47b932b898186527b, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1334020321}
@@ -12612,6 +12655,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1334020323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334020315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f057d1075248848b9bda3a514fe63c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UseItem2
 --- !u!1 &1349416443 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7974381612177263641, guid: f8b70d8b44565c14eabebe759739e861, type: 3}
@@ -17452,7 +17507,7 @@ MonoBehaviour:
   triggerBox: {fileID: 1868752889}
   collider1: {fileID: 1868752890}
   itemSO: {fileID: 11400000, guid: cce2ff867cf9f964a83a8520c03ec0cf, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1868752887}
@@ -19332,6 +19387,7 @@ GameObject:
   - component: {fileID: 2080760882}
   - component: {fileID: 2080760887}
   - component: {fileID: 2080760888}
+  - component: {fileID: 2080760889}
   m_Layer: 9
   m_Name: Tool_2
   m_TagString: Untagged
@@ -19494,7 +19550,7 @@ MonoBehaviour:
   triggerBox: {fileID: 2080760882}
   collider1: {fileID: 2080760883}
   itemSO: {fileID: 11400000, guid: cbb8ebb7b386f234784c5cea29f642d8, type: 2}
-  unityEvent:
+  interactUnityEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2080760888}
@@ -19509,6 +19565,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2080760889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080760881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08e7f0c329852b42a591b907d46def8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrowPlaceItem
+  mainCam: {fileID: 0}
+  pickObject: {fileID: 0}
+  placeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1049783
+  canPlace: 0
+  canThrow: 0
+  isThrowAnim: 0
 --- !u!1 &2085232624
 GameObject:
   m_ObjectHideFlags: 0
@@ -40652,13 +40728,7 @@ MonoBehaviour:
   anim: {fileID: 2521417405313169422}
   playerInventory: {fileID: 6313719984692195540}
   hintPrefab: {fileID: 8079782566891652839, guid: 6072e28ba2e4aed479e836a3197ce0a7, type: 3}
-  placeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1207
-  canPlace: 0
-  canThrow: 0
   canInteract: 0
-  isThrowAnim: 0
 --- !u!33 &4722339189268961366
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -53633,7 +53703,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12726e11f6f587b48b3b33f20bf94050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThirdPersonMove
-  playerInput: {fileID: 0}
   controller: {fileID: 7253150689349067626}
   anim: {fileID: 2521417405313169422}
   walkSpeed: 2
