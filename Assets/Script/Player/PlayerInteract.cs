@@ -98,8 +98,8 @@ public class PlayerInteract : MonoBehaviour
             //更新物品欄
             if (playerInventory != null)
             {
-                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<InventorySlot>().UpdateInfo(-1);
-                playerInventory.SlotAmount = -1;
+                UIManager.Instance.playerHand.handInventorySlots[playerInventory.SelectIndex].GetComponent<HandInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.playerHand.HandSlotAmount--;
             }
             //更新動畫
             anim.ThrowAnim(true, true);
@@ -118,8 +118,8 @@ public class PlayerInteract : MonoBehaviour
                 playerInventory.handObj.GetComponent<PickObject>().ColliderAndRig(true);
                 playerInventory.handObj = null;
 
-                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<InventorySlot>().UpdateInfo(-1);
-                playerInventory.SlotAmount = -1;
+                UIManager.Instance.playerHand.handInventorySlots[playerInventory.SelectIndex].GetComponent<HandInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.playerHand.HandSlotAmount--;
             }
             anim.ThrowAnim(false, false);
             isThrowAnim = false;

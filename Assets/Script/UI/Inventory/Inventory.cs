@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class PlayerBackpack : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
     [Header("背包物品欄參數")]
     public List<GameObject> backpackInventorySlots;
@@ -19,7 +19,7 @@ public class PlayerBackpack : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] int currentSlotAmount;
-    public int CurrentSlotAmount { get { return currentSlotAmount; } set { currentSlotAmount += value; } }
+    public int CurrentSlotAmount { get { return currentSlotAmount; } set { currentSlotAmount = value; } }
     [SerializeField] InventorySlot currentSelectSlot;
     [SerializeField] GameObject dragSlot = null;
     [SerializeField] InventorySlot firstSlot = null;

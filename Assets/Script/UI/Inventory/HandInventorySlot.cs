@@ -1,12 +1,10 @@
 using TMPro;
-using Unity.Properties;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour
+public class HandInventorySlot: MonoBehaviour
 {
-    [Header("物品欄參數")]
+    [Header("手部物品欄參數")]
     public ItemSO slotItemSO;
     [SerializeField] string itemName;
     public string ItemName { get { return itemName; } }
@@ -48,9 +46,7 @@ public class InventorySlot : MonoBehaviour
         else if (amount <= 0)
         {
             InitializationInfo();
-            UIManager.Instance.backpack.CurrentSlotAmount=-1;
         }
-
     }
     public void SetHandSlotInfo(GameObject item)
     {
@@ -66,60 +62,11 @@ public class InventorySlot : MonoBehaviour
         amountText.text = $"{amount}";
         imgText.text = $"{itemName}";
     }
-
-    public void SetBackpackSlotInfo(GameObject item)
-    {
-        isOccupy = true;
-        slotItemSO = item.GetComponent<PickObject>().itemSO;
-
-        itemName = item.GetComponent<PickObject>().itemSO.itemName;
-        itemID = slotItemSO.itemID;
-        itemDescription = item.GetComponent<PickObject>().itemSO.itemDescription;
-        canStack = item.GetComponent<PickObject>().itemSO.canStack;
-
-        amount = 1;
-        amountText.text = $"{amount}";
-        imgText.text = $"{itemName}";
-    }
-
-    public void SetSwitchSlotInfo(ItemSO itemSO, int amountValue)
-    {
-        if (itemSO != null)
-        {
-            isOccupy = true;
-            slotItemSO = itemSO;
-            itemName = slotItemSO.itemName;
-            itemID = slotItemSO.itemID;
-            itemDescription = slotItemSO.itemDescription;
-            canStack = slotItemSO.canStack;
-
-            amount = amountValue;
-            amountText.text = $"{amount}";
-            imgText.text = $"{itemName}";
-            Debug.Log("兩個欄位資訊互換(有東西)");
-        }
-        else
-        {
-            isOccupy = false;
-            slotItemSO = null;
-            itemName = $"";
-            itemID = -1;
-            itemDescription = $"";
-            canStack = false;
-
-            amount = 0;
-            amountText.text = $"{amount}";
-            imgText.text = $"{itemName}";
-            Debug.Log("兩個欄位資訊互換(沒東西)");
-        }
-
-    }
-
     public void InitializationInfo()
     {
         isOccupy = false;
         slotItemSO = null;
-        slotObject=null;
+        slotObject = null;
         itemName = $"";
         itemID = -1;
         itemDescription = $"";
@@ -129,5 +76,4 @@ public class InventorySlot : MonoBehaviour
         amountText.text = $"{amount}";
         imgText.text = $"{itemName}";
     }
-
 }

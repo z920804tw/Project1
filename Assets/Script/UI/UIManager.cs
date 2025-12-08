@@ -13,8 +13,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject playerUI;
     [SerializeField] GameObject backpackUI;
     [SerializeField] GameObject aimHint;
-    public List<GameObject> handInventorySlots;
-    public PlayerBackpack backpack;
+    [Header("物品欄")]
+    public HandInventory playerHand;
+    public Inventory backpack;
     [Header("Vehicle UI")]
     public GameObject vehicleUI;
 
@@ -65,9 +66,9 @@ public class UIManager : MonoBehaviour
     }
     public void SetInventoryInfo()
     {
-        foreach (GameObject i in handInventorySlots)
+        foreach (GameObject i in playerHand.handInventorySlots)
         {
-            i.GetComponent<InventorySlot>().InitializationInfo();
+            i.GetComponent<HandInventorySlot>().InitializationInfo();
         }
         foreach (GameObject i in backpack.backpackInventorySlots)
         {

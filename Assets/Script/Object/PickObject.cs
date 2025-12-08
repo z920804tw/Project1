@@ -36,14 +36,15 @@ public class PickObject : MonoBehaviour, IInteractable
     //新增進物品欄
     public void CollectToInventory(GameObject target)
     {
-        //判斷該物品是屬於哪個類別，是可拿在手上還是只能放在背包
+        //判斷該物品是屬於哪個類別，是可拿在手上還是放在背包
         if (itemSO.itemType == ItemType.HandItem)
         {
             //放到手部欄位
             PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
             if (playerInventory != null)
             {
-                if (playerInventory.SlotAmount < playerInventory.handSlots.Count)
+                HandInventory playerHand =UIManager.Instance.playerHand;
+                if (playerHand.HandSlotAmount < playerHand.handInventorySlots.Count)
                 {
                     playerInventory.AddItemToHandInventory(this.gameObject);
                 }
@@ -60,7 +61,7 @@ public class PickObject : MonoBehaviour, IInteractable
             if (playerInventory != null)
             {
                 //檢查背包的當前物件數量是否有沒有滿
-                PlayerBackpack playerBackpack=UIManager.Instance.backpack;
+                Inventory playerBackpack=UIManager.Instance.backpack;
                 if (playerBackpack.CurrentSlotAmount < playerBackpack.backpackInventorySlots.Count)
                 {
                     playerInventory.AddItemToBackpackInventory(this.gameObject);
