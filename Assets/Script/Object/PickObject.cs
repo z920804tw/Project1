@@ -59,7 +59,9 @@ public class PickObject : MonoBehaviour, IInteractable
             PlayerInventory playerInventory = target.GetComponent<PlayerStatus>().playerInventory;
             if (playerInventory != null)
             {
-                if (playerInventory.BackpackAmount < playerInventory.backpackSlots.Count)
+                //檢查背包的當前物件數量是否有沒有滿
+                PlayerBackpack playerBackpack=UIManager.Instance.backpack;
+                if (playerBackpack.CurrentSlotAmount < playerBackpack.backpackInventorySlots.Count)
                 {
                     playerInventory.AddItemToBackpackInventory(this.gameObject);
                 }

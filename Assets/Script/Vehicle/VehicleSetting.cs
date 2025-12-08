@@ -13,6 +13,7 @@ public class VehicleSetting : MonoBehaviour
     [SerializeField] VehicleTrack vehicleTrack;
     PlayerInput vehicleInput;
     ThirdPersonCamera thirdPersonCamera;
+    VehicleUI vehicleUI;
     [Header("元件套用")]
     [SerializeField] Transform interactPos;
     [SerializeField] Transform exitPos;
@@ -30,6 +31,7 @@ public class VehicleSetting : MonoBehaviour
     {
         thirdPersonCamera = GetComponent<ThirdPersonCamera>();
         vehicleInput = GameManager.Instance.playerInput;
+        vehicleUI = UIManager.Instance.vehicleUI.GetComponent<VehicleUI>();
         isEngineStart = false;
     }
 
@@ -41,9 +43,9 @@ public class VehicleSetting : MonoBehaviour
             //檢查車輛油量
             CheckFuelTankCapacity();
             //更新車輛UI
-            if (UIManager.Instance != null)
+            if (vehicleUI!=null && vehicleUI.gameObject.activeSelf)
             {
-                UIManager.Instance.UpdateVehecleUI(vehicleController.CurrentSpeed, vehicleController.MaxSpeed, vehicleFuelTank.CurrentFuel, vehicleFuelTank.MaxFuel);
+                vehicleUI.UpdateVehecleUI(vehicleController.CurrentSpeed, vehicleController.MaxSpeed, vehicleFuelTank.CurrentFuel, vehicleFuelTank.MaxFuel);
             }
         }
     }
@@ -70,6 +72,7 @@ public class VehicleSetting : MonoBehaviour
 
             //將載具功能打開
             VehicleStatus(true);
+            UIManager.Instance.vehicleUI.GetComponent<VehicleUI>().SetVehicleInfo(this.gameObject.name);
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 
             //啟用載具、載具攝影機控制監聽
@@ -113,7 +116,7 @@ public class VehicleSetting : MonoBehaviour
     {
         vehicleController.enabled = t;
         thirdPersonCamera.enabled = t;
-        vehicleTrack.enabled=t;
+        vehicleTrack.enabled = t;
         UIManager.Instance.ShowVehecleUI(t);
 
         CameraManager.Instance.vehicleCam.GetComponent<CinemachineCamera>().Follow = lookTarget;

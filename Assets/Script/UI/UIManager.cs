@@ -16,12 +16,8 @@ public class UIManager : MonoBehaviour
     public List<GameObject> handInventorySlots;
     public PlayerBackpack backpack;
     [Header("Vehicle UI")]
-    [SerializeField] GameObject vehicleUI;
-    [SerializeField] TMP_Text vehicleSpeedText;
-    [SerializeField] Image vehicleSpeedImg;
+    public GameObject vehicleUI;
 
-    [SerializeField] TMP_Text fuelTankCapacityText;
-    [SerializeField] Image fuelTankCapacityImg;
 
     [Header("Interaction UI")]
     public GameObject interactUI;
@@ -42,26 +38,10 @@ public class UIManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void ShowInteractHint(bool t)
     {
         interactUI.SetActive(t);
     }
-    public void UpdateVehecleUI(float speed, float maxSpeed, float fuelValue, float maxFuel)
-    {
-        vehicleSpeedText.text = $"Speed:{Mathf.RoundToInt(speed)}km/h";
-
-        if (maxSpeed != 0) vehicleSpeedImg.fillAmount = speed / maxSpeed;
-
-        fuelTankCapacityText.text = $"{fuelValue}/{maxFuel}";
-        fuelTankCapacityImg.fillAmount = fuelValue / maxFuel;
-    }
-
     public void ShowVehecleUI(bool t)
     {
         vehicleUI.SetActive(t);
@@ -87,11 +67,11 @@ public class UIManager : MonoBehaviour
     {
         foreach (GameObject i in handInventorySlots)
         {
-            i.GetComponent<PlayerInventorySlot>().InitializationInfo();
+            i.GetComponent<InventorySlot>().InitializationInfo();
         }
         foreach (GameObject i in backpack.backpackInventorySlots)
         {
-            i.GetComponent<PlayerInventorySlot>().InitializationInfo();
+            i.GetComponent<InventorySlot>().InitializationInfo();
         }
         backpack.ResetBackpackSlotInfo();
     }

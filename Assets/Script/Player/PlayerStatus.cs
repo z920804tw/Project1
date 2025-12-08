@@ -186,10 +186,12 @@ public class PlayerStatus : MonoBehaviour
     {
         if (ctx.performed)
         {
+            Debug.Log("瞄準");
             playerMove.OnAim();
         }
 
     }
+
     //--------玩家移動--------//
 
     //--------物品欄--------//
@@ -252,6 +254,7 @@ public class PlayerStatus : MonoBehaviour
 
         playerInput.actions["Aim"].performed += OnAim;
         playerInput.actions["Aim"].canceled += OnAim;
+
 
         playerInput.actions["Select"].performed += OnSelect;
         playerInput.actions["Select"].canceled += OnSelect;

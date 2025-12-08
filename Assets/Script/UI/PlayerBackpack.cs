@@ -18,19 +18,27 @@ public class PlayerBackpack : MonoBehaviour
     PlayerInput playerInput;
 
     [Header("Debug")]
-    [SerializeField] PlayerInventorySlot currentSelectSlot;
+    [SerializeField] int currentSlotAmount;
+    public int CurrentSlotAmount { get { return currentSlotAmount; } set { currentSlotAmount += value; } }
+    [SerializeField] InventorySlot currentSelectSlot;
     [SerializeField] GameObject dragSlot = null;
-    [SerializeField] PlayerInventorySlot firstSlot = null;
-    PlayerInventorySlot hoverSlot = null;
+    [SerializeField] InventorySlot firstSlot = null;
+    InventorySlot hoverSlot = null;
     [SerializeField] bool isSwitchItem;
     [SerializeField] bool isDrag;
-
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        int amount = 0;
+        foreach (GameObject slot in backpackInventorySlots)
+        {
+            if (slot.GetComponent<InventorySlot>().IsOccupy)
+            {
+                amount++;
+            }
+        }
+        currentSlotAmount = amount;
     }
 
     // Update is called once per frame
@@ -48,59 +56,70 @@ public class PlayerBackpack : MonoBehaviour
 
         List<RaycastResult> results = new List<RaycastResult>();
         raycaster.Raycast(data, results);
-
-        //檢查是否有開啟交換
-        if (isSwitchItem)
+        if (results.Count > 0)
         {
-            if (currentSelectSlot.slotItemSO == null)
+            //檢查是否有開啟交換
+            if (isSwitchItem)
             {
-                SwitchItem();
-                SelectBackPackSlot();
-                return;
-            }
-
-            foreach (RaycastResult result in results)
-            {
-                PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
-                if (slot != null)
+                if (currentSelectSlot.slotItemSO == null)
                 {
-                    ItemSO temporary = slot.slotItemSO;
-                    int amount = slot.Amount;
-
-                    slot.SetSwitchSlotInfo(currentSelectSlot.slotItemSO, currentSelectSlot.Amount);
-                    currentSelectSlot.SetSwitchSlotInfo(temporary, amount);
-
-                    SwitchItem(); //重製switch開關
+                    SwitchItem();
                     SelectBackPackSlot();
-
-                    temporary = null;
-
-                    Destroy(temporary);
-
                     return;
+                }
+
+                foreach (RaycastResult result in results)
+                {
+                    InventorySlot slot = result.gameObject.GetComponentInParent<InventorySlot>();
+                    if (slot != null)
+                    {
+                        ItemSO temporary = slot.slotItemSO;
+                        int amount = slot.Amount;
+
+                        slot.SetSwitchSlotInfo(currentSelectSlot.slotItemSO, currentSelectSlot.Amount);
+                        currentSelectSlot.SetSwitchSlotInfo(temporary, amount);
+
+                        SwitchItem(); //重製switch開關
+                        SelectBackPackSlot();
+
+                        temporary = null;
+
+                        Destroy(temporary);
+
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                foreach (RaycastResult result in results)
+                {
+                    InventorySlot slot = result.gameObject.GetComponentInParent<InventorySlot>();
+                    if (slot != null)
+                    {
+                        if (currentSelectSlot != null)
+                        {
+                            currentSelectSlot.selectImg.SetActive(false);
+                        }
+
+                        slot.selectImg.SetActive(true);
+                        slotItemName.text = slot.ItemName;
+                        slotItemDescription.text = slot.ItemDescription;
+                        currentSelectSlot = slot;
+                        return;
+                    }
                 }
             }
         }
         else
         {
-            foreach (RaycastResult result in results)
+            if (currentSelectSlot != null)
             {
-                PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
-                if (slot != null)
-                {
-                    if (currentSelectSlot != null)
-                    {
-                        currentSelectSlot.selectImg.SetActive(false);
-                    }
-
-                    slot.selectImg.SetActive(true);
-                    slotItemName.text = slot.ItemName;
-                    slotItemDescription.text = slot.ItemDescription;
-                    currentSelectSlot = slot;
-                    return;
-                }
+                currentSelectSlot.selectImg.SetActive(false);
+                currentSelectSlot=null;
             }
         }
+
     }
 
     //長按拖曳
@@ -121,12 +140,12 @@ public class PlayerBackpack : MonoBehaviour
                 {
                     foreach (RaycastResult result in results)
                     {
-                        PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                        InventorySlot slot = result.gameObject.GetComponentInParent<InventorySlot>();
                         if (slot != null && slot.IsOccupy)
                         {
                             dragSlot = Instantiate(slot.gameObject, Input.mousePosition, Quaternion.identity);
                             dragSlot.transform.SetParent(transform);
-                            dragSlot.GetComponent<PlayerInventorySlot>().bgImg.raycastTarget = false;
+                            dragSlot.GetComponent<InventorySlot>().bgImg.raycastTarget = false;
                             dragSlot.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
 
                             firstSlot = slot;
@@ -155,17 +174,17 @@ public class PlayerBackpack : MonoBehaviour
                 {
                     foreach (RaycastResult result in results)
                     {
-                        PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                        InventorySlot newslot = result.gameObject.GetComponentInParent<InventorySlot>();
                         //將拖曳的slot預覽物件資訊給予新的Slot欄位
-                        if (slot != null)
+                        if (newslot != null)
                         {
-                            PlayerInventorySlot newSlot = dragSlot.GetComponent<PlayerInventorySlot>();
-                            if (slot != firstSlot) //如果放開時的欄位與拖曳的欄位不一樣的話就交換
+                            InventorySlot oldSlot = dragSlot.GetComponent<InventorySlot>();
+                            if (newslot != firstSlot) //如果放開時的欄位與拖曳的欄位不一樣的話就交換
                             {
-                                ItemSO temporary = slot.slotItemSO;
-                                int amount = slot.Amount;
+                                ItemSO temporary = newslot.slotItemSO;
+                                int amount = newslot.Amount;
 
-                                slot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
+                                newslot.SetSwitchSlotInfo(oldSlot.slotItemSO, oldSlot.Amount);
                                 firstSlot.SetSwitchSlotInfo(temporary, amount);
 
                                 Destroy(dragSlot);
@@ -174,7 +193,7 @@ public class PlayerBackpack : MonoBehaviour
                             }
                             else //如果是一樣的話就覆蓋
                             {
-                                firstSlot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
+                                firstSlot.SetSwitchSlotInfo(oldSlot.slotItemSO, oldSlot.Amount);
                                 Destroy(dragSlot);
                                 dragSlot = null;
                                 firstSlot = null;
@@ -185,7 +204,7 @@ public class PlayerBackpack : MonoBehaviour
                 }
                 else //如果是陣列是<=0的話就將拖曳的物件直接回到原本的slot位置上
                 {
-                    PlayerInventorySlot newSlot = dragSlot.GetComponent<PlayerInventorySlot>();
+                    InventorySlot newSlot = dragSlot.GetComponent<InventorySlot>();
                     firstSlot.SetSwitchSlotInfo(newSlot.slotItemSO, newSlot.Amount);
                     Destroy(dragSlot);
                     dragSlot = null;
@@ -210,7 +229,7 @@ public class PlayerBackpack : MonoBehaviour
             {
                 if (hoverSlot == null) //檢查有沒有紀錄，如果沒有就去做檢查有沒有碰到新的Slot
                 {
-                    PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                    InventorySlot slot = result.gameObject.GetComponentInParent<InventorySlot>();
                     if (slot != null)
                     {
                         hoverSlot = slot;
@@ -221,7 +240,7 @@ public class PlayerBackpack : MonoBehaviour
                 }
                 else
                 {
-                    PlayerInventorySlot slot = result.gameObject.GetComponentInParent<PlayerInventorySlot>();
+                    InventorySlot slot = result.gameObject.GetComponentInParent<InventorySlot>();
                     if (slot != null)
                     {
                         if (slot != hoverSlot)
@@ -294,15 +313,15 @@ public class PlayerBackpack : MonoBehaviour
     }
     public void AutoArrangeBackpackSlot()
     {
-        PlayerInventorySlot targetSlot = null;
-        PlayerInventorySlot newSlot = null;
+        InventorySlot targetSlot = null;
+        InventorySlot newSlot = null;
         int currentIndex = 0;
         foreach (GameObject i in backpackInventorySlots)
         {
             //找到目標，並將目標往前方的空位移動
-            if (i.GetComponent<PlayerInventorySlot>().IsOccupy)
+            if (i.GetComponent<InventorySlot>().IsOccupy)
             {
-                targetSlot = i.GetComponent<PlayerInventorySlot>();
+                targetSlot = i.GetComponent<InventorySlot>();
             }
             else
             {
@@ -312,9 +331,9 @@ public class PlayerBackpack : MonoBehaviour
 
             for (int y = currentIndex; y >= 0; y--)
             {
-                if (backpackInventorySlots[y].GetComponent<PlayerInventorySlot>().IsOccupy == false)
+                if (backpackInventorySlots[y].GetComponent<InventorySlot>().IsOccupy == false)
                 {
-                    newSlot = backpackInventorySlots[y].GetComponent<PlayerInventorySlot>();
+                    newSlot = backpackInventorySlots[y].GetComponent<InventorySlot>();
                 }
             }
             if (newSlot != null)
@@ -344,9 +363,7 @@ public class PlayerBackpack : MonoBehaviour
     //------按鍵控制---------//
     public void OnClick(InputAction.CallbackContext ctx)
     {
-
         SelectBackPackSlot();
-
     }
     public void OnCloseBackpack(InputAction.CallbackContext ctx)
     {

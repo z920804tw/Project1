@@ -27,51 +27,52 @@ public class PlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckPlaceAndThrow();
+        if (thirdPersonMove.IsAim)
+        {
+            //如果有瞄準就執行手部物件的功能
+            if (playerInventory.handObj != null)
+            {
+                CheckPlaceAndThrow();
+            }
+        }
+        else
+        {
+            canPlace = false;
+            canThrow = false;
+
+            if (isThrowAnim)
+            {
+                isThrowAnim = false;
+                anim.ThrowAnim(false, false);
+            }
+        }
     }
 
     void CheckPlaceAndThrow()
     {
-        if (playerInventory != null && playerInventory.handObj != null)
+        Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 6f, placeLayerMask))
         {
-            if (thirdPersonMove.IsAim)
+            canPlace = true;
+            canThrow = false;
+            placePos = hit.point;
+            placePos.y += 1f;
+            if (isThrowAnim)
             {
-                Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 6f, placeLayerMask))
-                {
-                    canPlace = true;
-                    canThrow = false;
-                    placePos = hit.point;
-                    placePos.y += 1f;
-                    if (isThrowAnim)
-                    {
-                        isThrowAnim = false;
-                        anim.ThrowAnim(false, false);
-                    }
-                }
-                else
-                {
-                    canPlace = false;
-                    canThrow = true;
-                    //防止重複撥放動畫
-                    if (!isThrowAnim)
-                    {
-                        isThrowAnim = true;
-                        anim.ThrowAnim(true, false);
-                    }
-                }
+                isThrowAnim = false;
+                anim.ThrowAnim(false, false);
             }
-            else
+        }
+        else
+        {
+            canPlace = false;
+            canThrow = true;
+            //防止重複撥放動畫
+            if (!isThrowAnim)
             {
-                canPlace = false;
-                canThrow = false;
-
-                if (isThrowAnim)
-                {
-                    isThrowAnim = false;
-                    anim.ThrowAnim(false, false);
-                }
+                isThrowAnim = true;
+                anim.ThrowAnim(true, false);
             }
         }
     }
@@ -97,7 +98,7 @@ public class PlayerInteract : MonoBehaviour
             //更新物品欄
             if (playerInventory != null)
             {
-                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<InventorySlot>().UpdateInfo(-1);
                 playerInventory.SlotAmount = -1;
             }
             //更新動畫
@@ -117,7 +118,7 @@ public class PlayerInteract : MonoBehaviour
                 playerInventory.handObj.GetComponent<PickObject>().ColliderAndRig(true);
                 playerInventory.handObj = null;
 
-                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<PlayerInventorySlot>().UpdateInfo(-1);
+                UIManager.Instance.handInventorySlots[playerInventory.SelectIndex].GetComponent<InventorySlot>().UpdateInfo(-1);
                 playerInventory.SlotAmount = -1;
             }
             anim.ThrowAnim(false, false);

@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PlayerInventorySlot : MonoBehaviour
+public class InventorySlot : MonoBehaviour
 {
     [Header("物品欄參數")]
     public ItemSO slotItemSO;
-    // [SerializeField] Image itemImg;
     [SerializeField] string itemName;
     public string ItemName { get { return itemName; } }
     [SerializeField] int itemID;
@@ -20,7 +19,7 @@ public class PlayerInventorySlot : MonoBehaviour
     [SerializeField] bool canStack;
     public bool CanStack { get { return canStack; } }
     bool isOccupy;
-    public bool IsOccupy{get {return isOccupy;}}
+    public bool IsOccupy { get { return isOccupy; } }
 
     [Header("物件套用")]
     public GameObject slotObject;
@@ -48,20 +47,12 @@ public class PlayerInventorySlot : MonoBehaviour
         }
         else if (amount <= 0)
         {
-            slotItemSO = null;
-            slotObject = null;
-            itemName = "";
-            itemDescription = "";
-            isOccupy = false;
-            canStack = false;
-
-            amountText.text = $"{0}";
-            imgText.text = $"";
-
+            InitializationInfo();
+            UIManager.Instance.backpack.CurrentSlotAmount=-1;
         }
 
     }
-    public void SetInfo(GameObject item)
+    public void SetHandSlotInfo(GameObject item)
     {
         isOccupy = true;
         slotObject = item;
@@ -80,6 +71,7 @@ public class PlayerInventorySlot : MonoBehaviour
     {
         isOccupy = true;
         slotItemSO = item.GetComponent<PickObject>().itemSO;
+
         itemName = item.GetComponent<PickObject>().itemSO.itemName;
         itemID = slotItemSO.itemID;
         itemDescription = item.GetComponent<PickObject>().itemSO.itemDescription;
@@ -127,6 +119,7 @@ public class PlayerInventorySlot : MonoBehaviour
     {
         isOccupy = false;
         slotItemSO = null;
+        slotObject=null;
         itemName = $"";
         itemID = -1;
         itemDescription = $"";
@@ -136,4 +129,5 @@ public class PlayerInventorySlot : MonoBehaviour
         amountText.text = $"{amount}";
         imgText.text = $"{itemName}";
     }
+
 }

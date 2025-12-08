@@ -47,8 +47,6 @@ public class VehicleTrack : MonoBehaviour
             {
                 rightTransform[i] = rightTracksPoint[i].transform;
                 lefttransform[i] = leftTrackPoint[i].transform;
-                // Debug.Log($"{rightTransform[i].name} 位置:{rightTransform[i].position} 旋轉:{rightTransform[i].localEulerAngles.x}");
-                // Debug.Log($"{lefttransform[i].name} 位置:{lefttransform[i].position} 旋轉:{lefttransform[i].localEulerAngles.x}");
             }
             //記錄當前每個履帶的位置與旋轉
 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerInventory : MonoBehaviour
 {
@@ -10,16 +9,10 @@ public class PlayerInventory : MonoBehaviour
     public List<GameObject> handSlots;
     [SerializeField] int selectIndex;
     public int SelectIndex { get { return selectIndex; } }
-    int slotAmount;
-    public int SlotAmount { get { return slotAmount; } set { slotAmount += value; } }
+    [SerializeField]int slotAmount;
+    public int SlotAmount { get { return slotAmount; }set{slotAmount+=value;} }
     public GameObject handObj;
     [SerializeField] Transform handTransform;
-    [Header("物品欄(背包)參數")]
-    public List<GameObject> backpackSlots;
-    int backpackAmount;
-    public int BackpackAmount { get { return backpackAmount; } }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         selectIndex = 0;
@@ -27,9 +20,9 @@ public class PlayerInventory : MonoBehaviour
         {
             //從UIManager中抓取儲存格
             handSlots = UIManager.Instance.handInventorySlots;
-            handSlots[selectIndex].GetComponent<PlayerInventorySlot>().selectImg.SetActive(true);
+            handSlots[selectIndex].GetComponent<InventorySlot>().selectImg.SetActive(true);
 
-            backpackSlots=UIManager.Instance.backpack.backpackInventorySlots;
+            // backpackSlots=UIManager.Instance.backpack.backpackInventorySlots;
         }
 
     }
@@ -39,12 +32,12 @@ public class PlayerInventory : MonoBehaviour
     {
         foreach (GameObject i in handSlots)
         {
-            if (i.GetComponent<PlayerInventorySlot>().IsOccupy)
+            if (i.GetComponent<InventorySlot>().IsOccupy)
             {
                 //檢查該物品的itemID是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (i.GetComponent<PlayerInventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && item.GetComponent<PickObject>().itemSO.canStack)
+                if (i.GetComponent<InventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && item.GetComponent<PickObject>().itemSO.canStack)
                 {
-                    i.GetComponent<PlayerInventorySlot>().UpdateInfo(1);
+                    i.GetComponent<InventorySlot>().UpdateInfo(1);
                     Destroy(item);
                     Debug.Log("找到物品欄中已有相同物件，數量+1");
                     return true;
@@ -63,11 +56,11 @@ public class PlayerInventory : MonoBehaviour
             item.SetActive(false);
             foreach (GameObject i in handSlots)
             {
-                PlayerInventorySlot slot = i.GetComponent<PlayerInventorySlot>();
+                InventorySlot slot = i.GetComponent<InventorySlot>();
                 if (!slot.IsOccupy)
                 {
                     //設定物品欄位資訊
-                    slot.SetInfo(item);
+                    slot.SetHandSlotInfo(item);
                     //設定物品位置、關閉碰撞
                     item.transform.SetParent(handTransform);
                     item.transform.position = handTransform.position;
@@ -85,6 +78,7 @@ public class PlayerInventory : MonoBehaviour
             }
         }
     }
+    //手部物品欄用
     public void OnSelect(float value)
     {
         if (!thirdPersonMove.IsAim)
@@ -94,7 +88,7 @@ public class PlayerInventory : MonoBehaviour
             //先將全部的物品、選取UI都設定關閉
             foreach (GameObject slot in handSlots)
             {
-                PlayerInventorySlot pis = slot.GetComponent<PlayerInventorySlot>();
+                InventorySlot pis = slot.GetComponent<InventorySlot>();
                 pis.selectImg.SetActive(false);
                 if (pis.slotObject != null)
                 {
@@ -113,12 +107,12 @@ public class PlayerInventory : MonoBehaviour
                 selectIndex = handSlots.Count - 1;
             }
             //設定當前選擇的物品欄選擇框
-            handSlots[selectIndex].GetComponent<PlayerInventorySlot>().selectImg.SetActive(true);
+            handSlots[selectIndex].GetComponent<InventorySlot>().selectImg.SetActive(true);
             //如果該物品欄有紀錄東西，就讓該物品顯示
-            if (handSlots[selectIndex].GetComponent<PlayerInventorySlot>().slotObject != null)
+            if (handSlots[selectIndex].GetComponent<InventorySlot>().slotObject != null)
             {
-                handSlots[selectIndex].GetComponent<PlayerInventorySlot>().slotObject.SetActive(true);
-                handObj = handSlots[selectIndex].GetComponent<PlayerInventorySlot>().slotObject;
+                handSlots[selectIndex].GetComponent<InventorySlot>().slotObject.SetActive(true);
+                handObj = handSlots[selectIndex].GetComponent<InventorySlot>().slotObject;
             }
         }
     }
@@ -126,14 +120,16 @@ public class PlayerInventory : MonoBehaviour
     //---------------(背包)---------------//
     bool CheckBackpackSameItem(GameObject item)
     {
-        foreach (GameObject i in backpackSlots)
+        PlayerBackpack playerBackpack = UIManager.Instance.backpack;
+        foreach (GameObject i in playerBackpack.backpackInventorySlots)
         {
-            if (i.GetComponent<PlayerInventorySlot>().IsOccupy)
+            InventorySlot slot = i.GetComponent<InventorySlot>();
+            if (slot.IsOccupy)
             {
                 //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (i.GetComponent<PlayerInventorySlot>().ItemID == item.GetComponent<PickObject>().itemSO.itemID && i.GetComponent<PlayerInventorySlot>().CanStack)
+                if (slot.ItemID == item.GetComponent<PickObject>().itemSO.itemID && slot.CanStack)
                 {
-                    i.GetComponent<PlayerInventorySlot>().UpdateInfo(1);
+                    slot.UpdateInfo(1);
                     Destroy(item);
                     Debug.Log("找到物品欄中已有相同物件，數量+1");
                     return true;
@@ -145,17 +141,18 @@ public class PlayerInventory : MonoBehaviour
 
     public void AddItemToBackpackInventory(GameObject item)
     {
+        PlayerBackpack playerBackpack = UIManager.Instance.backpack;
         bool hasItem = CheckBackpackSameItem(item);
         if (!hasItem)
         {
-            foreach (GameObject i in backpackSlots)
+            foreach (GameObject i in playerBackpack.backpackInventorySlots)
             {
-                PlayerInventorySlot slot = i.GetComponent<PlayerInventorySlot>();
+                InventorySlot slot = i.GetComponent<InventorySlot>();
                 if (!slot.IsOccupy)
                 {
                     //設定物品欄位資訊
                     slot.SetBackpackSlotInfo(item);
-                    backpackAmount++;
+                    UIManager.Instance.backpack.CurrentSlotAmount=1;
                     Destroy(item);
                     Debug.Log("新物件已加入物品欄(背包)");
                     return;
