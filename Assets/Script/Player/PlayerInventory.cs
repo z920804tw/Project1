@@ -13,7 +13,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] Transform handTransform;
     void Start()
     {
-        playerHand=UIManager.Instance.playerHand;
+        playerHand = UIManager.Instance.playerHand;
         selectIndex = 0;
         playerHand.handInventorySlots[selectIndex].GetComponent<HandInventorySlot>().selectImg.SetActive(true);
     }
@@ -26,8 +26,9 @@ public class PlayerInventory : MonoBehaviour
             HandInventorySlot slot = i.GetComponent<HandInventorySlot>();
             if (slot.IsOccupy)
             {
+                PickObject pickObject = item.GetComponentInChildren<PickObject>();
                 //檢查該物品的itemID是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (slot.ItemID == item.GetComponent<PickObject>().itemSO.itemID && item.GetComponent<PickObject>().itemSO.canStack)
+                if (pickObject.itemSO.canStack && slot.ItemID == pickObject.itemSO.itemID)
                 {
                     slot.UpdateInfo(1);
                     Destroy(item);
@@ -56,7 +57,8 @@ public class PlayerInventory : MonoBehaviour
                     //設定物品位置、關閉碰撞
                     item.transform.SetParent(handTransform);
                     item.transform.position = handTransform.position;
-                    item.GetComponent<PickObject>().ColliderAndRig(false);
+                    item.transform.eulerAngles=new Vector3(0,0,0);
+                    item.GetComponentInChildren<PickObject>().ColliderAndRig(false);
                     if (index == selectIndex)
                     {
                         handObj = item;
@@ -96,7 +98,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else if (selectIndex < 0)
             {
-                selectIndex = playerHand.handInventorySlots.Count-1;
+                selectIndex = playerHand.handInventorySlots.Count - 1;
             }
             //設定當前選擇的物品欄選擇框
             playerHand.handInventorySlots[selectIndex].GetComponent<HandInventorySlot>().selectImg.SetActive(true);
@@ -118,8 +120,10 @@ public class PlayerInventory : MonoBehaviour
             InventorySlot slot = i.GetComponent<InventorySlot>();
             if (slot.IsOccupy)
             {
+
+                PickObject pickObject = item.GetComponentInChildren<PickObject>();
                 //檢查該物品的itemName是否與撿取的一樣，並且檢查是否能夠堆疊
-                if (slot.ItemID == item.GetComponent<PickObject>().itemSO.itemID && slot.CanStack)
+                if (slot.CanStack && slot.ItemID == pickObject.itemSO.itemID)
                 {
                     slot.UpdateInfo(1);
                     Destroy(item);

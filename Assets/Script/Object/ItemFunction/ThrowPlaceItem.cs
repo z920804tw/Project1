@@ -4,8 +4,8 @@ using UnityEngine;
 public class ThrowPlaceItem : MonoBehaviour, IUse
 {
     [SerializeField] GameObject mainCam;
-    [SerializeField] PickObject pickObject;
     [SerializeField] LayerMask placeLayerMask;
+    PickObject pickObject;
     public bool canPlace;
     public bool canThrow;
     [SerializeField] bool isThrowAnim;
@@ -18,7 +18,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
     void Start()
     {
         mainCam = GameObject.FindWithTag("MainCamera");
-        pickObject = GetComponent<PickObject>();
+        pickObject=GetComponentInChildren<PickObject>();
     }
 
     // Update is called once per frame
@@ -114,7 +114,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
         canThrow = false;
 
         //暫時關閉物件和玩家的偵測碰撞
-        GetComponent<PickObject>().ColliderAndRig(true);
+        pickObject.ColliderAndRig(true);
         Physics.IgnoreCollision(pickObject.collider1, GameObject.FindWithTag("Player").GetComponent<Collider>(), true);
         Physics.IgnoreCollision(pickObject.triggerBox, GameObject.FindWithTag("PlayerInteract").GetComponent<Collider>(), true);
 
@@ -130,7 +130,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
         {
             playerInventory.handObj.transform.SetParent(null);
             playerInventory.handObj.transform.position = placePos;
-            playerInventory.handObj.GetComponent<PickObject>().ColliderAndRig(true);
+            playerInventory.handObj.GetComponentInChildren<PickObject>().ColliderAndRig(true);
             playerInventory.handObj = null;
 
             UIManager.Instance.playerHand.handInventorySlots[playerInventory.SelectIndex].GetComponent<HandInventorySlot>().UpdateInfo(-1);
@@ -139,7 +139,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
         anim.ThrowAnim(false, false);
         isThrowAnim = false;
         canPlace = false;
-        isAim=false;
+        isAim = false;
     }
 
     IEnumerator WaitReset()

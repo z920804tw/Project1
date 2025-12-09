@@ -55,12 +55,13 @@ public class InventorySlot : MonoBehaviour
     public void SetBackpackSlotInfo(GameObject item)
     {
         isOccupy = true;
-        slotItemSO = item.GetComponent<PickObject>().itemSO;
+        PickObject pickObject=item.GetComponentInChildren<PickObject>();
+        slotItemSO = pickObject.itemSO;
 
-        itemName = item.GetComponent<PickObject>().itemSO.itemName;
+        itemName = slotItemSO.itemName;
         itemID = slotItemSO.itemID;
-        itemDescription = item.GetComponent<PickObject>().itemSO.itemDescription;
-        canStack = item.GetComponent<PickObject>().itemSO.canStack;
+        itemDescription = slotItemSO.itemDescription;
+        canStack = slotItemSO.canStack;
 
         amount = 1;
         amountText.text = $"{amount}";

@@ -28,23 +28,24 @@ public class PlayerInteract : MonoBehaviour
                 IUse item = playerInventory.handObj.GetComponent<IUse>();
                 if (item != null)
                 {
-                    isUse=true;
+                    isUse = true;
                     item.UseObject(transform.root.gameObject);
                 }
 
             }
             else if (!thirdPersonMove.IsAim && isUse)
             {
-               
+
                 IUse item = playerInventory.handObj.GetComponent<IUse>();
                 if (item != null)
                 {
-                    isUse=false;
+                    isUse = false;
                     item.ResetUse();
                 }
 
             }
         }
+
     }
     public void OnInteract()
     {

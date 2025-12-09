@@ -213,6 +213,21 @@ public class PlayerStatus : MonoBehaviour
 
         }
     }
+    public void OnDropHandItem(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed && playerInventory.handObj != null && !playerMove.IsAim)
+        {
+            GameObject obj = playerInventory.handObj;
+            //更新手部物品欄的物件數量
+            UIManager.Instance.playerHand.handInventorySlots[playerInventory.SelectIndex].GetComponent<HandInventorySlot>().UpdateInfo(-1);
+            UIManager.Instance.playerHand.HandSlotAmount--;
+            //更新handObj的內容
+            obj.GetComponentInChildren<PickObject>().ColliderAndRig(true);
+            obj.transform.SetParent(null);
+            obj.transform.position =transform.position+transform.forward;
+            playerInventory.handObj = null;
+        }
+    }
     //--------物品欄--------//
     //--------玩家互動--------//
     public void OnOpenBackpack(InputAction.CallbackContext ctx)
@@ -289,6 +304,9 @@ public class PlayerStatus : MonoBehaviour
 
         playerInput.actions["Place"].performed += OnPlace;
         playerInput.actions["Place"].canceled += OnPlace;
+
+        playerInput.actions["DropItem"].performed += OnDropHandItem;
+        playerInput.actions["DropItem"].canceled += OnDropHandItem;
         Debug.Log("監聽玩家控制");
     }
 
@@ -320,6 +338,9 @@ public class PlayerStatus : MonoBehaviour
 
         playerInput.actions["Place"].performed -= OnPlace;
         playerInput.actions["Place"].canceled -= OnPlace;
+
+        playerInput.actions["DropItem"].performed -= OnDropHandItem;
+        playerInput.actions["DropItem"].canceled -= OnDropHandItem;
         Debug.Log("取消監聽玩家控制");
     }
 }

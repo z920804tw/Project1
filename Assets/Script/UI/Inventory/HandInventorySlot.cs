@@ -52,7 +52,7 @@ public class HandInventorySlot: MonoBehaviour
     {
         isOccupy = true;
         slotObject = item;
-        slotItemSO = item.GetComponent<PickObject>().itemSO;
+        slotItemSO = item.GetComponentInChildren<PickObject>().itemSO;
         itemName = slotItemSO.itemName;
         itemID = slotItemSO.itemID;
         itemDescription = slotItemSO.itemDescription;

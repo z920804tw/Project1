@@ -146,7 +146,7 @@ public class Inventory : MonoBehaviour
                             dragSlot = Instantiate(slot.gameObject, Input.mousePosition, Quaternion.identity);
                             dragSlot.transform.SetParent(transform);
                             dragSlot.GetComponent<InventorySlot>().bgImg.raycastTarget = false;
-                            dragSlot.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+                            dragSlot.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 120);
 
                             firstSlot = slot;
                             slot.InitializationInfo();

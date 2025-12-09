@@ -12,14 +12,13 @@ public class PickObject : MonoBehaviour, IInteractable
     [Header("參數設定")]
     public ItemSO itemSO;
     string hintText;
-
     [Header("互動設定")]
     public UnityEvent<GameObject> interactUnityEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = transform.parent.GetComponent<Rigidbody>();
         hintText = $"{itemSO.hintText} {itemSO.itemName}";
     }
     //-------IInteractable--------//
@@ -46,7 +45,7 @@ public class PickObject : MonoBehaviour, IInteractable
                 HandInventory playerHand = UIManager.Instance.playerHand;
                 if (playerHand.HandSlotAmount < playerHand.handInventorySlots.Count)
                 {
-                    playerInventory.AddItemToHandInventory(this.gameObject);
+                    playerInventory.AddItemToHandInventory(transform.parent.gameObject);
                 }
                 else
                 {
@@ -64,7 +63,7 @@ public class PickObject : MonoBehaviour, IInteractable
                 Inventory playerBackpack = UIManager.Instance.backpack;
                 if (playerBackpack.CurrentSlotAmount < playerBackpack.backpackInventorySlots.Count)
                 {
-                    playerInventory.AddItemToBackpackInventory(this.gameObject);
+                    playerInventory.AddItemToBackpackInventory(transform.parent.gameObject);
                 }
                 else
                 {
