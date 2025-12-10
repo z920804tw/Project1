@@ -97,20 +97,18 @@ public class PlayerStatus : MonoBehaviour
     {
         //取消玩家按鍵監聽、攝影機按鍵監聽
         DisSubPlayerAllInput();
+        playerMove.ResetMove();
         playerCam.Stop();
         playerCam.DisSubAllCameraInput();
-
-        //停止玩家相關設定
-        playerMove.ResetMove();
-        // playerInteract.ResetThrowPlace();
 
         CameraManager.Instance.SetCameraMode(CameraMode.Normal);
 
         GameManager.Instance.ShowCursor(true);
         GameManager.Instance.SwitchInputMode("Inventory");
 
-        UIManager.Instance.backpack.SubAllUIInput();
-        UIManager.Instance.ShowBackpackUI(true);
+        UIManager.Instance.backpack.SubInventoryInput();
+        UIManager.Instance.backpack.SetTarget(this.gameObject);
+        UIManager.Instance.ShowInventoryUI(true);
 
     }
     //攀爬
@@ -136,18 +134,16 @@ public class PlayerStatus : MonoBehaviour
     {
         //關閉玩家監聽與相關設定
         DisSubPlayerAllInput();
+        playerCam.Stop();
         playerCam.DisSubAllCameraInput();
         playerMove.ResetMove();
         playerInteract.enabled = false;
 
         //將玩家UI關閉
         UIManager.Instance.ShowPlayerUI(false);
-        UIManager.Instance.ShowDialogueUI(true);
-        UIManager.Instance.dialogueUI.SetDialogueInfo(this.gameObject);
 
-        //開啟對話模式
+        UIManager.Instance.ShowDialogueUI(true);
         GameManager.Instance.ShowCursor(true);
-        playerCam.SubAllCameraInput();
         Debug.Log("切換成對話模式");
     }
 
@@ -224,7 +220,7 @@ public class PlayerStatus : MonoBehaviour
             //更新handObj的內容
             obj.GetComponentInChildren<PickObject>().ColliderAndRig(true);
             obj.transform.SetParent(null);
-            obj.transform.position =transform.position+transform.forward;
+            obj.transform.position = transform.position;
             playerInventory.handObj = null;
         }
     }

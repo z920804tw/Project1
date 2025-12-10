@@ -16,6 +16,7 @@ public class Inventory : MonoBehaviour
     public GraphicRaycaster raycaster;
     public EventSystem eventSystem;
     PlayerInput playerInput;
+    GameObject currentTarget;
 
     [Header("Debug")]
     [SerializeField] int currentSlotAmount;
@@ -116,7 +117,7 @@ public class Inventory : MonoBehaviour
             if (currentSelectSlot != null)
             {
                 currentSelectSlot.selectImg.SetActive(false);
-                currentSelectSlot=null;
+                currentSelectSlot = null;
             }
         }
 
@@ -307,6 +308,7 @@ public class Inventory : MonoBehaviour
         if (dragSlot != null) Destroy(dragSlot);
         dragSlot = null;
         firstSlot = null;
+        currentTarget = null;
         slotItemName.text = "";
         slotItemDescription.text = "";
 
@@ -346,7 +348,10 @@ public class Inventory : MonoBehaviour
         }
 
     }
-
+    public void SetTarget(GameObject target)
+    {
+        currentTarget = target;
+    }
     IEnumerator TranslateSlotHoverColor(Image target, Color end, float duration)
     {
         float timer = 0;
@@ -367,10 +372,12 @@ public class Inventory : MonoBehaviour
     }
     public void OnCloseBackpack(InputAction.CallbackContext ctx)
     {
+        //取消背包的輸入訂閱
+        DisSubInventoryInput();
+        currentTarget.GetComponent<PlayerStatus>().SetStatus(Status.Normal);
+
+        UIManager.Instance.ShowInventoryUI(false);
         ResetBackpackSlotInfo();
-        DisSubAllUIInput();
-        GameObject.FindWithTag("Player").GetComponent<PlayerStatus>().SetStatus(Status.Normal);
-        UIManager.Instance.ShowBackpackUI(false);
         Debug.Log("關閉背包");
     }
 
@@ -392,7 +399,7 @@ public class Inventory : MonoBehaviour
         }
     }
     //------按鍵控制---------//
-    public void SubAllUIInput()
+    public void SubInventoryInput()
     {
         playerInput = GameManager.Instance.playerInput;
         playerInput.actions["Click"].performed += OnClick;
@@ -406,7 +413,7 @@ public class Inventory : MonoBehaviour
 
         Debug.Log("監聽背包控制");
     }
-    public void DisSubAllUIInput()
+    public void DisSubInventoryInput()
     {
 
         playerInput.actions["Click"].performed -= OnClick;

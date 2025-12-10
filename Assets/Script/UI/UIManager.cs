@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     PlayerInput playerInput;
     [Header("Player UI")]
     [SerializeField] GameObject playerUI;
-    [SerializeField] GameObject backpackUI;
+    [SerializeField] GameObject inventoryUI;
     [SerializeField] GameObject aimHint;
     [Header("物品欄")]
     public HandInventory playerHand;
@@ -46,23 +46,27 @@ public class UIManager : MonoBehaviour
     public void ShowVehecleUI(bool t)
     {
         vehicleUI.SetActive(t);
+        CloseHintUI();
     }
     public void ShowPlayerUI(bool t)
     {
         playerUI.SetActive(t);
+        CloseHintUI();
     }
     public void ShowDialogueUI(bool t)
     {
         dialogueUI.gameObject.SetActive(t);
+        CloseHintUI();
     }
     public void ShowAimHint(bool t)
     {
         aimHint.SetActive(t);
     }
     //----------物品欄-----------//
-    public void ShowBackpackUI(bool t)
+    public void ShowInventoryUI(bool t)
     {
-        backpackUI.SetActive(t);
+        inventoryUI.SetActive(t);
+        CloseHintUI();
     }
     public void SetInventoryInfo()
     {
@@ -76,14 +80,14 @@ public class UIManager : MonoBehaviour
         }
         backpack.ResetBackpackSlotInfo();
     }
-
-
     //----------物品欄-----------//
 
-
-
-
-
-
-    //訂閱其他UI監聽事件
+    void CloseHintUI()
+    {
+        if (interactUI.activeSelf)
+        {
+            interactUI.GetComponent<InteractUI>().ResetHintInfo();
+            interactUI.SetActive(false);
+        }
+    }
 }

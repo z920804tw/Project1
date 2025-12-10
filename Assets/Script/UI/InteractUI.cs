@@ -49,5 +49,17 @@ public class InteractUI : MonoBehaviour
         }
     }
     //----------HintUI-----------//
+    public void ResetHintInfo()
+    {
+        if (hintUIList.Count > 0)
+        {
+            foreach (GameObject i in hintUIList)
+            {
+                Destroy(i);
+            }
+            hintUIList.Clear();
+            selectIndex=0;
+        }
+    }
 
 }

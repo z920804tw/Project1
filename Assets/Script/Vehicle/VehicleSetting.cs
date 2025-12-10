@@ -62,14 +62,6 @@ public class VehicleSetting : MonoBehaviour
             target.transform.DOMove(setPos.position, 1f).SetEase(Ease.InOutSine);
             target.transform.DORotate(setPos.eulerAngles, 1f).SetEase(Ease.Linear);
 
-            UIManager.Instance.ShowInteractHint(false);
-            foreach (GameObject i in UIManager.Instance.interactUI.GetComponent<InteractUI>().hintUIList)
-            {
-                Destroy(i);
-            }
-            UIManager.Instance.interactUI.GetComponent<InteractUI>().hintUIList.Clear();
-
-
             //將載具功能打開
             VehicleStatus(true);
             UIManager.Instance.vehicleUI.GetComponent<VehicleUI>().SetVehicleInfo(this.gameObject.name);
