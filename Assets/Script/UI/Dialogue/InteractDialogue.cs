@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPCDialogue : MonoBehaviour
+public class InteractDialogue : MonoBehaviour
 {
     public DialogueSO dialogueSO;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

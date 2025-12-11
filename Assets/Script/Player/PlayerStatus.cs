@@ -138,13 +138,16 @@ public class PlayerStatus : MonoBehaviour
         playerCam.DisSubAllCameraInput();
         playerMove.ResetMove();
         playerInteract.enabled = false;
-
         //將玩家UI關閉
         UIManager.Instance.ShowPlayerUI(false);
 
-        UIManager.Instance.ShowDialogueUI(true);
+        //開啟對話UI、啟用對話按鍵監聽
+        GameManager.Instance.SwitchInputMode("Dialogue");
         GameManager.Instance.ShowCursor(true);
-        Debug.Log("切換成對話模式");
+        
+        UIManager.Instance.ShowDialogueUI(true);
+        UIManager.Instance.dialogueUI.SubDialogueInput();
+
     }
 
     //-------------------------------狀態設定------------------------------//
@@ -248,7 +251,6 @@ public class PlayerStatus : MonoBehaviour
                 if (throwPlaceItem != null && throwPlaceItem.canThrow)
                 {
                     throwPlaceItem.Throw();
-                    Debug.Log("丟");
                 }
             }
         }
@@ -263,7 +265,6 @@ public class PlayerStatus : MonoBehaviour
                 if (throwPlaceItem != null && throwPlaceItem.canPlace)
                 {
                     throwPlaceItem.Place();
-                    Debug.Log("放置");
                 }
             }
         }

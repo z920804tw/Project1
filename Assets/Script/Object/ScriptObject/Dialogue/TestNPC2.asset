@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e098783c19bb72448c18b53bed0c4aa, type: 3}
-  m_Name: Test
+  m_Name: TestNPC2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
-  targetName: Test1
+  targetName: Test2
   dialogueLines:
-  - 'Hello,This is DialogTest!
-
-    This is Line1.'
-  - This is Line2
-  - This is Line3
+  - Hi This is Dialogue Test2!
+  - This is EndLine
+  endDialogueLines: 0001
   typeingSpeed: 0.05
+  chioces: []

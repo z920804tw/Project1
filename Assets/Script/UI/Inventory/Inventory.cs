@@ -401,7 +401,11 @@ public class Inventory : MonoBehaviour
     //------按鍵控制---------//
     public void SubInventoryInput()
     {
-        playerInput = GameManager.Instance.playerInput;
+        if (playerInput == null)
+        {
+            playerInput = GameManager.Instance.playerInput;
+        }
+
         playerInput.actions["Click"].performed += OnClick;
         playerInput.actions["Click"].canceled += OnClick;
 
