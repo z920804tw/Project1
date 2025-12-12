@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] CapsuleCollider interactCollider;
     [Header("玩家控制項")]
     PlayerInput playerInput;
-    public ThirdPersonMove playerMove;
+    [SerializeField] ThirdPersonMove playerMove;
     public ThirdPersonCamera playerCam;
     public PlayerInventory playerInventory;
     public PlayerInteract playerInteract;
@@ -132,14 +133,14 @@ public class PlayerStatus : MonoBehaviour
     //對話
     void SetDialogueStatus()
     {
-        //關閉玩家監聽與相關設定
+        //關閉玩家監聽與相關設定、玩家UI
         DisSubPlayerAllInput();
         playerCam.Stop();
         playerCam.DisSubAllCameraInput();
         playerMove.ResetMove();
         playerInteract.enabled = false;
-        //將玩家UI關閉
         UIManager.Instance.ShowPlayerUI(false);
+
 
         //開啟對話UI、啟用對話按鍵監聽
         GameManager.Instance.SwitchInputMode("Dialogue");

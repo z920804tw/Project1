@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,41 +11,38 @@ public class DialogueUI : MonoBehaviour
     PlayerInput playerInput;
     [Header("參數設定")]
     [SerializeField] DialogueSO currentSO;
+    [SerializeField] DialogueEvent[] dialogueEvents;
+    GameObject currentTarget;
+    GameObject interactTarget;
+    string[] dialogueLines;
+    [Header("UI物件套用")]
     [SerializeField] TMP_Text nameText;//物件名稱
     [SerializeField] TMP_Text contentText;//對話內容
     [SerializeField] GameObject hintText;
     [SerializeField] Transform choiceBtnParent;
     [SerializeField] GameObject choiceBtnPrefab;
-
-    GameObject currentTarget;
-    string[] dialogueLines;
     [Header("Debug")]
     [SerializeField] int currentIndex;
     [SerializeField] bool isTyping;
     bool isChoice;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void SetTarget(GameObject talk, GameObject interact)
     {
-
+        currentTarget = talk;
+        interactTarget = interact;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void SetTarget(GameObject target)
-    {
-        currentTarget = target;
-    }
-    public void SetDialogueInfo(DialogueSO dialogueSO)
+    public void SetDialogueInfo(DialogueSO dialogueSO, DialogueEvent[] events)
     {
         currentSO = dialogueSO;
         nameText.text = dialogueSO.targetName;
         dialogueLines = dialogueSO.dialogueLines;
         currentIndex = 0;
         contentText.text = string.Empty;
+
+        //套用事件內容
+        dialogueEvents = events;
+
+        //先清空按鈕
         ClearChoiceBtn();
         StartCoroutine(DelayShowText());
     }
@@ -52,7 +50,7 @@ public class DialogueUI : MonoBehaviour
     public void NextLine()
     {
         //檢查當前的對話是不是結束對話
-        if (currentSO.endDialogueLines[currentIndex])
+        if (currentSO.endDialogueLines.Length != 0 && currentSO.endDialogueLines[currentIndex])
         {
             EndDialogue();
             return;
@@ -65,12 +63,16 @@ public class DialogueUI : MonoBehaviour
     }
     public void EndDialogue()
     {
-        //關閉對話UI、清空資訊、解除按鍵監聽
-        ResetInfo();
+        if (interactTarget.GetComponent<InteractDialogue>().CanLook)
+        {
+            interactTarget.transform.DOLookAt(interactTarget.GetComponent<InteractDialogue>().DefaultLook, 1f, AxisConstraint.Y).SetEase(Ease.InOutSine);
+        }
+        //解除按鍵監聽
         DisSubDialogueInput();
-        this.gameObject.SetActive(false);
         //切換玩家狀態至普通模式
         if (currentTarget != null) currentTarget.GetComponent<PlayerStatus>().SetStatus(Status.Normal);
+        //關閉對話UI、清空資訊、解除按鍵監聽
+        ResetInfo();
     }
 
     void ResetInfo()
@@ -80,51 +82,64 @@ public class DialogueUI : MonoBehaviour
         contentText.text = string.Empty;
         currentIndex = 0;
         dialogueLines = null;
+        dialogueEvents = null;
+        currentTarget = null;
+        interactTarget = null;
+
         isTyping = false;
         hintText.SetActive(false);
+        this.gameObject.SetActive(false);
         ClearChoiceBtn();
     }
 
     void CheckShowChoice()
     {
-        if (currentSO.chioces.Length > 0)
+        if (currentSO.choices.Length > 0)
         {
-            for (int i = 0; i < currentSO.chioces.Length; i++)
+            for (int x = 0; x < currentSO.choices.Length; x++)
             {
-                if (currentIndex == currentSO.chioces[i].dialogueIndex)
+                if (currentIndex == currentSO.choices[x].dialogueIndex) //檢查當前index是否與chioces[i].dialogueIndex的參數一樣，如果一樣就代表當前對話有選擇
                 {
                     isChoice = true;
-                    //一樣就產生選項按鈕
-                    for (int y = 0; y < currentSO.chioces[i].options.Length; y++)
+                    for (int y = 0; y < currentSO.choices[x].options.Length; y++)
                     {
-                        GameObject btnObj = Instantiate(choiceBtnPrefab, choiceBtnParent);
-                        btnObj.GetComponentInChildren<TMP_Text>().text = currentSO.chioces[i].options[y];
-
-                        Button btn = btnObj.GetComponent<Button>();
-                        int nextIndex = currentSO.chioces[i].nextDialogueIndex[y];
-
-
-                        //當按鈕被按下去後會執行的功能
-                        btn.onClick.AddListener(() =>
-                        {
-                            //如果該按鈕有Event就執行該按鈕的Event
-
-                            currentIndex = nextIndex;
-                            isChoice = false;
-                            ClearChoiceBtn();
-                            StartCoroutine(DelayShowText());
-                        });
+                        //生成按鈕、給予按鈕按下時的功能
+                        SpawnOptionButton(x, y);
                     }
                     return;
                 }
             }
 
+            //判定有沒有選擇，如果沒有就顯示提示
             if (!isChoice)
             {
                 hintText.SetActive(true);
             }
         }
+    }
 
+    void SpawnOptionButton(int x, int y)
+    {
+        GameObject btnObj = Instantiate(choiceBtnPrefab, choiceBtnParent);
+        btnObj.GetComponentInChildren<TMP_Text>().text = currentSO.choices[x].options[y];
+
+        Button btn = btnObj.GetComponent<Button>();
+        int nextIndex = currentSO.choices[x].nextDialogueIndex[y];
+
+
+        //當按鈕被按下去後會執行的功能
+        btn.onClick.AddListener(() =>
+        {
+            //如果有事件，就綁定事件到按鈕上
+            if (dialogueEvents.Length != 0 && y < dialogueEvents[x].options.Length)
+            {
+                dialogueEvents[x].options[y].Invoke();
+            }
+            currentIndex = nextIndex;
+            isChoice = false;
+            ClearChoiceBtn();
+            StartCoroutine(DelayShowText());
+        });
     }
 
     //清空按鈕選項

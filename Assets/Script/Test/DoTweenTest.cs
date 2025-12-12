@@ -21,7 +21,6 @@ public class DoTweenTest : MonoBehaviour
         if (moveTween == null)
         {
             moveTween = transform.DOMove(new Vector3(transform.position.x + 7, transform.position.y, transform.position.z), 5).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
-            Debug.Log(123);
         }
         else
         {
@@ -34,5 +33,10 @@ public class DoTweenTest : MonoBehaviour
                 moveTween.Play();
             }
         }
+    }
+
+    public void Test1()
+    {
+        Debug.Log("不使用");
     }
 }

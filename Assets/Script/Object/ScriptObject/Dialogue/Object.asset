@@ -12,8 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e098783c19bb72448c18b53bed0c4aa, type: 3}
   m_Name: Object
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
-  targetName: 
-  dialogueLines: []
-  endDialogueLines: 
+  targetName: Obj1
+  dialogueLines:
+  - You want Use This Item?
+  - '*Use Item*'
+  - '*You Leave*'
+  endDialogueLines: 000101
   typeingSpeed: 0.05
-  chioces: []
+  choices:
+  - dialogueIndex: 0
+    options:
+    - Use
+    - Not Use
+    nextDialogueIndex: 0100000002000000

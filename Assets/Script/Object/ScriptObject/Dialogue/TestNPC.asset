@@ -19,15 +19,12 @@ MonoBehaviour:
     This is Line1.'
   - This is Line2. I have two fruits, Choice your answer.
   - You Choice Apple *Give you Apple*
-  - Now You Can Leave
   - You Choice Banana *Give you Banana*
-  - Now You Can Leave
-  endDialogueLines: 000000010001
+  endDialogueLines: 00000101
   typeingSpeed: 0.05
-  chioces:
+  choices:
   - dialogueIndex: 1
     options:
     - Apple
     - Banana
-    nextDialogueIndex: 0200000004000000
-    selectEvent: []
+    nextDialogueIndex: 0200000003000000

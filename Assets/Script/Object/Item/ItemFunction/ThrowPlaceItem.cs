@@ -18,7 +18,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
     void Start()
     {
         mainCam = GameObject.FindWithTag("MainCamera");
-        pickObject=GetComponentInChildren<PickObject>();
+        pickObject = GetComponentInChildren<PickObject>();
     }
 
     // Update is called once per frame
@@ -29,7 +29,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
             CheckPlaceAndThrow();
         }
     }
-
+    //-----------IUse----------//
     public void UseObject(GameObject target)
     {
         if (anim == null)
@@ -47,6 +47,7 @@ public class ThrowPlaceItem : MonoBehaviour, IUse
     {
         ResetThrowPlace();
     }
+    //-----------IUse----------//
     void CheckPlaceAndThrow()
     {
         Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);

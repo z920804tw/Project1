@@ -40,9 +40,6 @@ public class Ladder : MonoBehaviour
             //移動和旋轉至到目標點
             player.transform.DOMove(btmPos, 0.5f).SetEase(Ease.InOutSine);
             player.transform.DORotate(transform.eulerAngles, 0.5f).SetEase(Ease.InOutSine);
-
-            // Quaternion rot = transform.rotation;
-            // StartCoroutine(SmoothTranslate(player.gameObject, player.transform.position, btmPos, rot, 0.5f));
         }
     }
 

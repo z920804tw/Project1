@@ -14,8 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
   targetName: Test2
   dialogueLines:
-  - Hi This is Dialogue Test2!
-  - This is EndLine
-  endDialogueLines: 0001
+  - 'Hi This is Dialogue Test2!
+
+    Pleace Choice'
+  - Choice1
+  - You Can Chioce Next
+  - Choice1-1
+  - Choice1-2
+  - Choice2
+  - You Can Chioce Next
+  - Choice2-1
+  - Choice2-2
+  endDialogueLines: 000000010100000101
   typeingSpeed: 0.05
-  chioces: []
+  choices:
+  - dialogueIndex: 0
+    options:
+    - Choice1
+    - Choice2
+    nextDialogueIndex: 0100000005000000
+  - dialogueIndex: 2
+    options:
+    - Choice1-1
+    - Choice1-2
+    nextDialogueIndex: 0300000004000000
+  - dialogueIndex: 6
+    options:
+    - Choice2-1
+    - Choice2-2
+    nextDialogueIndex: 0700000008000000
