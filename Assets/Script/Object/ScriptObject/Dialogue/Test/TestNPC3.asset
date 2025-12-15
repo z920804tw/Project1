@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e098783c19bb72448c18b53bed0c4aa, type: 3}
+  m_Name: TestNPC3
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
+  targetName: Test3
+  typeingSpeed: 0.05
+  dialogueContent:
+  - dialogueLines:
+    - Hi,This is Dialogue Test3
+    - This is Line2
+    - This is Line3
+    - This is Line4
+    - This is Options you can choice.
+    endDialogueLines: 
+    choices:
+    - checkNumber: 0
+      dialogueIndex: 4
+      options:
+      - Option1
+      - Option2
+      nextDialogueIndex: 0100000002000000
+  - dialogueLines:
+    - Great Choice!
+    - Now this is Line1
+    - This is Line2
+    - Good bye!
+    endDialogueLines: 00000001
+    choices: []
+  - dialogueLines:
+    - Great Choice!
+    - Now this is Line1
+    - This is Line2
+    - This is Line3
+    - This is Line4
+    - Good bye!
+    endDialogueLines: 000000000001
+    choices: []

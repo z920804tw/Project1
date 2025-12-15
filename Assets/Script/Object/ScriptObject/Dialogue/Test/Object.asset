@@ -13,15 +13,23 @@ MonoBehaviour:
   m_Name: Object
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
   targetName: Obj1
-  dialogueLines:
-  - You want Use This Item?
-  - '*Use Item*'
-  - '*You Leave*'
-  endDialogueLines: 000101
   typeingSpeed: 0.05
-  choices:
-  - dialogueIndex: 0
-    options:
-    - Use
-    - Not Use
-    nextDialogueIndex: 0100000002000000
+  dialogueContent:
+  - dialogueLines:
+    - You want to Use Item?
+    endDialogueLines: 00
+    choices:
+    - checkNumber: 0
+      dialogueIndex: 0
+      options:
+      - Use
+      - Leave
+      nextDialogueIndex: 0100000002000000
+  - dialogueLines:
+    - You Use Item.
+    endDialogueLines: 01
+    choices: []
+  - dialogueLines:
+    - You Leave
+    endDialogueLines: 01
+    choices: []
