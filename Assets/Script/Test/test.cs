@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
-    // public InventorySystem inventorySystem;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,6 +18,11 @@ public class test : MonoBehaviour
     public void GiveA(string name)
     {
         Debug.Log($"Give {name}");
+    }
+
+    public void GiveQuest(QuestSO questSO)
+    {
+        UIManager.Instance.questUI.AddQuest(questSO);
     }
 
 }

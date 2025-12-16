@@ -26,22 +26,14 @@ MonoBehaviour:
     - checkNumber: 0
       dialogueIndex: 4
       options:
-      - Option1
-      - Option2
+      - Accept
+      - Leave
       nextDialogueIndex: 0100000002000000
   - dialogueLines:
-    - Great Choice!
-    - Now this is Line1
-    - This is Line2
-    - Good bye!
-    endDialogueLines: 00000001
+    - You Accetp testQuest
+    endDialogueLines: 01
     choices: []
   - dialogueLines:
-    - Great Choice!
-    - Now this is Line1
-    - This is Line2
-    - This is Line3
-    - This is Line4
-    - Good bye!
-    endDialogueLines: 000000000001
+    - You Leave
+    endDialogueLines: 01
     choices: []

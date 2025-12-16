@@ -18,13 +18,12 @@ public class UIManager : MonoBehaviour
     public Inventory backpack;
     [Header("Vehicle UI")]
     public GameObject vehicleUI;
-
-
     [Header("Interaction UI")]
     public GameObject interactUI;
-
     [Header("Dialogue UI")]
     public DialogueUI dialogueUI;
+    [Header("Quest UI")]
+    public QuestUI questUI;
     public void Awake()
     {
         Instance = this;
