@@ -7,11 +7,6 @@ public class InteractDialogue : MonoBehaviour
     [Header("參數設定")]
     public DialogueSO dialogueSO;
 
-    Vector3 defaultLook;
-    public Vector3 DefaultLook { get { return defaultLook; } }
-    [SerializeField] bool canLook;
-    public bool CanLook { get { return canLook; } }
-
     [Header("事件參數設定")]
     [Tooltip("對話需要使用的Event事件")]
     public DialogueEvent[] dialogueEvents;
@@ -38,11 +33,7 @@ public class InteractDialogue : MonoBehaviour
 
         target.transform.DOLookAt(transform.position, 1f, AxisConstraint.Y).SetEase(Ease.InOutSine);
 
-        if (canLook)
-        {
-            defaultLook = transform.position + transform.forward;
-            transform.DOLookAt(target.transform.position, 1f, AxisConstraint.Y).SetEase(Ease.InOutSine);
-        }
+
         //開啟DialogueUI並傳遞參數給他
         UIManager.Instance.dialogueUI.SetDialogueInfo(dialogueSO, dialogueEvents);
         UIManager.Instance.dialogueUI.SetTarget(target, this.gameObject);

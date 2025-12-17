@@ -4917,7 +4917,7 @@ MonoBehaviour:
   unityEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1576661561}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NPCDialogue, Assembly-CSharp
         m_MethodName: StarDialogue
         m_Mode: 0
@@ -4963,7 +4963,7 @@ GameObject:
   - component: {fileID: 520744008}
   - component: {fileID: 520744007}
   - component: {fileID: 520744006}
-  - component: {fileID: 520744005}
+  - component: {fileID: 520744011}
   - component: {fileID: 520744004}
   m_Layer: 0
   m_Name: Capsule (3)
@@ -4984,37 +4984,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0110e44f3bafb489adae1c76740d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::test
---- !u!114 &520744005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 520744003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83d23ac8e5ea8df4eb0f60b16c48ba51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCDialogue
-  dialogueSO: {fileID: 11400000, guid: 353709105ffe27a43ac52a46c8928317, type: 2}
-  canLook: 1
-  dialogueEvents:
-  - checkNumber: 0
-    options:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 520744004}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveQuest
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 49fa032ab84287649bdf53ab7baa5f19, type: 2}
-            m_ObjectArgumentAssemblyTypeName: QuestSO, Assembly-CSharp
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!54 &520744006
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5138,6 +5107,70 @@ Transform:
   - {fileID: 1032682635}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &520744011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520744003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c5dfedd626b45e4cbf360a11fc83958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NpcInteractDialogue
+  canLook: 1
+  currentStatus: 1
+  StartDialogueSO: {fileID: 11400000, guid: 49d8a242b022fa44ebdc27c34186bd64, type: 2}
+  InQuestDialogueSO: {fileID: 11400000, guid: b7027a08ab153644c83e2501510e9e08, type: 2}
+  defaultDialogueSO: {fileID: 11400000, guid: 7d263b1bdb2cdc0408108616b8214564, type: 2}
+  startEvents:
+  - checkNumber: 0
+    options:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 520744004}
+          m_TargetAssemblyTypeName: test, Assembly-CSharp
+          m_MethodName: GiveQuest
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 11400000, guid: 49fa032ab84287649bdf53ab7baa5f19, type: 2}
+            m_ObjectArgumentAssemblyTypeName: QuestSO, Assembly-CSharp
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 520744011}
+          m_TargetAssemblyTypeName: NpcInteractDialogue, Assembly-CSharp
+          m_MethodName: SetInQuest
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  inQuestEvents:
+  - checkNumber: 0
+    options:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 520744011}
+          m_TargetAssemblyTypeName: NpcInteractDialogue, Assembly-CSharp
+          m_MethodName: CheckQuestComplete
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  defaultEvents: []
 --- !u!1 &532563520
 GameObject:
   m_ObjectHideFlags: 0
@@ -7993,8 +8026,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 764496228}
-        m_TargetAssemblyTypeName: NPCDialogue, Assembly-CSharp
-        m_MethodName: StarDialogue
+        m_TargetAssemblyTypeName: NpcInteractDialogue, Assembly-CSharp
+        m_MethodName: SetDialogue
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8522,12 +8555,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 764496222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83d23ac8e5ea8df4eb0f60b16c48ba51, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c5dfedd626b45e4cbf360a11fc83958, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCDialogue
-  dialogueSO: {fileID: 11400000, guid: ca695cb4e8465694e9a25ebf66a43d85, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::NpcInteractDialogue
   canLook: 1
-  dialogueEvents: []
+  currentStatus: 0
+  StartDialogueSO: {fileID: 0}
+  InQuestDialogueSO: {fileID: 0}
+  defaultDialogueSO: {fileID: 11400000, guid: ac823f70f69b6474297376c175cec39d, type: 2}
+  startEvents: []
+  inQuestEvents: []
+  defaultEvents: []
 --- !u!1001 &764549052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10506,9 +10544,9 @@ MonoBehaviour:
   unityEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 520744005}
-        m_TargetAssemblyTypeName: NPCDialogue, Assembly-CSharp
-        m_MethodName: StarDialogue
+      - m_Target: {fileID: 520744011}
+        m_TargetAssemblyTypeName: NpcInteractDialogue, Assembly-CSharp
+        m_MethodName: SetDialogue
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11928,7 +11966,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9587e7204215fa4dbb6188fd3e2699a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestUI
-  currentQuestSO: {fileID: 0}
+  currentQuest:
+    questSO: {fileID: 0}
+    currentAmount: 0
+    currentIndex: 0
   activeQuest: []
   questTitle: {fileID: 876958842}
   questDescription: {fileID: 1834864517}
@@ -12611,7 +12652,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractDialogue
   dialogueSO: {fileID: 11400000, guid: 18dcd2afee229a149b86727dbbcc0ea5, type: 2}
-  canLook: 0
   dialogueEvents:
   - checkNumber: 0
     options:
@@ -14562,7 +14602,9 @@ MonoBehaviour:
   hintText: {fileID: 386857550}
   choiceBtnParent: {fileID: 1079606071}
   choiceBtnPrefab: {fileID: 7827870495891067942, guid: 24ed155bac337e047bbc2da01a0693ac, type: 3}
+  dialogueIndex: 0
   isTyping: 0
+  isCheck: 0
 --- !u!1 &1467065697
 GameObject:
   m_ObjectHideFlags: 0
@@ -15914,7 +15956,6 @@ GameObject:
   - component: {fileID: 1576661564}
   - component: {fileID: 1576661563}
   - component: {fileID: 1576661562}
-  - component: {fileID: 1576661561}
   - component: {fileID: 1576661567}
   m_Layer: 0
   m_Name: Capsule (2)
@@ -15922,112 +15963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1576661561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576661560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83d23ac8e5ea8df4eb0f60b16c48ba51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCDialogue
-  dialogueSO: {fileID: 11400000, guid: de298c611205812418126913380264b5, type: 2}
-  canLook: 1
-  dialogueEvents:
-  - checkNumber: 0
-    options:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1576661567}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveA
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 1
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1576661567}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveA
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 2
-            m_BoolArgument: 0
-          m_CallState: 2
-  - checkNumber: 1
-    options:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1576661567}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveA
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 1-1
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1576661567}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveA
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 1-2
-            m_BoolArgument: 0
-          m_CallState: 2
-  - checkNumber: 2
-    options:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1576661567}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveA
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 2-1
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1576661567}
-          m_TargetAssemblyTypeName: test, Assembly-CSharp
-          m_MethodName: GiveA
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 2-2
-            m_BoolArgument: 0
-          m_CallState: 2
+  m_IsActive: 0
 --- !u!54 &1576661562
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19784,9 +19720,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 494f4c0884a66dc48b610af2dd67def4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::testQuestItem
-  questStatusType: 0
-  id: 1
-  questIndex: 0
+  questSO: {fileID: 11400000, guid: 49fa032ab84287649bdf53ab7baa5f19, type: 2}
+  subId: 0
   addAmount: 1
 --- !u!54 &1953471477
 Rigidbody:
@@ -20869,9 +20804,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 494f4c0884a66dc48b610af2dd67def4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::testQuestItem
-  questStatusType: 0
-  id: 1
-  questIndex: 0
+  questSO: {fileID: 11400000, guid: 49fa032ab84287649bdf53ab7baa5f19, type: 2}
+  subId: 0
   addAmount: 1
 --- !u!54 &2068628554
 Rigidbody:

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class QuestUI : MonoBehaviour
 {
     [Header("參數")]
     [SerializeField] QuestOnRunTime currentQuest;
+    public QuestOnRunTime CurrentQuest { get { return currentQuest; } }
     [SerializeField] List<QuestOnRunTime> activeQuest = new List<QuestOnRunTime>();
     [Header("組件套用")]
     [SerializeField] TMP_Text questTitle;
@@ -14,9 +16,6 @@ public class QuestUI : MonoBehaviour
 
     public void AddQuest(QuestSO quest)
     {
-        //如果該任務已經完成，就不重複接取
-        if (quest.isComplet) return;
-
         QuestOnRunTime questOnRunTime = new QuestOnRunTime();
         questOnRunTime.SetQuest(quest);
         activeQuest.Add(questOnRunTime);
@@ -30,47 +29,54 @@ public class QuestUI : MonoBehaviour
 
 
     //更新任務狀態
-    public void UpdateQuestProgress(int questID, QuestStatusType questStatusType, int questIndex, int amount)
+    public void UpdateQuestProgress(QuestStatusType type, int subID, int amount)
     {
         //檢查有沒有任務，如果沒有就return
-        if (activeQuest.Count == 0 || currentQuest == null) return;
-
-        QuestSO current=currentQuest.questSO;
-        //檢查互動物件傳入的ID和任務類型是不是與當前的任務是一樣的
-        if (current.questID == questID && current.Quest[currentQuest.currentIndex].questStatusType == questStatusType)
+        if (currentQuest.questSO == null) return;
+        Quest questStep = currentQuest.questSO.Quest[currentQuest.currentIndex];
+        //檢查QuestID和當前quest的id是否一樣，並判斷類型是否一樣
+        if (subID == questStep.subID && type == questStep.questStatusType)
         {
-            //跟新當前進度
             currentQuest.currentAmount += amount;
             UpdateConditionText();
-
-            if (currentQuest.currentAmount == current.Quest[currentQuest.currentIndex].requiredAmount)
+            if (currentQuest.currentAmount >= questStep.requiredAmount)
             {
-                //該任務完成，檢查是不是尾端，就更新執行下一個任務，否則就刪除該任務
-                if (current.endLine.Length != 0)
-                {
-                    if (!current.endLine[questIndex])
-                    {
-                        //下一個任務
-                        currentQuest.currentIndex++;
-                        currentQuest.currentAmount = 0;
-                        UpdateQuestContent(currentQuest.questSO, currentQuest.currentIndex);
-                        UpdateConditionText();
-                    }
-                    else
-                    {
-                        current.isComplet = true;
-                        activeQuest.Remove(currentQuest);
-                        currentQuest = null;
-                        UpdateQuestContent(null, 0);
-                        Debug.Log("當前任務完成");
-                    }
-                }
+                currentQuest.currentAmount = questStep.requiredAmount;
+                NextStepOrComplete();
             }
+        }
+
+    }
+
+    public void NextStepOrComplete()
+    {
+        int count = currentQuest.questSO.Quest.Count();
+        if (currentQuest.currentIndex < count - 1)
+        {
+            //進到下一個任務階段
+            currentQuest.currentIndex++;
+            currentQuest.currentAmount = 0;
+            UpdateQuestContent(currentQuest.questSO, currentQuest.currentIndex);
+            UpdateConditionText();
+        }
+        else
+        {
+            activeQuest.Remove(currentQuest);
+            currentQuest = null;
+            UpdateQuestContent(null, 0);
+            UpdateConditionText();
+            Debug.Log("任務完成");
         }
     }
 
     void UpdateConditionText()
     {
+        if (currentQuest == null)
+        {
+            questCondition.text = "";
+            return;
+        }
+
         QuestStatusType type = currentQuest.questSO.Quest[currentQuest.currentIndex].questStatusType;
         switch (type)
         {
@@ -81,7 +87,7 @@ public class QuestUI : MonoBehaviour
                 questCondition.text = $"";
                 break;
             case QuestStatusType.InteractObject:
-                questCondition.text=$"";
+                questCondition.text = $"";
                 break;
         }
     }
@@ -97,6 +103,19 @@ public class QuestUI : MonoBehaviour
         {
             questTitle.text = questSO.Quest[index].questName;
             questDescription.text = questSO.Quest[index].description;
+        }
+    }
+    public bool GetQuestComplete()
+    {
+        if (currentQuest == null) return false;
+
+        if (currentQuest.currentAmount >= currentQuest.questSO.Quest[currentQuest.currentIndex].requiredAmount)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

@@ -22,9 +22,10 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] Transform choiceBtnParent;
     [SerializeField] GameObject choiceBtnPrefab;
     [Header("Debug")]
-    int dialogueIndex;
+    [SerializeField] int dialogueIndex;
     int currentIndex;
     [SerializeField] bool isTyping;
+    public bool isCheck;
     bool isChoice;
 
     //設定目標
@@ -54,7 +55,7 @@ public class DialogueUI : MonoBehaviour
     //下一行
     public void NextLine()
     {
-        bool[] endDialogueLines=currentSO.dialogueContent[dialogueIndex].endDialogueLines;
+        bool[] endDialogueLines = currentSO.dialogueContent[dialogueIndex].endDialogueLines;
         //檢查當前的對話是不是結束對話
         if (endDialogueLines.Length != 0 && endDialogueLines[currentIndex])
         {
@@ -70,9 +71,10 @@ public class DialogueUI : MonoBehaviour
     //結束對話
     public void EndDialogue()
     {
-        if (interactTarget.GetComponent<InteractDialogue>().CanLook)
+        NpcInteractDialogue npcInteractDialogue = interactTarget.GetComponent<NpcInteractDialogue>();
+        if (npcInteractDialogue != null && npcInteractDialogue.CanLook)
         {
-            interactTarget.transform.DOLookAt(interactTarget.GetComponent<InteractDialogue>().DefaultLook, 1f, AxisConstraint.Y).SetEase(Ease.InOutSine);
+            interactTarget.transform.DOLookAt(npcInteractDialogue.DefaultLook, 1f, AxisConstraint.Y).SetEase(Ease.InOutSine);
         }
         //解除按鍵監聽
         DisSubDialogueInput();
@@ -160,6 +162,9 @@ public class DialogueUI : MonoBehaviour
             {
                 dialogueEvents[currentEventIndex].options[y].Invoke();
             }
+
+            if (isCheck) return;
+
             dialogueIndex = nextIndex;
             dialogueLines = currentSO.dialogueContent[dialogueIndex].dialogueLines;
             currentIndex = 0;
@@ -176,6 +181,14 @@ public class DialogueUI : MonoBehaviour
         {
             Destroy(i.gameObject);
         }
+    }
+    public void SetDialogueIndex(int nextIndex)
+    {
+        dialogueIndex = nextIndex;
+        dialogueLines = currentSO.dialogueContent[dialogueIndex].dialogueLines;
+        isChoice=false;
+        ClearChoiceBtn();
+        StartCoroutine(DelayShowText());
     }
     IEnumerator DelayShowText()
     {

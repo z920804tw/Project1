@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class testQuestItem : MonoBehaviour
 {
-
-    [SerializeField] QuestStatusType questStatusType;
-    [SerializeField] int id;
-    [SerializeField] int questIndex;
+    [SerializeField] QuestSO questSO;
+    [SerializeField] int subId;
     [SerializeField] int addAmount;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,6 +19,6 @@ public class testQuestItem : MonoBehaviour
 
     public void CollectQuestItem()
     {
-        UIManager.Instance.questUI.UpdateQuestProgress(id, questStatusType, questIndex, addAmount);
+        UIManager.Instance.questUI.UpdateQuestProgress(questSO.Quest[subId].questStatusType,subId, addAmount);
     }
 }

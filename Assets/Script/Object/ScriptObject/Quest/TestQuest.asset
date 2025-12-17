@@ -16,11 +16,13 @@ MonoBehaviour:
   endLine: 0001
   Quest:
   - questName: Find Item
+    subID: 0
     description: Find 2 Item.
     questStatusType: 0
     requiredAmount: 2
   - questName: Talk with NPC3
+    subID: 1
     description: Go to talk with NPC3
     questStatusType: 2
-    requiredAmount: 1
+    requiredAmount: 0
   isComplet: 0

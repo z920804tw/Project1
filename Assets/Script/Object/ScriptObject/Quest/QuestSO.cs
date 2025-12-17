@@ -14,6 +14,7 @@ public class QuestSO : ScriptableObject
 public class Quest
 {
     public string questName;
+    public int subID;
     [TextArea]
     public string description;
     public QuestStatusType questStatusType;
@@ -33,7 +34,7 @@ public class QuestOnRunTime
     {
         questSO = quest;
         currentAmount = 0;
-        currentIndex=0;
+        currentIndex = 0;
     }
 }
 public enum QuestStatusType
