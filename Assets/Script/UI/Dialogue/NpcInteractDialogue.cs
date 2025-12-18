@@ -11,11 +11,15 @@ public enum NpcStatus
 public class NpcInteractDialogue : MonoBehaviour
 {
     [Header("參數設定")]
-    Vector3 defaultLook;
-    public Vector3 DefaultLook { get { return defaultLook; } }
     [SerializeField] bool canLook;
     public bool CanLook { get { return canLook; } }
+    Vector3 defaultLook;
+    public Vector3 DefaultLook { get { return defaultLook; } }
+
+
     [Header("NPC狀態參數設定")]
+    [Tooltip("如果該NPC有任務的話請掛上對應的SO")]
+    public QuestSO questSO;
     public NpcStatus currentStatus;
     public DialogueSO StartDialogueSO;
     public DialogueSO InQuestDialogueSO;
@@ -27,6 +31,24 @@ public class NpcInteractDialogue : MonoBehaviour
     [SerializeField] DialogueEvent[] inQuestEvents;
     [SerializeField] DialogueEvent[] defaultEvents;
 
+    void Start()
+    {
+        if (questSO != null)
+        {
+            if (questSO.isComplet)
+            {
+                currentStatus = NpcStatus.Default;
+            }
+            else
+            {
+                currentStatus = NpcStatus.StartQuest;
+            }
+        }
+        else
+        {
+            currentStatus = NpcStatus.Default;
+        }
+    }
 
 
     public void UpdateNpcStatus(GameObject target)
@@ -95,16 +117,16 @@ public class NpcInteractDialogue : MonoBehaviour
     public void SetComplet()
     {
         currentStatus = NpcStatus.Default;
-        QuestOnRunTime questOnRunTime=UIManager.Instance.questUI.CurrentQuest;
-        UIManager.Instance.questUI.UpdateQuestProgress(questOnRunTime.questSO.Quest[questOnRunTime.currentIndex].questStatusType,1,1);
+        QuestOnRunTime questOnRunTime = UIManager.Instance.questManager.CurrentQuest;
+        UIManager.Instance.questManager.UpdateQuestProgress(questOnRunTime.questSO.Quest[questOnRunTime.currentIndex].questStatusType, 1, 1);
     }
     //-----------更改NPC對話狀態-------------//
 
     //-----------檢查NPC的任務完成狀態-------//
     public void CheckQuestComplete()
     {
-        bool isComplete = UIManager.Instance.questUI.GetQuestComplete();
-        // UIManager.Instance.dialogueUI.isCheck = true;
+        bool isComplete = UIManager.Instance.questManager.GetQuestComplete();
+
         if (isComplete)
         {
             SetComplet();
@@ -112,7 +134,11 @@ public class NpcInteractDialogue : MonoBehaviour
         }
         else
         {
-            SetInQuest();
+            //任務沒有完成，就切換DialogueUI的對話到指定的Index
+            UIManager.Instance.dialogueUI.isCheck = true;
+            DialogueUI dialogueUI = UIManager.Instance.dialogueUI;
+            dialogueUI.StopAllCoroutines();
+            UIManager.Instance.dialogueUI.SetDialogueIndex(dialogueUI.currentSO.dialogueContent[dialogueUI.dialogueIndex].choices[dialogueUI.dialogueIndex].notCompleteNextIndex[0]);
             Debug.Log("沒有完成任務");
         }
 

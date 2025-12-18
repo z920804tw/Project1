@@ -22,6 +22,6 @@ public class test : MonoBehaviour
 
     public void GiveQuest(QuestSO questSO)
     {
-        UIManager.Instance.questUI.AddQuest(questSO);
+        UIManager.Instance.questManager.AddQuest(questSO);
     }
 }

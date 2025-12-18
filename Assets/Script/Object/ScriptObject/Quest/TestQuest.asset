@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: TestQuest
   m_EditorClassIdentifier: Assembly-CSharp::QuestSO
   questID: 1
-  endLine: 0001
   Quest:
   - questName: Find Item
     subID: 0
@@ -24,5 +23,10 @@ MonoBehaviour:
     subID: 1
     description: Go to talk with NPC3
     questStatusType: 2
+    requiredAmount: 0
+  - questName: Go To 123
+    subID: 2
+    description: Go to Point1
+    questStatusType: 1
     requiredAmount: 0
   isComplet: 0

@@ -10,32 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e098783c19bb72448c18b53bed0c4aa, type: 3}
-  m_Name: npc3_InQuest
+  m_Name: npc3_StartQuest
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
   targetName: npc3
   typeingSpeed: 0.05
   dialogueContent:
   - dialogueLines:
     - Hi this is dialogue test, i'm npc3
-    - This ScriptObject Dialogue is InQuest
-    - Did you already collect 2 item?
+    - This ScriptObject Dialogue is StartQuest
+    - Can you pick 2 item for me?
     endDialogueLines: 000000
     choices:
     - checkNumber: 0
-      dialogueIndex: 2
+      triggerIndex: 2
       options:
-      - Yes
-      - No
-      nextDialogueIndex: 0100000003000000
+      - Accept
+      - Leave
+      nextDialogueIndex: 0100000002000000
+      notCompleteNextIndex: 
   - dialogueLines:
-    - Thank your help!
+    - Thanks you!
     endDialogueLines: 01
     choices: []
   - dialogueLines:
-    - Seem like you didn't collect yet
-    endDialogueLines: 01
-    choices: []
-  - dialogueLines:
-    - Ok,Never mind
+    - Ok, maybe next time
     endDialogueLines: 01
     choices: []

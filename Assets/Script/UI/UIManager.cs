@@ -23,7 +23,9 @@ public class UIManager : MonoBehaviour
     [Header("Dialogue UI")]
     public DialogueUI dialogueUI;
     [Header("Quest UI")]
-    public QuestUI questUI;
+    public GameObject questUI;
+    public QuestManager questManager;
+
     public void Awake()
     {
         Instance = this;
@@ -60,6 +62,10 @@ public class UIManager : MonoBehaviour
     public void ShowAimHint(bool t)
     {
         aimHint.SetActive(t);
+    }
+    public void ShowQuestUI(bool t)
+    {
+        questUI.SetActive(t);
     }
     //----------物品欄-----------//
     public void ShowInventoryUI(bool t)

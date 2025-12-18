@@ -5,7 +5,7 @@ public class QuestSO : ScriptableObject
     [Header("任務參數")]
     //任務ID
     public int questID;
-    public bool[] endLine;
+    // public bool[] endLine;
     [Header("任務內容")]
     public Quest[] Quest;
     public bool isComplet;
@@ -28,8 +28,6 @@ public class QuestOnRunTime
     public int currentAmount;
     public int currentIndex;
     // public bool isComplet;
-
-
     public void SetQuest(QuestSO quest)
     {
         questSO = quest;

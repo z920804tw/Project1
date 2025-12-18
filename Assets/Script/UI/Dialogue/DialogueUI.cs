@@ -10,7 +10,7 @@ public class DialogueUI : MonoBehaviour
 {
     PlayerInput playerInput;
     [Header("參數設定")]
-    [SerializeField] DialogueSO currentSO;
+    public DialogueSO currentSO;
     [SerializeField] DialogueEvent[] dialogueEvents;
     GameObject currentTarget;
     GameObject interactTarget;
@@ -22,8 +22,10 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] Transform choiceBtnParent;
     [SerializeField] GameObject choiceBtnPrefab;
     [Header("Debug")]
-    [SerializeField] int dialogueIndex;
-    int currentIndex;
+    [Tooltip("DialogueContent使用")]
+    public int dialogueIndex;
+    [Tooltip("DialogueContent.DialogueLine的對話內容使用")]
+    [SerializeField] int currentIndex;
     [SerializeField] bool isTyping;
     public bool isCheck;
     bool isChoice;
@@ -44,7 +46,7 @@ public class DialogueUI : MonoBehaviour
         dialogueLines = dialogueSO.dialogueContent[dialogueIndex].dialogueLines;
         contentText.text = string.Empty;
 
-        //套用事件內容
+        //如果對向有事件就套用對象的事件內容，否則這邊就會留空
         dialogueEvents = events;
 
         //先清空按鈕
@@ -87,9 +89,10 @@ public class DialogueUI : MonoBehaviour
     //重置資訊
     void ResetInfo()
     {
-        currentSO = null;
         nameText.text = string.Empty;
         contentText.text = string.Empty;
+
+        currentSO = null;
         dialogueIndex = 0;
         currentIndex = 0;
         dialogueLines = null;
@@ -98,6 +101,7 @@ public class DialogueUI : MonoBehaviour
         interactTarget = null;
 
         isTyping = false;
+        isCheck = false;
         hintText.SetActive(false);
         this.gameObject.SetActive(false);
         ClearChoiceBtn();
@@ -111,7 +115,7 @@ public class DialogueUI : MonoBehaviour
         {
             for (int x = 0; x < dialogueChioce.Length; x++)
             {
-                if (currentIndex == dialogueChioce[x].dialogueIndex) //檢查當前index是否與chioces[i].dialogueIndex的參數一樣，如果一樣就代表當前對話有選擇
+                if (currentIndex == dialogueChioce[x].triggerIndex) //檢查當前index是否與chioces[i].dialogueIndex的參數一樣，如果一樣就代表當前對話有選擇
                 {
                     isChoice = true;
                     //找當前Choice的選項有沒有符合的條件
@@ -154,7 +158,7 @@ public class DialogueUI : MonoBehaviour
         int nextIndex = dialogueChioce[x].nextDialogueIndex[y];
 
 
-        //當按鈕被按下去後會執行的功能
+        //當按鈕被按下去後才會執行的功能
         btn.onClick.AddListener(() =>
         {
             //如果有事件，就綁定事件到按鈕上
@@ -181,12 +185,17 @@ public class DialogueUI : MonoBehaviour
         {
             Destroy(i.gameObject);
         }
+        
     }
+
+    //直接設定要跳到哪個Index
     public void SetDialogueIndex(int nextIndex)
     {
         dialogueIndex = nextIndex;
         dialogueLines = currentSO.dialogueContent[dialogueIndex].dialogueLines;
-        isChoice=false;
+        currentIndex=0;
+        isChoice = false;
+
         ClearChoiceBtn();
         StartCoroutine(DelayShowText());
     }

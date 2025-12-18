@@ -40,9 +40,9 @@ public class InteractDialogue : MonoBehaviour
 
     }
 }
-[System.Serializable]
-public class DialogueEvent
-{
-    public int checkNumber=-1;
-    public UnityEvent[] options;
-}
+// [System.Serializable]
+// public class DialogueEvent
+// {
+//     public int checkNumber=-1;
+//     public UnityEvent[] options;
+// }
